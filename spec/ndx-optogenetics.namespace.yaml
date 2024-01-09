@@ -1,0 +1,11 @@
+namespaces:
+- author:
+  - Ryan Ly
+  contact:
+  - rly@lbl.gov
+  doc: NWB extension to improve support for optogenetics data and metadata
+  name: ndx-optogenetics
+  schema:
+  - namespace: core
+  - source: ndx-optogenetics.extensions.yaml
+  version: 0.2.0
