@@ -14,10 +14,14 @@ def main():
         version="""0.2.0""",
         doc="""NWB extension to improve support for optogenetics data and metadata""",
         author=[
-            "Ryan Ly", 
+            "Ryan Ly",
+            "Horea Christian",
+            "Ben Dichter",
         ],
         contact=[
-            "rly@lbl.gov", 
+            "rly@lbl.gov",
+            "rly@lbl.gov",  # TODO
+            "ben.dichter@catalystneuro.com",
         ],
     )
     ns_builder.include_namespace("core")

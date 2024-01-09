@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'ndx-optogenetics'
-copyright = '2024, Ryan Ly'
-author = 'Ryan Ly'
+copyright = '2024, Ryan Ly, Horea Christian, Ben Dichter'
+author = 'Ryan Ly, Horea Christian, Ben Dichter'
 
 version = '0.2.0'
 release = 'alpha'
