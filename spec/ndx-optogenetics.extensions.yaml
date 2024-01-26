@@ -1,8 +1,345 @@
 groups:
-- neurodata_type_def: TetrodeSeries
-  neurodata_type_inc: ElectricalSeries
-  doc: An extension of ElectricalSeries to include the tetrode ID for each time series.
+- neurodata_type_def: Laser
+  neurodata_type_inc: Device
+  doc: Laser device. Currently there are no additional attributes.
+- neurodata_type_def: OpticFiber
+  neurodata_type_inc: Device
+  doc: Optical fiber device.
   attributes:
-  - name: trode_id
-    dtype: int32
-    doc: The tetrode ID.
+  - name: description
+    dtype: text
+    doc: Description of the optic fiber and ferrule equipment, including cleave type
+      or tapering.
+    required: false
+  - name: fiber_name
+    dtype: text
+    doc: Name of the optic fiber.
+  - name: fiber_manufacturer_code
+    dtype: text
+    doc: Code / product ID of the optic fiber from the manufacturer.
+    required: false
+  - name: manufacturer
+    dtype: text
+    doc: Manufacturer of the optic fiber and ferrule.
+  - name: numerical_aperture
+    dtype: float
+    doc: Numerical aperture, e.g., 0.39 NA.
+  - name: cannula_core_diameter
+    dtype: float
+    doc: Cannula diameter in mm, e.g., 0.2 mm (200 um).
+  - name: active_length
+    dtype: float
+    doc: Active length for a tapered fiber, e.g., Optogenix Lambda fiber. See https://www.optogenix.com/lambda-fibers/
+      for details of one example.
+    required: false
+  - name: ferrule_name
+    dtype: text
+    doc: Product name of the ferrule.
+    required: false
+  - name: ferrule_manufacturer_code
+    dtype: text
+    doc: Code / product ID of the ferrule from the manufacturer.
+    required: false
+  - name: ferrule_diameter
+    dtype: float
+    doc: Ferrule diameter in mm, e.g., 1.25 mm (LC) or 2.5 mm (FC).
+    required: false
+  - name: transmittance
+    dtype: float
+    doc: Transmittance.
+    required: false
+- neurodata_type_def: OpticFiberImplantSite
+  neurodata_type_inc: OptogeneticStimulusSite
+  doc: Information about the orthogonal stereotactic coordinates and angles of the
+    optic fiber implant sitesite (e.g., tip of the optic fiber in the brain) and excitation
+    wavelength.
+  attributes:
+  - name: reference
+    dtype: text
+    doc: Reference point for `ap`, `ml`, and `dv` coordinates, e.g., bregma at the
+      cortical surface.
+  - name: ap
+    dtype: float
+    doc: Anteroposterior coordinate in mm of the optogenetic stimulus site (+ is anterior),
+      with reference to `reference`.
+  - name: ml
+    dtype: float
+    doc: Mediolateral coordinate in mm of the optogenetic stimulus site (+ is right),
+      with reference to `reference`.
+  - name: dv
+    dtype: float
+    doc: Dorsoventral coordinate in mm of the optogenetic stimulus site (+ is dorsal/above
+      the brain), with reference to `reference`.
+  - name: pitch
+    dtype: float
+    doc: Pitch angle in degrees (rotation around left-right axis).
+    required: false
+  - name: yaw
+    dtype: float
+    doc: Yaw angle in degrees (rotation around dorsal-ventral axis).
+    required: false
+  - name: roll
+    dtype: float
+    doc: Roll angle in degrees (rotation around anterior-posterior axis).
+    required: false
+  - name: power
+    dtype: float
+    doc: Constant power of laser, in watts, e.g., 0.077 W (77 mW).
+  links:
+  - name: device
+    target_type: Laser
+    doc: Link to the laser device.
+  - name: optic_fiber
+    target_type: OpticFiber
+    doc: Link to the optic fiber device.
+- neurodata_type_def: OptogeneticVirus
+  neurodata_type_inc: NWBContainer
+  doc: Metadata about the optogenetic virus.
+  attributes:
+  - name: construct_name
+    dtype: text
+    doc: Name of the virus construct/vector, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP".
+  - name: description
+    dtype: text
+    doc: Description of the optogenetic virus.
+    required: false
+  - name: manufacturer
+    dtype: text
+    doc: Manufacturer of the optogenetic virus.
+  - name: titer
+    dtype: int
+    doc: Titer of the optogenetic virus, in vg/ml, e.g., 1x10^12 vg/ml.
+- neurodata_type_def: OptogeneticVirusInjection
+  neurodata_type_inc: NWBContainer
+  doc: Information about the injection of a virus for optogenetic experiments. The
+    name should be the virus name, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP". Use two
+    OptogeneticVirusInjection objects for a bilateral injection, one per hemisphere.
+    If exact coordinates or injection volume is not known, please elaborate in the
+    description field.
+  attributes:
+  - name: description
+    dtype: text
+    doc: Description of the optogenetic virus injection.
+    required: false
+  - name: location
+    dtype: text
+    doc: Name of the targeted location of the optogenetic virus injection.
+  - name: reference
+    dtype: text
+    doc: Reference point for `ap`, `ml`, and `dv` coordinates, e.g., bregma at the
+      cortical surface.
+  - name: ap
+    dtype: float
+    doc: Anteroposterior coordinate in mm of the optogenetic virus injection site
+      (+ is anterior), with reference to `reference`.
+  - name: ml
+    dtype: float
+    doc: Mediolateral coordinate in mm of the optogenetic virus injection site (+
+      is right), with reference to `reference`.
+  - name: dv
+    dtype: float
+    doc: Dorsoventral coordinate in mm of the optogenetic virus injection site (+
+      is dorsal/above the brain), with reference to `reference`.
+  - name: volume
+    dtype: float
+    doc: Volume of injection, in uL., e.g., 0.45 uL (450 nL)
+  - name: injection_date
+    dtype: isodatetime
+    doc: Date of injection.
+    required: false
+  links:
+  - name: virus
+    target_type: OptogeneticVirus
+    doc: Link to OptogeneticVirus object with metadata about the name, manufacturer,
+      and titer.
+- neurodata_type_def: OptogeneticViruses
+  neurodata_type_inc: NWBContainer
+  name: optogenetic_viruses
+  doc: Group containing one or more OptogeneticVirus objects, to be used within an
+    OptogeneticExperimentMetadata object.
+  groups:
+  - neurodata_type_inc: OptogeneticVirus
+    doc: OptogeneticVirus object(s).
+    quantity: +
+- neurodata_type_def: OptogeneticVirusInjections
+  neurodata_type_inc: NWBContainer
+  name: optogenetic_virus_injections
+  doc: Group containing one or more OptogeneticVirusInjection objects, to be used
+    within an OptogeneticExperimentMetadata object.
+  groups:
+  - neurodata_type_inc: OptogeneticVirusInjection
+    doc: OptogeneticVirusInjection object(s).
+    quantity: +
+- neurodata_type_def: OptogeneticExperimentMetadata
+  neurodata_type_inc: LabMetaData
+  name: optogenetics_metadata
+  doc: General metadata about the optogenetic stimulation.
+  attributes:
+  - name: stimulation_software
+    dtype: text
+    doc: Name of the software used to deliver optogenetic stimulation.
+  groups:
+  - name: optogenetic_viruses
+    neurodata_type_inc: OptogeneticViruses
+    doc: Group containing of one or more OptogeneticVirus objects.
+  - name: optogenetic_virus_injections
+    neurodata_type_inc: OptogeneticVirusInjections
+    doc: Group containing one or more OptogeneticVirusInjection objects.
+- neurodata_type_def: OptogeneticEpochs
+  neurodata_type_inc: TimeIntervals
+  doc: General metadata about the optogenetic stimulation that may change per epoch.
+  datasets:
+  - name: stimulation_on
+    neurodata_type_inc: VectorData
+    dtype: bool
+    doc: Whether optogenetic stimulation was used at any time during this epoch. If
+      False, then all other metadata values should be 0.
+  - name: pulse_length_ms
+    neurodata_type_inc: VectorData
+    dtype: int
+    doc: Duration of one pulse, in ms.
+  - name: period_ms
+    neurodata_type_inc: VectorData
+    dtype: int
+    doc: Duration between the starts of two pulses, in ms. Note that the interpulse
+      interval = `period_ms` - `pulse_length_ms`
+  - name: number_pulses_per_pulse_train
+    neurodata_type_inc: VectorData
+    dtype: int
+    doc: Number of pulses in one pulse train. After this number of pulses, no more
+      stimulation occurs until the next train begins (see `intertrain_interval_ms`)
+  - name: number_trains
+    neurodata_type_inc: VectorData
+    dtype: int
+    doc: Number of trains per stimulus. After this number of trains, no more stimulation
+      occurs until stimulation is re-triggered, e.g., after the animal leaves the
+      spatial filter and returns.
+  - name: intertrain_interval_ms
+    neurodata_type_inc: VectorData
+    dtype: int
+    doc: Duration between the starts of two consecutive pulse trains, in ms. Determines
+      the frequency of stimulation.
+- neurodata_type_def: FrankLabOptogeneticEpochs
+  neurodata_type_inc: OptogeneticEpochs
+  doc: General metadata about the optogenetic stimulation that may change per epoch,
+    with fields specific to Loren Frank Lab experiments. If the spatial filter is
+    ON, then the experimenter can stimulate in either open (frequency-based) or closed
+    loop (theta-based), only when animal is in a particular position. If the spatial
+    filter is OFF, then ignore the position (this is not common / doesn't happen).
+    If the spatial filter is ON and the experimeter is stimulating in open loop mode
+    and the animal enters the spatial filter rectangle, then immediately apply one
+    and only one stimulation bout. If stimulating in closed loop mode and the animal
+    enters the rectangle, then every time the particular theta phase is detected,
+    immediately apply one stimulation bout (accounting for the lockout period).
+  datasets:
+  - name: epoch_name
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: Name of the epoch.
+  - name: convenience_code
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: Convenience code of the epoch.
+  - name: theta_filter_on
+    neurodata_type_inc: VectorData
+    dtype: bool
+    doc: Whether the theta filter was on. A theta filter is closed-loop stimulation
+      - read one tetrode and calculate the phase. Depending on the phase of theta,
+      apply stimulation immediately. If this column is not present, then the theta
+      filter was not used.
+    quantity: '?'
+  - name: theta_filter_lockout_period_samples
+    neurodata_type_inc: VectorData
+    dtype: uint
+    doc: If the theta filter was used, lockout period in the number of samples (based
+      on the clock of the SpikeGadgets hardware). minimum number of samples needed
+      between stimulations. start to start.
+    quantity: '?'
+  - name: theta_filter_phase_degrees
+    neurodata_type_inc: VectorData
+    dtype: uint
+    doc: 'If the theta filter was used, phase in degrees during closed-loop theta
+      phase-specific stimulation experiments. 0 is defined as the trough. 90 is ascending
+      phase. Options are: 0, 90, 180, 270, 360'
+    quantity: '?'
+  - name: theta_filter_reference_ntrode
+    neurodata_type_inc: VectorData
+    dtype: uint
+    doc: If the theta filter was used, reference electrode that used used for theta
+      phase-specific stimulation. ntrode is related to SpikeGadgets. ntrodes are specified
+      in the electrode groups. (note that ntrodes are 1-indexed.) mapping from ntrode
+      to electrode ID is in the electrode metadata files.
+    quantity: '?'
+  - name: spatial_filter_on
+    neurodata_type_inc: VectorData
+    dtype: bool
+    doc: Whether the spatial filter was on. Closed-loop stimulation based on whether
+      the position of the animal is within a specified rectangular region of the video.
+      If this column is not present, then the spatial filter was not used.
+    quantity: '?'
+  - name: spatial_filter_lockout_period_samples
+    neurodata_type_inc: VectorData
+    dtype: uint
+    doc: If the spatial filter was used, lockout period in the number of samples.
+      Uses trodes time (samplecount).
+    quantity: '?'
+  - name: spatial_filter_bottom_left_coord
+    neurodata_type_inc: VectorData
+    dtype: uint
+    dims:
+    - x y
+    shape:
+    - 2
+    doc: If the spatial filter was used, the (x, y) coordinate of the bottom-left
+      corner pixel of the rectangular region of the video that was used for space-specific
+      stimulation. (0,0) is the bottom-left corner of the video.
+    quantity: '?'
+  - name: spatial_filter_top_right_coord
+    neurodata_type_inc: VectorData
+    dtype: uint
+    dims:
+    - x y
+    shape:
+    - 2
+    doc: If the spatial filter was used, the (x, y) coordinate of the top-right corner
+      pixel of the rectangular region of the video that was used for space-specific
+      stimulation. (0,0) is the bottom-left corner of the video.
+    quantity: '?'
+  - name: ripple_filter_on
+    neurodata_type_inc: VectorData
+    dtype: bool
+    doc: Whether the ripple filter was on. Closed-loop stimulation based on whether
+      a ripple was detected - whether N tetrodes have their signal cross the standard
+      deviation threshold. If this column is not present, then the ripple filter was
+      not used.
+    quantity: '?'
+  - name: ripple_filter_lockout_period_samples
+    neurodata_type_inc: VectorData
+    dtype: uint
+    doc: If the ripple filter was used, lockout period in the number of samples. Uses
+      trodes time (samplecount).
+    quantity: '?'
+  - name: ripple_filter_threshold_sd
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: If the ripple filter was used, the threshold for detecting a ripple, in number
+      of standard deviations.
+    quantity: '?'
+  - name: ripple_filter_num_above_threshold
+    neurodata_type_inc: VectorData
+    dtype: uint
+    doc: If the ripple filter was used, the number of tetrodes that have their signal
+      cross the standard deviation threshold.
+    quantity: '?'
+  - name: spatial_filter_cameras_index
+    neurodata_type_inc: VectorIndex
+    doc: Index column for `spatial_filter_cameras`.
+    quantity: '?'
+  - name: spatial_filter_cameras
+    neurodata_type_inc: VectorData
+    dtype:
+      target_type: Device
+      reftype: object
+    doc: If the ripple filter was used, the number of tetrodes that have their signal
+      cross the standard deviation threshold.
+    quantity: '?'

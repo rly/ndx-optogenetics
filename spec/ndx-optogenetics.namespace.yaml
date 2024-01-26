@@ -1,8 +1,12 @@
 namespaces:
 - author:
   - Ryan Ly
+  - Horea Christian
+  - Ben Dichter
   contact:
   - rly@lbl.gov
+  - rly@lbl.gov
+  - ben.dichter@catalystneuro.com
   doc: NWB extension to improve support for optogenetics data and metadata
   name: ndx-optogenetics
   schema:

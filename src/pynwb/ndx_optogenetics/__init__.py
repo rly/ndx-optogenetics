@@ -18,11 +18,16 @@ if not os.path.exists(__spec_path):
 # Load the namespace
 load_namespaces(str(__spec_path))
 
-# TODO: Define your classes here to make them accessible at the package level.
-# Either have PyNWB generate a class from the spec using `get_class` as shown
-# below or write a custom class and register it using the class decorator
-# `@register_class("TetrodeSeries", "ndx-optogenetics")`
-TetrodeSeries = get_class("TetrodeSeries", "ndx-optogenetics")
+Laser = get_class("Laser", "ndx-optogenetics")
+OpticFiber = get_class("OpticFiber", "ndx-optogenetics")
+OpticFiberImplantSite = get_class("OpticFiberImplantSite", "ndx-optogenetics")
+OptogeneticVirus = get_class("OptogeneticVirus", "ndx-optogenetics")
+OptogeneticVirusInjection = get_class("OptogeneticVirusInjection", "ndx-optogenetics")
+OptogeneticViruses = get_class("OptogeneticViruses", "ndx-optogenetics")
+OptogeneticVirusInjections = get_class("OptogeneticVirusInjections", "ndx-optogenetics")
+OptogeneticExperimentMetadata = get_class("OptogeneticExperimentMetadata", "ndx-optogenetics")
+OptogeneticEpochs = get_class("OptogeneticEpochs", "ndx-optogenetics")
+FrankLabOptogeneticEpochs = get_class("FrankLabOptogeneticEpochs", "ndx-optogenetics")
 
 # Remove these functions from the package
 del load_namespaces, get_class
