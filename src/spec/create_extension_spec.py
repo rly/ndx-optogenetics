@@ -61,7 +61,8 @@ def main():
                 name="manufacturer",
                 doc="Manufacturer of the optic fiber and ferrule.",
                 dtype="text",
-                # NOTE it is assumed that the fiber and ferrule are from the same manufacturer
+                # NOTE it is assumed that the fiber and ferrule are from the same manufacturer.
+                # Device has only one manufacturer attribute
             ),
             NWBAttributeSpec(
                 name="numerical_aperture",
@@ -69,14 +70,14 @@ def main():
                 dtype="float",
             ),
             NWBAttributeSpec(
-                name="cannula_core_diameter",  # TODO is cladding diameter important?
+                name="cannula_core_diameter_in_mm",  # TODO is cladding diameter important?
                 doc="Cannula diameter in mm, e.g., 0.2 mm (200 um).",
                 dtype="float",
             ),
             NWBAttributeSpec(
-                name="active_length",
+                name="active_length_in_mm",
                 doc=(
-                    "Active length for a tapered fiber, e.g., Optogenix Lambda fiber. "
+                    "Active length in mm for a tapered fiber, e.g., Optogenix Lambda fiber. "
                     "See https://www.optogenix.com/lambda-fibers/ for details of one example."
                 ),
                 dtype="float",
@@ -95,73 +96,100 @@ def main():
                 required=False,
             ),
             NWBAttributeSpec(  # TODO is this important to store? what about ferrule material? manufacturer?
-                name="ferrule_diameter",
+                name="ferrule_diameter_in_mm",
                 doc="Ferrule diameter in mm, e.g., 1.25 mm (LC) or 2.5 mm (FC).",
                 dtype="float",
                 required=False,
             ),
-            NWBAttributeSpec(  # TODO what is this?
-                name="transmittance",
-                doc="Transmittance.",
-                dtype="float",
-                required=False,
-            ),
+            # NWBAttributeSpec(  # TODO what is this? property of the tissue or of the fiber? measured where?
+            #     name="transmittance",
+            #     doc="",
+            #     dtype="float",
+            #     required=False,
+            # ),
         ],
     )
 
     optic_fiber_implant_site = NWBGroupSpec(
         neurodata_type_def="OpticFiberImplantSite",
         neurodata_type_inc="OptogeneticStimulusSite",
-        doc=("Information about the orthogonal stereotactic coordinates and angles of the optic fiber implant site"
-             "site (e.g., tip of the optic fiber in the brain) and excitation wavelength."),
+        doc=("Information about the orthogonal stereotactic coordinates and angles of the optic fiber implant site "
+             "(e.g., tip of the optic fiber in the brain) and excitation wavelength."),
         attributes=[
             NWBAttributeSpec(
                 name="reference",
-                doc=("Reference point for `ap`, `ml`, and `dv` coordinates, e.g., bregma at the cortical surface."),
+                doc=('Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., '
+                     '"bregma at the cortical surface".'),
                 dtype="text",
             ),
             NWBAttributeSpec(
-                name="ap",
+                name="hemisphere",
+                doc=('The hemisphere ("left" or "right") of the targeted location of the optogenetic stimulus '
+                     'site. Should be consistent with `ml_in_mm` coordinate.'),
+                dtype="text",
+            ),
+            NWBAttributeSpec(
+                name="ap_in_mm",
                 doc=("Anteroposterior coordinate in mm of the optogenetic stimulus site (+ is anterior), "
                      "with reference to `reference`."),
                 dtype="float",
             ),
             NWBAttributeSpec(
-                name="ml",
+                name="ml_in_mm",
                 doc=("Mediolateral coordinate in mm of the optogenetic stimulus site (+ is right), "
                      "with reference to `reference`."),
                 dtype="float",
             ),
             NWBAttributeSpec(
-                name="dv",
+                name="dv_in_mm",
                 doc=("Dorsoventral coordinate in mm of the optogenetic stimulus site "
                      "(+ is dorsal/above the brain), with reference to `reference`."),
                 dtype="float",
             ),
             NWBAttributeSpec(
-                name="pitch",
-                doc="Pitch angle in degrees (rotation around left-right axis).",
+                name="pitch_in_deg",
+                doc=("Pitch angle in degrees of the optic fiber implant (rotation around left-right axis, "
+                    "+ is rotating the nose upward)."),
                 dtype="float",
                 required=False,
             ),
             NWBAttributeSpec(
-                name="yaw",
-                doc="Yaw angle in degrees (rotation around dorsal-ventral axis).",
+                name="yaw_in_deg",
+                doc=("Yaw angle in degrees of the optic fiber implant (rotation around dorsal-ventral axis, "
+                     "+ is rotating the nose rightward)."),
                 dtype="float",
                 required=False,
             ),
             NWBAttributeSpec(
-                name="roll",
-                doc="Roll angle in degrees (rotation around anterior-posterior axis).",
+                name="roll_in_deg",
+                doc=("Roll angle in degrees of the optic fiber implant (rotation around anterior-posterior axis, "
+                     "+ is rotating the right side downward)."),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="stereotactic_rotation_in_deg",
+                doc=("TODO"),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="stereotactic_tilt_in_deg",
+                doc=("TODO"),
                 dtype="float",
                 required=False,
             ),
             # TODO allow time series representing changing power of laser over time
             NWBAttributeSpec(
-                name="power",
-                doc=("Constant power of laser, in watts, e.g., 0.077 W (77 mW)."),
+                name="power_in_mW",
+                doc=("Constant power of laser, in mW, e.g., 77 mW."),
                 dtype="float",
             ),
+            # NWBAttributeSpec(  # TODO not sure if this is necessary
+            #     name="intensity_in_mW_per_mm2",
+            #     doc=("Laser light intensity, in mW/mm^2, e.g., 0.5 mW/mm^2."),
+            #     dtype="float",
+            # ),
         ],
         links = [
             NWBLinkSpec(
@@ -199,7 +227,7 @@ def main():
                 dtype="text",
             ),
             NWBAttributeSpec(
-                name="titer",
+                name="titer_in_vg_per_ml",
                 doc=("Titer of the optogenetic virus, in vg/ml, e.g., 1x10^12 vg/ml."),
                 dtype="int",
             )
@@ -211,8 +239,7 @@ def main():
         neurodata_type_inc="NWBContainer",
         doc=("Information about the injection of a virus for optogenetic experiments. "
              'The name should be the virus name, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP". '
-             "Use two OptogeneticVirusInjection objects for a bilateral injection, one per hemisphere. "
-             "If exact coordinates or injection volume is not known, please elaborate in the description field."),
+             "Use two OptogeneticVirusInjection objects for a bilateral injection, one per hemisphere."),
         attributes=[
             NWBAttributeSpec(
                 name="description",
@@ -226,48 +253,70 @@ def main():
                 dtype="text",
             ),
             NWBAttributeSpec(
-                name="reference",
-                doc=("Reference point for `ap`, `ml`, and `dv` coordinates, e.g., bregma at the cortical surface."),
+                name="hemisphere",
+                doc=('The hemisphere ("left" or "right") of the targeted location of the optogenetic virus '
+                     'injection. Should be consistent with `ml_in_mm` coordinate.'),
                 dtype="text",
             ),
             NWBAttributeSpec(
-                name="ap",
+                name="reference",
+                doc=('Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., '
+                     '"bregma at the cortical surface".'),
+                dtype="text",
+            ),
+            NWBAttributeSpec(
+                name="ap_in_mm",
                 doc=("Anteroposterior coordinate in mm of the optogenetic virus injection site (+ is anterior), "
                      "with reference to `reference`."),
                 dtype="float",
             ),
             NWBAttributeSpec(
-                name="ml",
+                name="ml_in_mm",
                 doc=("Mediolateral coordinate in mm of the optogenetic virus injection site (+ is right), "
                      "with reference to `reference`."),
                 dtype="float",
             ),
             NWBAttributeSpec(
-                name="dv",
+                name="dv_in_mm",
                 doc=("Dorsoventral coordinate in mm of the optogenetic virus injection site "
                      "(+ is dorsal/above the brain), with reference to `reference`."),
                 dtype="float",
             ),
-            # NWBAttributeSpec(
-            #     name="pitch",
-            #     doc="Pitch angle in degrees (rotation around left-right axis).",
-            #     dtype="float",
-            #     required=False,
-            # ),
-            # NWBAttributeSpec(
-            #     name="yaw",
-            #     doc="Yaw angle in degrees (rotation around dorsal-ventral axis).",
-            #     dtype="float",
-            #     required=False,
-            # ),
-            # NWBAttributeSpec(
-            #     name="roll",
-            #     doc="Roll angle in degrees (rotation around anterior-posterior axis).",
-            #     dtype="float",
-            #     required=False,
-            # ),
             NWBAttributeSpec(
-                name="volume",
+                name="pitch_in_deg",
+                doc=("Pitch angle in degrees of the optogenetic virus injection (rotation around left-right axis, "
+                    "+ is rotating the nose upward)."),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="yaw_in_deg",
+                doc=("Yaw angle in degrees of the optogenetic virus injection (rotation around dorsal-ventral axis, "
+                     "+ is rotating the nose clockwise)."),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="roll_in_deg",
+                doc=("Roll angle in degrees of the optogenetic virus injection (rotation around anterior-posterior "
+                     "axis, + is rotating the right side down)."),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="stereotactic_rotation_in_deg",
+                doc=("TODO"),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="stereotactic_tilt_in_deg",
+                doc=("TODO"),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="volume_in_uL",
                 doc=("Volume of injection, in uL., e.g., 0.45 uL (450 nL)"),
                 dtype="float",
             ),
@@ -325,7 +374,7 @@ def main():
         neurodata_type_def="OptogeneticExperimentMetadata",
         neurodata_type_inc="LabMetaData",
         doc="General metadata about the optogenetic stimulation.",
-        name="optogenetics_metadata",
+        name="optogenetics_metadata",  # this goes against best practices but is consistent with core schema naming
         attributes=[
             NWBAttributeSpec(
                 name="stimulation_software",
@@ -350,7 +399,8 @@ def main():
     optogenetic_epochs = NWBGroupSpec(
         neurodata_type_def="OptogeneticEpochs",
         neurodata_type_inc="TimeIntervals",
-        doc="General metadata about the optogenetic stimulation that may change per epoch.",
+        doc=("General metadata about the optogenetic stimulation that may change per epoch. Some epochs have no "
+             "stimulation and are used as control epochs. If the stimulation is on, then the epoch is a stimulation."),
         datasets=[
             NWBDatasetSpec(
                 name="stimulation_on",
@@ -360,23 +410,24 @@ def main():
                 dtype="bool",
             ),
             NWBDatasetSpec(
-                name="pulse_length_ms",
+                name="pulse_length_in_ms",
                 neurodata_type_inc="VectorData",
-                doc=("Duration of one pulse, in ms."),
-                dtype="int",
+                doc=("Duration of one pulse, in ms. Use NaN if stimulation was off."),
+                dtype="float",
             ),
             NWBDatasetSpec(
-                name="period_ms",
+                name="period_in_ms",
                 neurodata_type_inc="VectorData",
-                doc=("Duration between the starts of two pulses, in ms. "
+                doc=("Duration between the starts of two pulses, in ms. Use NaN if stimulation was off."
                      "Note that the interpulse interval = `period_ms` - `pulse_length_ms`"),
-                dtype="int",
+                dtype="float",
             ),
             NWBDatasetSpec(
                 name="number_pulses_per_pulse_train",
                 neurodata_type_inc="VectorData",
                 doc=("Number of pulses in one pulse train. After this number of pulses, no more stimulation "
-                     "occurs until the next train begins (see `intertrain_interval_ms`)"),
+                     "occurs until the next train begins (see `intertrain_interval_ms`). "
+                     "Use -1 if stimulation was off."),
                 dtype="int",
             ),
             NWBDatasetSpec(
@@ -384,18 +435,59 @@ def main():
                 neurodata_type_inc="VectorData",
                 doc=("Number of trains per stimulus. After this number of trains, no more stimulation "
                      "occurs until stimulation is re-triggered, e.g., after the animal leaves the spatial filter "
-                     "and returns."),
+                     "and returns. Use -1 if stimulation was off."),
                 dtype="int",
             ),
             NWBDatasetSpec(
-                name="intertrain_interval_ms",
+                name="intertrain_interval_in_ms",
                 neurodata_type_inc="VectorData",
                 doc=("Duration between the starts of two consecutive pulse trains, in ms. "
-                     "Determines the frequency of stimulation."),
-                dtype="int",
+                     "Determines the frequency of stimulation. Use NaN if stimulation was off."),
+                dtype="float",
             ),
         ],
     )
+
+    frank_lab_camera = NWBGroupSpec(
+        neurodata_type_def="FrankLabCamera",  # specifying Frank Lab in case of conflicts with other Cameras
+        neurodata_type_inc="Device",
+        doc="Camera device.",
+        attributes=[
+            NWBAttributeSpec(
+                name="model",
+                doc="Model of the camera.",
+                dtype="text",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="serial_number",
+                doc="Serial number of the camera.",
+                dtype="text",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="frame_rate",
+                doc="Frame rate of the camera, in frames per second.",
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="resolution_in_pixels",
+                doc=("Width and height of the camera video in pixels."),
+                dtype="int",
+                shape=(2, ),
+                dims=("w h", ),
+                required=False,
+            ),
+            # NWBAttributeSpec(
+            #     name="cm_per_pixel",
+            #     doc="Centimeters per pixel in the camera video.",
+            #     dtype="float",
+            #     required=False,
+            # ),
+        ],
+    )
+
     frank_lab_optogenetic_epochs = NWBGroupSpec(
         neurodata_type_def="FrankLabOptogeneticEpochs",
         neurodata_type_inc="OptogeneticEpochs",
@@ -411,15 +503,33 @@ def main():
         # TODO some lab members have other filters. Add those parameters below.
         datasets=[
             NWBDatasetSpec(
+                name="experimenter",
+                neurodata_type_inc="VectorData",
+                doc=("Name of the experimenter."),
+                dtype="text",
+            ),
+            NWBDatasetSpec(
                 name="epoch_name",
                 neurodata_type_inc="VectorData",
                 doc=("Name of the epoch."),
                 dtype="text",
             ),
             NWBDatasetSpec(
+                name="epoch_number",
+                neurodata_type_inc="VectorData",
+                doc=("1-indexed number of the epoch."),
+                dtype="int",
+            ),
+            NWBDatasetSpec(
                 name="convenience_code",
                 neurodata_type_inc="VectorData",
                 doc=("Convenience code of the epoch."),
+                dtype="text",
+            ),
+            NWBDatasetSpec(
+                name="epoch_type",
+                neurodata_type_inc="VectorData",
+                doc=("Type of the epoch."),
                 dtype="text",
             ),
             NWBDatasetSpec(
@@ -433,20 +543,21 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="theta_filter_lockout_period_samples",
+                name="theta_filter_lockout_period_in_samples",
                 neurodata_type_inc="VectorData",
                 doc=("If the theta filter was used, lockout period in the number of samples (based on the "
-                     "clock of the SpikeGadgets hardware). minimum number of samples needed between stimulations. start to start."),
-                dtype="uint",
+                     "clock of the SpikeGadgets hardware) needed between stimulations, start to start. "
+                     "Use -1 if the theta filter was not used."),
+                dtype="int",
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="theta_filter_phase_degrees",
+                name="theta_filter_phase_in_deg",
                 neurodata_type_inc="VectorData",
                 doc=("If the theta filter was used, phase in degrees during closed-loop theta phase-specific "
                      "stimulation experiments. 0 is defined as the trough. 90 is ascending phase. Options are: "
-                     "0, 90, 180, 270, 360"),  # TODO validate this in API
-                dtype="uint",
+                     "0, 90, 180, 270, 360, NaN. Use NaN if the theta filter was not used."),
+                dtype="float",
                 quantity="?",
             ),
             NWBDatasetSpec(
@@ -455,8 +566,8 @@ def main():
                 doc=("If the theta filter was used, reference electrode that used used for theta phase-specific "
                      "stimulation. ntrode is related to SpikeGadgets. ntrodes are specified in the electrode groups. "
                      "(note that ntrodes are 1-indexed.) mapping from ntrode to electrode ID is in the electrode "
-                     "metadata files."),
-                dtype="uint",
+                     "metadata files. Use -1 if the theta filter was not used."),
+                dtype="int",
                 quantity="?",
             ),
             NWBDatasetSpec(
@@ -469,33 +580,57 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="spatial_filter_lockout_period_samples",
+                name="spatial_filter_lockout_period_in_samples",
                 neurodata_type_inc="VectorData",
                 doc=("If the spatial filter was used, lockout period in the number of samples. "
-                     "Uses trodes time (samplecount)."),
-                dtype="uint",
+                     "Uses trodes time (samplecount). Use -1 if the spatial filter was not used."),
+                dtype="int",
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="spatial_filter_bottom_left_coord",
+                name="spatial_filter_bottom_left_coord_in_pixels",
                 neurodata_type_inc="VectorData",
                 doc=("If the spatial filter was used, the (x, y) coordinate of the bottom-left corner pixel of the "
                      "rectangular region of the video that was used for space-specific stimulation. "
-                     "(0,0) is the bottom-left corner of the video."),
-                dtype="uint",
+                     "(0,0) is the bottom-left corner of the video. Use (-1, -1) if the spatial filter was not used."),
+                dtype="int",
                 shape=(2, ),
                 dims=("x y", ),
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="spatial_filter_top_right_coord",
+                name="spatial_filter_top_right_coord_in_pixels",
                 neurodata_type_inc="VectorData",
                 doc=("If the spatial filter was used, the (x, y) coordinate of the top-right corner pixel of the "
                      "rectangular region of the video that was used for space-specific stimulation. "
-                     "(0,0) is the bottom-left corner of the video."),
-                dtype="uint",
+                     "(0,0) is the bottom-left corner of the video. Use (-1, -1) if the spatial filter was not used."),
+                dtype="int",
                 shape=(2, ),
                 dims=("x y", ),
+                quantity="?",
+            ),
+            NWBDatasetSpec(
+                name="spatial_filter_cameras_index",
+                neurodata_type_inc="VectorIndex",
+                doc=("Index column for `spatial_filter_cameras` so that each epoch can have multiple cameras."),
+                quantity="?",
+            ),
+            NWBDatasetSpec(
+                name="spatial_filter_cameras",
+                neurodata_type_inc="VectorData",
+                doc=("References to camera objects used for the spatial filter."),
+                dtype=NWBRefSpec(
+                    target_type="FrankLabCamera",
+                    reftype="object",
+                ),
+                quantity="?",
+            ),
+            NWBDatasetSpec(
+                name="spatial_filter_cameras_cm_per_pixel",
+                neurodata_type_inc="VectorData",
+                doc=("The cm/pixel values for each spatial filter camera used in this epoch, in the same order "
+                     "as `spatial_filter_cameras`."),
+                dtype="float",
                 quantity="?",
             ),
             NWBDatasetSpec(
@@ -508,11 +643,11 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="ripple_filter_lockout_period_samples",
+                name="ripple_filter_lockout_period_in_samples",
                 neurodata_type_inc="VectorData",
                 doc=("If the ripple filter was used, lockout period in the number of samples. "
                      "Uses trodes time (samplecount)."),
-                dtype="uint",
+                dtype="int",
                 quantity="?",
             ),
             NWBDatasetSpec(
@@ -528,24 +663,7 @@ def main():
                 neurodata_type_inc="VectorData",
                 doc=("If the ripple filter was used, the number of tetrodes that have their signal cross "
                      "the standard deviation threshold."),
-                dtype="uint",
-                quantity="?",
-            ),
-            NWBDatasetSpec(
-                name="spatial_filter_cameras_index",
-                neurodata_type_inc="VectorIndex",
-                doc=("Index column for `spatial_filter_cameras`."),
-                quantity="?",
-            ),
-            NWBDatasetSpec(
-                name="spatial_filter_cameras",
-                neurodata_type_inc="VectorData",
-                doc=("If the ripple filter was used, the number of tetrodes that have their signal cross "
-                     "the standard deviation threshold."),
-                dtype=NWBRefSpec(
-                    target_type="Device",
-                    reftype="object",
-                ),
+                dtype="int",
                 quantity="?",
             ),
         ],
@@ -561,6 +679,7 @@ def main():
         optogenetic_virus_injections,
         optogenetic_experiment_metadata,
         optogenetic_epochs,
+        frank_lab_camera,
         frank_lab_optogenetic_epochs,
     ]
 

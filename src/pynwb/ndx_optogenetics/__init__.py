@@ -27,6 +27,7 @@ OptogeneticViruses = get_class("OptogeneticViruses", "ndx-optogenetics")
 OptogeneticVirusInjections = get_class("OptogeneticVirusInjections", "ndx-optogenetics")
 OptogeneticExperimentMetadata = get_class("OptogeneticExperimentMetadata", "ndx-optogenetics")
 OptogeneticEpochs = get_class("OptogeneticEpochs", "ndx-optogenetics")
+FrankLabCamera = get_class("FrankLabCamera", "ndx-optogenetics")
 FrankLabOptogeneticEpochs = get_class("FrankLabOptogeneticEpochs", "ndx-optogenetics")
 
 # Remove these functions from the package
