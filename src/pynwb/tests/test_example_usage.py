@@ -1,6 +1,5 @@
 def test_example_usage():
     import datetime
-    import numpy as np
     from pynwb import NWBFile, NWBHDF5IO
     from ndx_optogenetics import (
         Laser,
@@ -11,7 +10,7 @@ def test_example_usage():
         OptogeneticViruses,
         OptogeneticVirusInjections,
         OptogeneticExperimentMetadata,
-        FrankLabOptogeneticEpochs,
+        OptogeneticEpochsTable,
     )
 
     # initialize an NWBFile object
@@ -100,58 +99,23 @@ def test_example_usage():
     # this should be added to the NWBFile under the nwbfile/general/optogenetics group instead of labmetadata
     nwbfile.add_lab_meta_data(optogenetic_experiment_metadata)
 
-    camera1 = nwbfile.create_device(
-        name="overhead_run_camera 1",
-        description="Camera used for tracking running",
-        # TODO cm_per_pixel
-    )
-
-    camera2 = nwbfile.create_device(
-        name="overhead_run_camera 2",
-        description="Camera used for tracking running",
-        # TODO cm_per_pixel
-    )
-
-    opto_epochs = FrankLabOptogeneticEpochs(
+    opto_epochs_table = OptogeneticEpochsTable(
         name="optogenetic_epochs",
         description="Metadata about the optogenetic stimulation parameters that change per epoch.",
     )
 
     # test add one epoch
-    opto_epochs.add_row(
+    opto_epochs_table.add_row(
         start_time=0.0,
         stop_time=100.0,
-        experimenter="Xulu Sun",
-        convenience_code="a1",
-        epoch_name="lineartrack",
         stimulation_on=True,
-        pulse_length_in_ms=40,
-        period_in_ms=250,
+        pulse_length_in_ms=40.0,
+        period_in_ms=250.0,
         number_pulses_per_pulse_train=100,
-        # interpulse_interval_in_ms=210.0,  # derived from period_in_ms and pulse_length_in_ms
         number_trains=1,
-        intertrain_interval_in_ms=0,
-        # manual_number_stims,
-        # manual_time_between_stims,
-        # manual_control_mins,
-        # manual_control_start_mins_into_rec,
-        # manual_control_end_mins_into_rec,
-        # theta_filter_on=False,
-        # theta_filter_in_deg -- None
-        # theta_filter_reference_ntrode=12,
-        spatial_filter_on=True,
-        # tracking_threshold,
-        spatial_filter_bottom_left_coord_in_pixels=np.array([260, 920], dtype=np.uint),
-        spatial_filter_top_right_coord_in_pixels=np.array([800, 1050], dtype=np.uint),
-        spatial_filter_cameras=[camera1, camera2],
-        # spatial_filter_lockout_period_in_samples -- None
-        # lockout_period_samples_theta_in_deg -- None
-        # ripple_filter,
-        # lockout_period_samples_ripple,
-        # ripple_threshold_sd,
-        # num_above_threshold_ripple
+        intertrain_interval_in_ms=0.0,
     )
-    nwbfile.add_time_intervals(opto_epochs)
+    nwbfile.add_time_intervals(opto_epochs_table)
 
     # write the NWBFile to disk
     path = "test_optogenetics.nwb"
@@ -161,3 +125,80 @@ def test_example_usage():
     # read the NWBFile from disk and print out TODO
     with NWBHDF5IO(path, mode="r", load_namespaces=True) as io:
         read_nwbfile = io.read()
+
+        assert type(read_nwbfile.devices["Omicron LuxX+ 488-100"]) is Laser
+        assert read_nwbfile.devices["Omicron LuxX+ 488-100"].name == "Omicron LuxX+ 488-100"
+        assert read_nwbfile.devices["Omicron LuxX+ 488-100"].description == "Laser for optogenetic stimulation."
+        assert read_nwbfile.devices["Omicron LuxX+ 488-100"].manufacturer == "Omicron"
+
+        assert type(read_nwbfile.devices["Lambda"]) is OpticFiber
+        assert read_nwbfile.devices["Lambda"].name == "Lambda"
+        assert read_nwbfile.devices["Lambda"].description == "Lambda fiber (tapered fiber) from Optogenix."
+        assert read_nwbfile.devices["Lambda"].fiber_name == "Lambda"
+        assert read_nwbfile.devices["Lambda"].fiber_manufacturer_code == "lambda_b5"
+        assert read_nwbfile.devices["Lambda"].manufacturer == "Optogenix"
+        assert read_nwbfile.devices["Lambda"].numerical_aperture == 0.39
+        assert read_nwbfile.devices["Lambda"].cannula_core_diameter_in_mm == 0.2
+        assert read_nwbfile.devices["Lambda"].active_length_in_mm == 2.0
+        assert read_nwbfile.devices["Lambda"].ferrule_name == "cFCF - ∅2.5mm Ceramic Ferrule"
+        assert read_nwbfile.devices["Lambda"].ferrule_diameter_in_mm == 2.5
+
+        assert type(read_nwbfile.ogen_sites["Lambda_GPe"]) is OpticFiberImplantSite
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].name == "Lambda_GPe"
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].description == "Optic fiber implanted into GPe stimulating at 488 nm and 77 mW."
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].excitation_lambda == 488.0
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].hemisphere == "right"
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].location == "GPe"
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].ap_in_mm == -1.5
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].ml_in_mm == 3.2
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].dv_in_mm == -5.8
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].roll_in_deg == 0.0
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].pitch_in_deg == 0.0
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].yaw_in_deg == 0.0
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].reference == "bregma at the cortical surface"
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].power_in_mW == 77.0
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].device == read_nwbfile.devices["Omicron LuxX+ 488-100"]
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].optic_fiber == read_nwbfile.devices["Lambda"]
+
+        assert type(read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"]) is OptogeneticExperimentMetadata
+        assert read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"].stimulation_software == "FSGUI 2.0"
+
+        assert len(read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"].optogenetic_viruses.optogenetic_virus) == 1
+        read_virus = read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"].optogenetic_viruses.optogenetic_virus["AAV-EF1a-DIO-hChR2(H134R)-EYFP"]
+        assert read_virus.name == "AAV-EF1a-DIO-hChR2(H134R)-EYFP"
+        assert read_virus.construct_name == "AAV-EF1a-DIO-hChR2(H134R)-EYFP"
+        assert read_virus.description == "Excitatory optogenetic construct designed to make neurons express the light sensitive opsin, hChR2-EYFP."
+        assert read_virus.manufacturer == "UNC Vector Core"
+        assert read_virus.titer_in_vg_per_ml == int(1.0e12)
+
+        assert len(read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"].optogenetic_virus_injections.optogenetic_virus_injections) == 1
+        read_virus_injection = read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"].optogenetic_virus_injections.optogenetic_virus_injections["AAV-EF1a-DIO-hChR2(H134R)-EYFP Injection"]
+        assert read_virus_injection.name == "AAV-EF1a-DIO-hChR2(H134R)-EYFP Injection"
+        assert read_virus_injection.description == "AAV-EF1a-DIO-hChR2(H134R)-EYFP injection into GPe."
+        assert read_virus_injection.hemisphere == "right"
+        assert read_virus_injection.location == "GPe"
+        assert read_virus_injection.ap_in_mm == -1.5
+        assert read_virus_injection.ml_in_mm == 3.2
+        assert read_virus_injection.dv_in_mm == -6.0
+        assert read_virus_injection.roll_in_deg == 0.0
+        assert read_virus_injection.pitch_in_deg == 0.0
+        assert read_virus_injection.yaw_in_deg == 0.0
+        assert read_virus_injection.reference == "bregma at the cortical surface"
+        assert read_virus_injection.virus == read_virus
+        assert read_virus_injection.volume_in_uL == 0.45
+
+        assert type(read_nwbfile.intervals["optogenetic_epochs"]) is OptogeneticEpochsTable
+        assert read_nwbfile.intervals["optogenetic_epochs"].name == "optogenetic_epochs"
+        assert read_nwbfile.intervals["optogenetic_epochs"].description == "Metadata about the optogenetic stimulation parameters that change per epoch."
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "start_time"] == 0.0
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "stop_time"] == 100.0
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "stimulation_on"] == True
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "pulse_length_in_ms"] == 40.0
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "period_in_ms"] == 250.0
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "number_pulses_per_pulse_train"] == 100
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "number_trains"] == 1
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "intertrain_interval_in_ms"] == 0.0
+
+
+
+
