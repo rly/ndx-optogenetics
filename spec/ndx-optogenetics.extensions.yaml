@@ -93,9 +93,6 @@ groups:
     dtype: float
     doc: TODO
     required: false
-  - name: power_in_mW
-    dtype: float
-    doc: Constant power of laser, in mW, e.g., 77 mW.
   links:
   - name: device
     target_type: Laser
@@ -258,3 +255,7 @@ groups:
     dtype: float
     doc: Duration between the starts of two consecutive pulse trains, in ms. Determines
       the frequency of stimulation. Use NaN if stimulation was off.
+  - name: power_in_mW
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Constant power of laser, in mW, e.g., 77 mW.

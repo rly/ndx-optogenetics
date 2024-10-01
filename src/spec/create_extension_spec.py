@@ -179,12 +179,6 @@ def main():
                 dtype="float",
                 required=False,
             ),
-            # TODO allow time series representing changing power of laser over time
-            NWBAttributeSpec(
-                name="power_in_mW",
-                doc=("Constant power of laser, in mW, e.g., 77 mW."),
-                dtype="float",
-            ),
             # NWBAttributeSpec(  # TODO not sure if this is necessary
             #     name="intensity_in_mW_per_mm2",
             #     doc=("Laser light intensity, in mW/mm^2, e.g., 0.5 mW/mm^2."),
@@ -443,6 +437,13 @@ def main():
                 neurodata_type_inc="VectorData",
                 doc=("Duration between the starts of two consecutive pulse trains, in ms. "
                      "Determines the frequency of stimulation. Use NaN if stimulation was off."),
+                dtype="float",
+            ),
+            # TODO allow time series representing changing power of laser over time
+            NWBDatasetSpec(
+                name="power_in_mW",
+                neurodata_type_inc="VectorData",
+                doc="Constant power of laser, in mW, e.g., 77 mW.",
                 dtype="float",
             ),
         ],

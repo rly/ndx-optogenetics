@@ -54,7 +54,6 @@ def test_example_usage():
         pitch_in_deg=0.0,
         yaw_in_deg=0.0,
         reference="bregma at the cortical surface",
-        power_in_mW=77.0,
         device=laser,
         optic_fiber=optic_fiber,
     )
@@ -114,6 +113,7 @@ def test_example_usage():
         number_pulses_per_pulse_train=100,
         number_trains=1,
         intertrain_interval_in_ms=0.0,
+        power_in_mW=77.0,
     )
     nwbfile.add_time_intervals(opto_epochs_table)
 
@@ -156,7 +156,6 @@ def test_example_usage():
         assert read_nwbfile.ogen_sites["Lambda_GPe"].pitch_in_deg == 0.0
         assert read_nwbfile.ogen_sites["Lambda_GPe"].yaw_in_deg == 0.0
         assert read_nwbfile.ogen_sites["Lambda_GPe"].reference == "bregma at the cortical surface"
-        assert read_nwbfile.ogen_sites["Lambda_GPe"].power_in_mW == 77.0
         assert read_nwbfile.ogen_sites["Lambda_GPe"].device == read_nwbfile.devices["Omicron LuxX+ 488-100"]
         assert read_nwbfile.ogen_sites["Lambda_GPe"].optic_fiber == read_nwbfile.devices["Lambda"]
 
@@ -190,6 +189,7 @@ def test_example_usage():
         assert type(read_nwbfile.intervals["optogenetic_epochs"]) is OptogeneticEpochsTable
         assert read_nwbfile.intervals["optogenetic_epochs"].name == "optogenetic_epochs"
         assert read_nwbfile.intervals["optogenetic_epochs"].description == "Metadata about the optogenetic stimulation parameters that change per epoch."
+        assert len(read_nwbfile.intervals["optogenetic_epochs"]) == 1
         assert read_nwbfile.intervals["optogenetic_epochs"][0, "start_time"] == 0.0
         assert read_nwbfile.intervals["optogenetic_epochs"][0, "stop_time"] == 100.0
         assert read_nwbfile.intervals["optogenetic_epochs"][0, "stimulation_on"] == True
@@ -198,7 +198,7 @@ def test_example_usage():
         assert read_nwbfile.intervals["optogenetic_epochs"][0, "number_pulses_per_pulse_train"] == 100
         assert read_nwbfile.intervals["optogenetic_epochs"][0, "number_trains"] == 1
         assert read_nwbfile.intervals["optogenetic_epochs"][0, "intertrain_interval_in_ms"] == 0.0
-
+        assert read_nwbfile.intervals["optogenetic_epochs"][0, "power_in_mW"] == 77.0
 
 
 
