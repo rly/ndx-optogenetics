@@ -187,9 +187,11 @@ def main():
         ],
         links = [
             NWBLinkSpec(
+                # TODO: make this optional here and in OptogeneticStimulusSite
+                # for cases when the fiber is implanted but the laser was not turned on 
                 name="device",  # override existing "device" link
                 doc="Link to the laser device.",
-                target_type="Laser",  # TODO test this
+                target_type="Laser",
             ),
             NWBLinkSpec(
                 name="optic_fiber",
