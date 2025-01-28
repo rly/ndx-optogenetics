@@ -26,7 +26,7 @@ groups:
     doc: Numerical aperture, e.g., 0.39 NA.
   - name: core_diameter_in_um
     dtype: float
-    doc: Cannula core diameter in um, e.g., 200 um.
+    doc: Cannula core diameter in um, e.g., 200.0 um.
   - name: active_length_in_mm
     dtype: float
     doc: Active length in mm for a tapered fiber, e.g., Optogenix Lambda fiber. See

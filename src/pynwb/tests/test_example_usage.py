@@ -34,7 +34,7 @@ def test_example_usage():
         fiber_manufacturer_code="lambda_b5",
         manufacturer="Optogenix",
         numerical_aperture=0.39,
-        core_diameter_in_um=200,
+        core_diameter_in_um=200.0,
         active_length_in_mm=2.0,
         ferrule_name="cFCF - ∅2.5mm Ceramic Ferrule",
         ferrule_diameter_in_mm=2.5,

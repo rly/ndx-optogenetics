@@ -71,7 +71,7 @@ def main():
             ),
             NWBAttributeSpec(
                 name="core_diameter_in_um",  # TODO is cladding diameter important?
-                doc="Cannula core diameter in um, e.g., 200 um.",
+                doc="Cannula core diameter in um, e.g., 200.0 um.",
                 dtype="float",
             ),
             NWBAttributeSpec(
