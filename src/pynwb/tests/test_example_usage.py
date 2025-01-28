@@ -3,8 +3,8 @@ def test_example_usage():
     from pynwb import NWBFile, NWBHDF5IO
     from ndx_optogenetics import (
         Laser,
-        OpticFiber,
-        OpticFiberImplantSite,
+        OpticalFiber,
+        OpticalFiberImplantSite,
         OptogeneticVirus,
         OptogeneticVirusInjection,
         OptogeneticViruses,
@@ -27,21 +27,21 @@ def test_example_usage():
     )
     nwbfile.add_device(laser)
 
-    optic_fiber = OpticFiber(
+    optical_fiber = OpticalFiber(
         name="Lambda",
         description="Lambda fiber (tapered fiber) from Optogenix.",
         fiber_name="Lambda",
         fiber_manufacturer_code="lambda_b5",
         manufacturer="Optogenix",
         numerical_aperture=0.39,
-        cannula_core_diameter_in_mm=0.2,
+        core_diameter_in_um=200,
         active_length_in_mm=2.0,
         ferrule_name="cFCF - ∅2.5mm Ceramic Ferrule",
         ferrule_diameter_in_mm=2.5,
     )
-    nwbfile.add_device(optic_fiber)
+    nwbfile.add_device(optical_fiber)
 
-    optic_fiber_implant_site = OpticFiberImplantSite(
+    optical_fiber_implant_site = OpticalFiberImplantSite(
         name="Lambda_GPe",
         description="Optic fiber implanted into GPe stimulating at 488 nm and 77 mW.",
         excitation_lambda=488.0,  # in nm
@@ -55,9 +55,9 @@ def test_example_usage():
         yaw_in_deg=0.0,
         reference="bregma at the cortical surface",
         device=laser,
-        optic_fiber=optic_fiber,
+        optical_fiber=optical_fiber,
     )
-    nwbfile.add_ogen_site(optic_fiber_implant_site)
+    nwbfile.add_ogen_site(optical_fiber_implant_site)
 
     virus = OptogeneticVirus(
         name="AAV-EF1a-DIO-hChR2(H134R)-EYFP",
@@ -131,19 +131,19 @@ def test_example_usage():
         assert read_nwbfile.devices["Omicron LuxX+ 488-100"].description == "Laser for optogenetic stimulation."
         assert read_nwbfile.devices["Omicron LuxX+ 488-100"].manufacturer == "Omicron"
 
-        assert type(read_nwbfile.devices["Lambda"]) is OpticFiber
+        assert type(read_nwbfile.devices["Lambda"]) is OpticalFiber
         assert read_nwbfile.devices["Lambda"].name == "Lambda"
         assert read_nwbfile.devices["Lambda"].description == "Lambda fiber (tapered fiber) from Optogenix."
         assert read_nwbfile.devices["Lambda"].fiber_name == "Lambda"
         assert read_nwbfile.devices["Lambda"].fiber_manufacturer_code == "lambda_b5"
         assert read_nwbfile.devices["Lambda"].manufacturer == "Optogenix"
         assert read_nwbfile.devices["Lambda"].numerical_aperture == 0.39
-        assert read_nwbfile.devices["Lambda"].cannula_core_diameter_in_mm == 0.2
+        assert read_nwbfile.devices["Lambda"].core_diameter_in_um == 200
         assert read_nwbfile.devices["Lambda"].active_length_in_mm == 2.0
         assert read_nwbfile.devices["Lambda"].ferrule_name == "cFCF - ∅2.5mm Ceramic Ferrule"
         assert read_nwbfile.devices["Lambda"].ferrule_diameter_in_mm == 2.5
 
-        assert type(read_nwbfile.ogen_sites["Lambda_GPe"]) is OpticFiberImplantSite
+        assert type(read_nwbfile.ogen_sites["Lambda_GPe"]) is OpticalFiberImplantSite
         assert read_nwbfile.ogen_sites["Lambda_GPe"].name == "Lambda_GPe"
         assert read_nwbfile.ogen_sites["Lambda_GPe"].description == "Optic fiber implanted into GPe stimulating at 488 nm and 77 mW."
         assert read_nwbfile.ogen_sites["Lambda_GPe"].excitation_lambda == 488.0
@@ -157,7 +157,7 @@ def test_example_usage():
         assert read_nwbfile.ogen_sites["Lambda_GPe"].yaw_in_deg == 0.0
         assert read_nwbfile.ogen_sites["Lambda_GPe"].reference == "bregma at the cortical surface"
         assert read_nwbfile.ogen_sites["Lambda_GPe"].device == read_nwbfile.devices["Omicron LuxX+ 488-100"]
-        assert read_nwbfile.ogen_sites["Lambda_GPe"].optic_fiber == read_nwbfile.devices["Lambda"]
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].optical_fiber == read_nwbfile.devices["Lambda"]
 
         assert type(read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"]) is OptogeneticExperimentMetadata
         assert read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"].stimulation_software == "FSGUI 2.0"

@@ -19,8 +19,8 @@ if not os.path.exists(__spec_path):
 load_namespaces(str(__spec_path))
 
 Laser = get_class("Laser", "ndx-optogenetics")
-OpticFiber = get_class("OpticFiber", "ndx-optogenetics")
-OpticFiberImplantSite = get_class("OpticFiberImplantSite", "ndx-optogenetics")
+OpticalFiber = get_class("OpticalFiber", "ndx-optogenetics")
+OpticalFiberImplantSite = get_class("OpticalFiberImplantSite", "ndx-optogenetics")
 OptogeneticVirus = get_class("OptogeneticVirus", "ndx-optogenetics")
 OptogeneticVirusInjection = get_class("OptogeneticVirusInjection", "ndx-optogenetics")
 OptogeneticViruses = get_class("OptogeneticViruses", "ndx-optogenetics")

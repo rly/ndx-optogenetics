@@ -31,8 +31,8 @@ def main():
         doc="Laser device. Currently there are no additional attributes.",
     )
 
-    optic_fiber = NWBGroupSpec(
-        neurodata_type_def="OpticFiber",
+    optical_fiber = NWBGroupSpec(
+        neurodata_type_def="OpticalFiber",
         neurodata_type_inc="Device",
         doc="Optical fiber device.",
         # refs:
@@ -70,8 +70,8 @@ def main():
                 dtype="float",
             ),
             NWBAttributeSpec(
-                name="cannula_core_diameter_in_mm",  # TODO is cladding diameter important?
-                doc="Cannula diameter in mm, e.g., 0.2 mm (200 um).",
+                name="core_diameter_in_um",  # TODO is cladding diameter important?
+                doc="Cannula core diameter in um, e.g., 200 um.",
                 dtype="float",
             ),
             NWBAttributeSpec(
@@ -110,8 +110,8 @@ def main():
         ],
     )
 
-    optic_fiber_implant_site = NWBGroupSpec(
-        neurodata_type_def="OpticFiberImplantSite",
+    optical_fiber_implant_site = NWBGroupSpec(
+        neurodata_type_def="OpticalFiberImplantSite",
         neurodata_type_inc="OptogeneticStimulusSite",
         doc=("Information about the orthogonal stereotactic coordinates and angles of the optic fiber implant site "
              "(e.g., tip of the optic fiber in the brain) and excitation wavelength."),
@@ -194,9 +194,9 @@ def main():
                 target_type="Laser",
             ),
             NWBLinkSpec(
-                name="optic_fiber",
+                name="optical_fiber",
                 doc="Link to the optic fiber device.",
-                target_type="OpticFiber",
+                target_type="OpticalFiber",
             )
         ],
     )
@@ -455,8 +455,8 @@ def main():
 
     new_data_types = [
         laser,
-        optic_fiber,
-        optic_fiber_implant_site,
+        optical_fiber,
+        optical_fiber_implant_site,
         optogenetic_virus,
         optogenetic_virus_injection,
         optogenetic_viruses,

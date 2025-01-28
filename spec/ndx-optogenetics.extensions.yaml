@@ -2,7 +2,7 @@ groups:
 - neurodata_type_def: Laser
   neurodata_type_inc: Device
   doc: Laser device. Currently there are no additional attributes.
-- neurodata_type_def: OpticFiber
+- neurodata_type_def: OpticalFiber
   neurodata_type_inc: Device
   doc: Optical fiber device.
   attributes:
@@ -24,9 +24,9 @@ groups:
   - name: numerical_aperture
     dtype: float
     doc: Numerical aperture, e.g., 0.39 NA.
-  - name: cannula_core_diameter_in_mm
+  - name: core_diameter_in_um
     dtype: float
-    doc: Cannula diameter in mm, e.g., 0.2 mm (200 um).
+    doc: Cannula core diameter in um, e.g., 200 um.
   - name: active_length_in_mm
     dtype: float
     doc: Active length in mm for a tapered fiber, e.g., Optogenix Lambda fiber. See
@@ -44,7 +44,7 @@ groups:
     dtype: float
     doc: Ferrule diameter in mm, e.g., 1.25 mm (LC) or 2.5 mm (FC).
     required: false
-- neurodata_type_def: OpticFiberImplantSite
+- neurodata_type_def: OpticalFiberImplantSite
   neurodata_type_inc: OptogeneticStimulusSite
   doc: Information about the orthogonal stereotactic coordinates and angles of the
     optic fiber implant site (e.g., tip of the optic fiber in the brain) and excitation
@@ -97,8 +97,8 @@ groups:
   - name: device
     target_type: Laser
     doc: Link to the laser device.
-  - name: optic_fiber
-    target_type: OpticFiber
+  - name: optical_fiber
+    target_type: OpticalFiber
     doc: Link to the optic fiber device.
 - neurodata_type_def: OptogeneticVirus
   neurodata_type_inc: NWBContainer
