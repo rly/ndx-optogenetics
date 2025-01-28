@@ -43,7 +43,7 @@ def test_example_usage():
 
     optical_fiber_implant_site = OpticalFiberImplantSite(
         name="Lambda_GPe",
-        description="Optic fiber implanted into GPe stimulating at 488 nm and 77 mW.",
+        description="Optical fiber implanted into GPe stimulating at 488 nm and 77 mW.",
         excitation_lambda=488.0,  # in nm
         hemisphere="right",
         location="GPe",
@@ -145,7 +145,7 @@ def test_example_usage():
 
         assert type(read_nwbfile.ogen_sites["Lambda_GPe"]) is OpticalFiberImplantSite
         assert read_nwbfile.ogen_sites["Lambda_GPe"].name == "Lambda_GPe"
-        assert read_nwbfile.ogen_sites["Lambda_GPe"].description == "Optic fiber implanted into GPe stimulating at 488 nm and 77 mW."
+        assert read_nwbfile.ogen_sites["Lambda_GPe"].description == "Optical fiber implanted into GPe stimulating at 488 nm and 77 mW."
         assert read_nwbfile.ogen_sites["Lambda_GPe"].excitation_lambda == 488.0
         assert read_nwbfile.ogen_sites["Lambda_GPe"].hemisphere == "right"
         assert read_nwbfile.ogen_sites["Lambda_GPe"].location == "GPe"

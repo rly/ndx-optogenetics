@@ -8,19 +8,19 @@ groups:
   attributes:
   - name: description
     dtype: text
-    doc: Description of the optic fiber and ferrule equipment, including cleave type
+    doc: Description of the optical fiber and ferrule equipment, including cleave type
       or tapering.
     required: false
   - name: fiber_name
     dtype: text
-    doc: Name of the optic fiber.
+    doc: Name of the optical fiber.
   - name: fiber_manufacturer_code
     dtype: text
-    doc: Code / product ID of the optic fiber from the manufacturer.
+    doc: Code / product ID of the optical fiber from the manufacturer.
     required: false
   - name: manufacturer
     dtype: text
-    doc: Manufacturer of the optic fiber and ferrule.
+    doc: Manufacturer of the optical fiber and ferrule.
   - name: numerical_aperture
     dtype: float
     doc: Numerical aperture, e.g., 0.39 NA.
@@ -47,7 +47,7 @@ groups:
 - neurodata_type_def: OpticalFiberImplantSite
   neurodata_type_inc: OptogeneticStimulusSite
   doc: Information about the orthogonal stereotactic coordinates and angles of the
-    optic fiber implant site (e.g., tip of the optic fiber in the brain) and excitation
+    optical fiber implant site (e.g., tip of the optical fiber in the brain) and excitation
     wavelength.
   attributes:
   - name: reference
@@ -72,17 +72,17 @@ groups:
       the brain), with reference to `reference`.
   - name: pitch_in_deg
     dtype: float
-    doc: Pitch angle in degrees of the optic fiber implant (rotation around left-right
+    doc: Pitch angle in degrees of the optical fiber implant (rotation around left-right
       axis, + is rotating the nose upward).
     required: false
   - name: yaw_in_deg
     dtype: float
-    doc: Yaw angle in degrees of the optic fiber implant (rotation around dorsal-ventral
+    doc: Yaw angle in degrees of the optical fiber implant (rotation around dorsal-ventral
       axis, + is rotating the nose rightward).
     required: false
   - name: roll_in_deg
     dtype: float
-    doc: Roll angle in degrees of the optic fiber implant (rotation around anterior-posterior
+    doc: Roll angle in degrees of the optical fiber implant (rotation around anterior-posterior
       axis, + is rotating the right side downward).
     required: false
   - name: stereotactic_rotation_in_deg
@@ -99,7 +99,7 @@ groups:
     doc: Link to the laser device.
   - name: optical_fiber
     target_type: OpticalFiber
-    doc: Link to the optic fiber device.
+    doc: Link to the optical fiber device.
 - neurodata_type_def: OptogeneticVirus
   neurodata_type_inc: NWBContainer
   doc: Metadata about the optogenetic virus.

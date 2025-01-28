@@ -42,24 +42,24 @@ def main():
         attributes=[
             NWBAttributeSpec(
                 name="description",
-                doc="Description of the optic fiber and ferrule equipment, including cleave type or tapering.",
+                doc="Description of the optical fiber and ferrule equipment, including cleave type or tapering.",
                 dtype="text",
                 required=False,
             ),
             NWBAttributeSpec(
                 name="fiber_name",
-                doc="Name of the optic fiber.",
+                doc="Name of the optical fiber.",
                 dtype="text",
             ),
             NWBAttributeSpec(
                 name="fiber_manufacturer_code",
-                doc="Code / product ID of the optic fiber from the manufacturer.",
+                doc="Code / product ID of the optical fiber from the manufacturer.",
                 dtype="text",
                 required=False,
             ),
             NWBAttributeSpec(
                 name="manufacturer",
-                doc="Manufacturer of the optic fiber and ferrule.",
+                doc="Manufacturer of the optical fiber and ferrule.",
                 dtype="text",
                 # NOTE it is assumed that the fiber and ferrule are from the same manufacturer.
                 # Device has only one manufacturer attribute
@@ -113,8 +113,8 @@ def main():
     optical_fiber_implant_site = NWBGroupSpec(
         neurodata_type_def="OpticalFiberImplantSite",
         neurodata_type_inc="OptogeneticStimulusSite",
-        doc=("Information about the orthogonal stereotactic coordinates and angles of the optic fiber implant site "
-             "(e.g., tip of the optic fiber in the brain) and excitation wavelength."),
+        doc=("Information about the orthogonal stereotactic coordinates and angles of the optical fiber implant site "
+             "(e.g., tip of the optical fiber in the brain) and excitation wavelength."),
         attributes=[
             NWBAttributeSpec(
                 name="reference",
@@ -148,21 +148,21 @@ def main():
             ),
             NWBAttributeSpec(
                 name="pitch_in_deg",
-                doc=("Pitch angle in degrees of the optic fiber implant (rotation around left-right axis, "
+                doc=("Pitch angle in degrees of the optical fiber implant (rotation around left-right axis, "
                     "+ is rotating the nose upward)."),
                 dtype="float",
                 required=False,
             ),
             NWBAttributeSpec(
                 name="yaw_in_deg",
-                doc=("Yaw angle in degrees of the optic fiber implant (rotation around dorsal-ventral axis, "
+                doc=("Yaw angle in degrees of the optical fiber implant (rotation around dorsal-ventral axis, "
                      "+ is rotating the nose rightward)."),
                 dtype="float",
                 required=False,
             ),
             NWBAttributeSpec(
                 name="roll_in_deg",
-                doc=("Roll angle in degrees of the optic fiber implant (rotation around anterior-posterior axis, "
+                doc=("Roll angle in degrees of the optical fiber implant (rotation around anterior-posterior axis, "
                      "+ is rotating the right side downward)."),
                 dtype="float",
                 required=False,
@@ -195,7 +195,7 @@ def main():
             ),
             NWBLinkSpec(
                 name="optical_fiber",
-                doc="Link to the optic fiber device.",
+                doc="Link to the optical fiber device.",
                 target_type="OpticalFiber",
             )
         ],
