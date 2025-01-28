@@ -1,9 +1,10 @@
+# copy of ndx-optogenetics.extensions.yaml but with added comments
 groups:
 - neurodata_type_def: Laser
   neurodata_type_inc: Device
   doc: Laser device. Currently there are no additional attributes.
 
-# copy LightSource from Alessandra's extension here
+# copy ExcitationSource from Alessandra's extension here
 
 
 - neurodata_type_def: OpticalFiber
