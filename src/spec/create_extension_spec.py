@@ -117,32 +117,37 @@ def main():
              "(e.g., tip of the optical fiber in the brain) and excitation wavelength."),
         attributes=[
             NWBAttributeSpec(
+                name="location",
+                doc=("Name of the targeted location of the optogenetic stimulation site."),
+                dtype="text",
+            ),
+            NWBAttributeSpec(
+                name="hemisphere",
+                doc=('The hemisphere ("left" or "right") of the targeted location of the optogenetic stimulation '
+                     'site. Should be consistent with `ml_in_mm` coordinate.'),
+                dtype="text",
+            ),
+            NWBAttributeSpec(
                 name="reference",
                 doc=('Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., '
                      '"bregma at the cortical surface".'),
                 dtype="text",
             ),
             NWBAttributeSpec(
-                name="hemisphere",
-                doc=('The hemisphere ("left" or "right") of the targeted location of the optogenetic stimulus '
-                     'site. Should be consistent with `ml_in_mm` coordinate.'),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
                 name="ap_in_mm",
-                doc=("Anteroposterior coordinate in mm of the optogenetic stimulus site (+ is anterior), "
+                doc=("Anteroposterior coordinate in mm of the optogenetic stimulation site (+ is anterior), "
                      "with reference to `reference`."),
                 dtype="float",
             ),
             NWBAttributeSpec(
                 name="ml_in_mm",
-                doc=("Mediolateral coordinate in mm of the optogenetic stimulus site (+ is right), "
+                doc=("Mediolateral coordinate in mm of the optogenetic stimulation site (+ is right), "
                      "with reference to `reference`."),
                 dtype="float",
             ),
             NWBAttributeSpec(
                 name="dv_in_mm",
-                doc=("Dorsoventral coordinate in mm of the optogenetic stimulus site "
+                doc=("Dorsoventral coordinate in mm of the optogenetic stimulation site "
                      "(+ is dorsal/above the brain), with reference to `reference`."),
                 dtype="float",
             ),
