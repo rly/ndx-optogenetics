@@ -1,6 +1,6 @@
 # ndx-optogenetics Extension for NWB
 
-NWB extension to improve support for optogenetics data and metadata
+NWB extension to enhance support for optogenetics data and metadata in NWB
 
 ## Installation
 

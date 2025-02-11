@@ -1,11 +1,6 @@
+from importlib.resources import files
 import os
 from pynwb import load_namespaces, get_class
-
-try:
-    from importlib.resources import files
-except ImportError:
-    # TODO: Remove when python 3.9 becomes the new minimum
-    from importlib_resources import files
 
 # Get path to the namespace.yaml file with the expected location when installed not in editable mode
 __location_of_this_file = files(__name__)
@@ -18,9 +13,11 @@ if not os.path.exists(__spec_path):
 # Load the namespace
 load_namespaces(str(__spec_path))
 
-Laser = get_class("Laser", "ndx-optogenetics")
+ExcitationSourceModel = get_class("ExcitationSourceModel", "ndx-optogenetics")
+ExcitationSource = get_class("ExcitationSource", "ndx-optogenetics")
+OpticalFiberModel = get_class("OpticalFiberModel", "ndx-optogenetics")
 OpticalFiber = get_class("OpticalFiber", "ndx-optogenetics")
-OpticalFiberImplantSite = get_class("OpticalFiberImplantSite", "ndx-optogenetics")
+OpticalFiberLocationsTable = get_class("OpticalFiberLocationsTable", "ndx-optogenetics")
 OptogeneticVirus = get_class("OptogeneticVirus", "ndx-optogenetics")
 OptogeneticVirusInjection = get_class("OptogeneticVirusInjection", "ndx-optogenetics")
 OptogeneticViruses = get_class("OptogeneticViruses", "ndx-optogenetics")
@@ -28,5 +25,19 @@ OptogeneticVirusInjections = get_class("OptogeneticVirusInjections", "ndx-optoge
 OptogeneticExperimentMetadata = get_class("OptogeneticExperimentMetadata", "ndx-optogenetics")
 OptogeneticEpochsTable = get_class("OptogeneticEpochsTable", "ndx-optogenetics")
 
-# Remove these functions from the package
-del load_namespaces, get_class
+__all__ = [
+    "ExcitationSourceModel",
+    "ExcitationSource",
+    "OpticalFiberModel",
+    "OpticalFiber",
+    "OpticalFiberLocationsTable",
+    "OptogeneticVirus",
+    "OptogeneticVirusInjection",
+    "OptogeneticViruses",
+    "OptogeneticVirusInjections",
+    "OptogeneticExperimentMetadata",
+    "OptogeneticEpochsTable",
+]
+
+# Remove these functions/modules from the package
+del load_namespaces, get_class, files, os, __location_of_this_file, __spec_path

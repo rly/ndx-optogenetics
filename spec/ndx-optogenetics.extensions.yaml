@@ -1,22 +1,54 @@
 groups:
-- neurodata_type_def: Laser
+- neurodata_type_def: ExcitationSourceModel
   neurodata_type_inc: Device
-  doc: Laser device. Currently there are no additional attributes.
-- neurodata_type_def: OpticalFiber
+  doc: Excitation source model. Currently there are no additional attributes.
+  attributes:
+  - name: illumination_type
+    dtype: text
+    doc: 'Type of illumination. Suggested values: LED, Gas Laser (e.g., Argon, Krypton),
+      Solid-State Laser (e.g., Diode, DPSS).'
+  - name: wavelength_range_in_nm
+    dtype: float
+    shape:
+    - 2
+    doc: Excitation wavelength range of the stimulation light in nm. For LEDs, this
+      is the center wavelength +/- half of the full width at half maximum (FWHM).
+      For lasers, this is the peak wavelength (use as both min and max).
+    required: false
+- neurodata_type_def: ExcitationSource
   neurodata_type_inc: Device
-  doc: Optical fiber device.
+  doc: Excitation source device.
+  attributes:
+  - name: wavelength_in_nm
+    dtype: float
+    doc: Peak excitation wavelength of the stimulation light in nm.
+  - name: power_in_W
+    dtype: float
+    doc: Excitation power of the stimulation light in W.
+    required: false
+  - name: intensity_in_W_per_m2
+    dtype: float
+    doc: Intensity of the stimulation light in W/m^2.
+    required: false
+  links:
+  - name: model
+    target_type: ExcitationSourceModel
+    doc: The model of the excitation source.
+- neurodata_type_def: OpticalFiberModel
+  neurodata_type_inc: Device
+  doc: Optical fiber device model.
   attributes:
   - name: description
     dtype: text
-    doc: Description of the optical fiber and ferrule equipment, including cleave type
-      or tapering.
+    doc: Description of the optical fiber and ferrule equipment, including cleave
+      type or tapering.
     required: false
   - name: fiber_name
     dtype: text
     doc: Name of the optical fiber.
-  - name: fiber_manufacturer_code
+  - name: fiber_model
     dtype: text
-    doc: Code / product ID of the optical fiber from the manufacturer.
+    doc: Model (or product ID) of the optical fiber.
     required: false
   - name: manufacturer
     dtype: text
@@ -44,62 +76,94 @@ groups:
     dtype: float
     doc: Ferrule diameter in mm, e.g., 1.25 mm (LC) or 2.5 mm (FC).
     required: false
-- neurodata_type_def: OpticalFiberImplantSite
-  neurodata_type_inc: OptogeneticStimulusSite
-  doc: Information about the orthogonal stereotactic coordinates and angles of the
-    optical fiber implant site (e.g., tip of the optical fiber in the brain) and excitation
-    wavelength.
+- neurodata_type_def: OpticalFiber
+  neurodata_type_inc: Device
+  doc: Optical fiber device.
+  links:
+  - name: model
+    target_type: OpticalFiberModel
+    doc: The model of the optical fiber.
+- neurodata_type_def: OpticalFiberLocationsTable
+  neurodata_type_inc: DynamicTable
+  default_name: optical_fiber_locations_table
+  doc: Information about the targeted stereotactic coordinates of the tip of the implanted
+    optical fiber and the angles of the optical fiber in the brain.
   attributes:
   - name: reference
     dtype: text
-    doc: Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g.,
-      "bregma at the cortical surface".
-  - name: hemisphere
+    doc: Zero point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g.,
+      "Bregma at the cortical surface".
+  datasets:
+  - name: implanted_fiber_description
+    neurodata_type_inc: VectorData
     dtype: text
-    doc: The hemisphere ("left" or "right") of the targeted location of the optogenetic
-      stimulus site. Should be consistent with `ml_in_mm` coordinate.
+    doc: Description of the implanted optical fiber, e.g., 'Lambda fiber implanted
+      into right GPe'.
+  - name: location
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: Name of the targeted location of the tip of the optical fiber in the brain.
+  - name: hemisphere
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: The hemisphere ("left" or "right") of the targeted location of the tip of
+      the optical fiber. Should be consistent with `ml_in_mm` coordinate.
   - name: ap_in_mm
+    neurodata_type_inc: VectorData
     dtype: float
-    doc: Anteroposterior coordinate in mm of the optogenetic stimulus site (+ is anterior),
-      with reference to `reference`.
+    doc: Anteroposterior coordinate in mm of the targeted location of the tip of the
+      optical fiber (+ is anterior), with reference to `reference`.
   - name: ml_in_mm
+    neurodata_type_inc: VectorData
     dtype: float
-    doc: Mediolateral coordinate in mm of the optogenetic stimulus site (+ is right),
-      with reference to `reference`.
+    doc: Mediolateral coordinate in mm of the targeted location of the tip of the
+      optical fiber (+ is right), with reference to `reference`.
   - name: dv_in_mm
+    neurodata_type_inc: VectorData
     dtype: float
-    doc: Dorsoventral coordinate in mm of the optogenetic stimulus site (+ is dorsal/above
-      the brain), with reference to `reference`.
+    doc: Dorsoventral coordinate in mm of the targeted location of the tip of the
+      optical fiber (+ is dorsal/above the brain), with reference to `reference`.
   - name: pitch_in_deg
+    neurodata_type_inc: VectorData
     dtype: float
-    doc: Pitch angle in degrees of the optical fiber implant (rotation around left-right
+    doc: Pitch angle in degrees of the implanted optical fiber (rotation around left-right
       axis, + is rotating the nose upward).
-    required: false
+    quantity: '?'
   - name: yaw_in_deg
+    neurodata_type_inc: VectorData
     dtype: float
-    doc: Yaw angle in degrees of the optical fiber implant (rotation around dorsal-ventral
+    doc: Yaw angle in degrees of the implanted optical fiber (rotation around dorsal-ventral
       axis, + is rotating the nose rightward).
-    required: false
+    quantity: '?'
   - name: roll_in_deg
+    neurodata_type_inc: VectorData
     dtype: float
-    doc: Roll angle in degrees of the optical fiber implant (rotation around anterior-posterior
+    doc: Roll angle in degrees of the implanted optical fiber (rotation around anterior-posterior
       axis, + is rotating the right side downward).
-    required: false
+    quantity: '?'
   - name: stereotactic_rotation_in_deg
+    neurodata_type_inc: VectorData
     dtype: float
     doc: TODO
-    required: false
+    quantity: '?'
   - name: stereotactic_tilt_in_deg
+    neurodata_type_inc: VectorData
     dtype: float
     doc: TODO
-    required: false
-  links:
-  - name: device
-    target_type: Laser
-    doc: Link to the laser device.
+    quantity: '?'
+  - name: excitation_source
+    neurodata_type_inc: VectorData
+    dtype:
+      target_type: ExcitationSource
+      reftype: object
+    doc: The excitation source device connected to the optical fiber.
+    quantity: '?'
   - name: optical_fiber
-    target_type: OpticalFiber
-    doc: Link to the optical fiber device.
+    neurodata_type_inc: VectorData
+    dtype:
+      target_type: OpticalFiber
+      reftype: object
+    doc: The optical fiber device.
 - neurodata_type_def: OptogeneticVirus
   neurodata_type_inc: NWBContainer
   doc: Metadata about the optogenetic virus.
@@ -115,7 +179,7 @@ groups:
     dtype: text
     doc: Manufacturer of the optogenetic virus.
   - name: titer_in_vg_per_ml
-    dtype: int
+    dtype: float
     doc: Titer of the optogenetic virus, in vg/ml, e.g., 1x10^12 vg/ml.
 - neurodata_type_def: OptogeneticVirusInjection
   neurodata_type_inc: NWBContainer
@@ -137,7 +201,7 @@ groups:
   - name: reference
     dtype: text
     doc: Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g.,
-      "bregma at the cortical surface".
+      "Bregma at the cortical surface".
   - name: ap_in_mm
     dtype: float
     doc: Anteroposterior coordinate in mm of the optogenetic virus injection site
@@ -158,12 +222,12 @@ groups:
   - name: yaw_in_deg
     dtype: float
     doc: Yaw angle in degrees of the optogenetic virus injection (rotation around
-      dorsal-ventral axis, + is rotating the nose clockwise).
+      dorsal-ventral axis, + is rotating the nose rightward).
     required: false
   - name: roll_in_deg
     dtype: float
     doc: Roll angle in degrees of the optogenetic virus injection (rotation around
-      anterior-posterior axis, + is rotating the right side down).
+      anterior-posterior axis, + is rotating the right side downward).
     required: false
   - name: stereotactic_rotation_in_deg
     dtype: float
@@ -212,6 +276,10 @@ groups:
     dtype: text
     doc: Name of the software used to deliver optogenetic stimulation.
   groups:
+  - name: optical_fiber_locations_table
+    neurodata_type_inc: OpticalFiberLocationsTable
+    doc: Information about the targeted stereotactic coordinates of the tip of the
+      implanted optical fiber and the angles of the optical fiber in the brain.
   - name: optogenetic_viruses
     neurodata_type_inc: OptogeneticViruses
     doc: Group containing of one or more OptogeneticVirus objects.
@@ -248,8 +316,7 @@ groups:
     neurodata_type_inc: VectorData
     dtype: int
     doc: Number of trains per stimulus. After this number of trains, no more stimulation
-      occurs until stimulation is re-triggered, e.g., after the animal leaves the
-      spatial filter and returns. Use -1 if stimulation was off.
+      occurs until stimulation is re-triggered. Use -1 if stimulation was off.
   - name: intertrain_interval_in_ms
     neurodata_type_inc: VectorData
     dtype: float
@@ -258,4 +325,5 @@ groups:
   - name: power_in_mW
     neurodata_type_inc: VectorData
     dtype: float
-    doc: Constant power of laser, in mW, e.g., 77 mW.
+    doc: Constant power of excitation source throughout the epoch, in mW, e.g., 77
+      mW.

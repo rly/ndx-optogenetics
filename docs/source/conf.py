@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'ndx-optogenetics'
-copyright = '2024, Ryan Ly, Horea Christian, Ben Dichter'
+copyright = '2025, Ryan Ly, Horea Christian, Ben Dichter'
 author = 'Ryan Ly, Horea Christian, Ben Dichter'
 
 version = '0.2.0'
@@ -91,7 +91,6 @@ add_function_parentheses = False
 
 # -- HTML sphinx options
 html_theme = "sphinx_rtd_theme"
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # LaTeX Sphinx options
 latex_elements = {
