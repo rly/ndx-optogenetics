@@ -246,7 +246,7 @@ def test_example_usage():
         assert len(read_optogenetic_epochs_table) == 1
         assert read_optogenetic_epochs_table[0, "start_time"] == 0.0
         assert read_optogenetic_epochs_table[0, "stop_time"] == 100.0
-        assert read_optogenetic_epochs_table[0, "stimulation_on"] is True
+        assert read_optogenetic_epochs_table[0, "stimulation_on"] == True
         assert read_optogenetic_epochs_table[0, "pulse_length_in_ms"] == 40.0
         assert read_optogenetic_epochs_table[0, "period_in_ms"] == 250.0
         assert read_optogenetic_epochs_table[0, "number_pulses_per_pulse_train"] == 100

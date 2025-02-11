@@ -123,6 +123,7 @@ exclude = ".git|.mypy_cache|.tox|.venv|venv|.ipynb_checkpoints|_build/|dist/|__p
 
 [tool.ruff]
 lint.select = ["E", "F", "T100", "T201", "T203", "C901"]
+lint.ignore = ["E712"]  # ignore suggestion to change np.True_ == True to np.True_ is True
 exclude = [
   "docs/source/conf.py",
 ]
