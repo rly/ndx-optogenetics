@@ -2,7 +2,13 @@
 import os.path
 
 from pynwb.spec import (
-    NWBNamespaceBuilder, export_spec, NWBGroupSpec, NWBAttributeSpec, NWBLinkSpec, NWBDatasetSpec, NWBRefSpec
+    NWBNamespaceBuilder,
+    export_spec,
+    NWBGroupSpec,
+    NWBAttributeSpec,
+    NWBLinkSpec,
+    NWBDatasetSpec,
+    NWBRefSpec,
 )
 
 
@@ -33,15 +39,19 @@ def main():
         attributes=[
             NWBAttributeSpec(
                 name="illumination_type",
-                doc=("Type of illumination. Suggested values: LED, Gas Laser (e.g., Argon, Krypton), "
-                     "Solid-State Laser (e.g., Diode, DPSS)."),
+                doc=(
+                    "Type of illumination. Suggested values: LED, Gas Laser (e.g., Argon, Krypton), "
+                    "Solid-State Laser (e.g., Diode, DPSS)."
+                ),
                 dtype="text",
             ),
             NWBAttributeSpec(
                 name="wavelength_range_in_nm",
-                doc=("Excitation wavelength range of the stimulation light in nm. "
-                     "For LEDs, this is the center wavelength +/- half of the full width at half maximum (FWHM). "
-                     "For lasers, this is the peak wavelength (use as both min and max)."),
+                doc=(
+                    "Excitation wavelength range of the stimulation light in nm. "
+                    "For LEDs, this is the center wavelength +/- half of the full width at half maximum (FWHM). "
+                    "For lasers, this is the peak wavelength (use as both min and max)."
+                ),
                 dtype="float",
                 shape=(2,),
                 required=False,
@@ -81,7 +91,7 @@ def main():
                 target_type="ExcitationSourceModel",
                 doc="The model of the excitation source.",
             )
-        ]
+        ],
     )
 
     optical_fiber_model = NWBGroupSpec(
@@ -174,7 +184,7 @@ def main():
                 target_type="OpticalFiberModel",
                 doc="The model of the optical fiber.",
             )
-        ]
+        ],
     )
 
     # NOTE: These columns could all be properties of OpticalFiber, or the optical fiber model and serial number
@@ -184,8 +194,10 @@ def main():
     optical_fiber_locations_table = NWBGroupSpec(
         neurodata_type_def="OpticalFiberLocationsTable",
         neurodata_type_inc="DynamicTable",
-        doc=("Information about the targeted stereotactic coordinates of the tip of the implanted optical fiber "
-             "and the angles of the optical fiber in the brain."),
+        doc=(
+            "Information about the targeted stereotactic coordinates of the tip of the implanted optical fiber "
+            "and the angles of the optical fiber in the brain."
+        ),
         default_name="optical_fiber_locations_table",
         datasets=[
             NWBDatasetSpec(
@@ -203,52 +215,66 @@ def main():
             NWBDatasetSpec(
                 name="hemisphere",
                 neurodata_type_inc="VectorData",
-                doc=('The hemisphere ("left" or "right") of the targeted location of the tip of the optical fiber. '
-                     'Should be consistent with `ml_in_mm` coordinate.'),
+                doc=(
+                    'The hemisphere ("left" or "right") of the targeted location of the tip of the optical fiber. '
+                    "Should be consistent with `ml_in_mm` coordinate."
+                ),
                 dtype="text",
             ),
             NWBDatasetSpec(
                 name="ap_in_mm",
                 neurodata_type_inc="VectorData",
-                doc=("Anteroposterior coordinate in mm of the targeted location of the tip of the optical fiber "
-                     "(+ is anterior), with reference to `reference`."),
+                doc=(
+                    "Anteroposterior coordinate in mm of the targeted location of the tip of the optical fiber "
+                    "(+ is anterior), with reference to `reference`."
+                ),
                 dtype="float",
             ),
             NWBDatasetSpec(
                 name="ml_in_mm",
                 neurodata_type_inc="VectorData",
-                doc=("Mediolateral coordinate in mm of the targeted location of the tip of the optical fiber "
-                     "(+ is right), with reference to `reference`."),
+                doc=(
+                    "Mediolateral coordinate in mm of the targeted location of the tip of the optical fiber "
+                    "(+ is right), with reference to `reference`."
+                ),
                 dtype="float",
             ),
             NWBDatasetSpec(
                 name="dv_in_mm",
                 neurodata_type_inc="VectorData",
-                doc=("Dorsoventral coordinate in mm of the targeted location of the tip of the optical fiber "
-                     "(+ is dorsal/above the brain), with reference to `reference`."),
+                doc=(
+                    "Dorsoventral coordinate in mm of the targeted location of the tip of the optical fiber "
+                    "(+ is dorsal/above the brain), with reference to `reference`."
+                ),
                 dtype="float",
             ),
             NWBDatasetSpec(
                 name="pitch_in_deg",
                 neurodata_type_inc="VectorData",
-                doc=("Pitch angle in degrees of the implanted optical fiber (rotation around left-right axis, "
-                    "+ is rotating the nose upward)."),
+                doc=(
+                    "Pitch angle in degrees of the implanted optical fiber (rotation around left-right axis, "
+                    "+ is rotating the nose upward)."
+                ),
                 dtype="float",
                 quantity="?",
             ),
             NWBDatasetSpec(
                 name="yaw_in_deg",
                 neurodata_type_inc="VectorData",
-                doc=("Yaw angle in degrees of the implanted optical fiber (rotation around dorsal-ventral axis, "
-                     "+ is rotating the nose rightward)."),
+                doc=(
+                    "Yaw angle in degrees of the implanted optical fiber (rotation around dorsal-ventral axis, "
+                    "+ is rotating the nose rightward)."
+                ),
                 dtype="float",
                 quantity="?",
             ),
             NWBDatasetSpec(
                 name="roll_in_deg",
                 neurodata_type_inc="VectorData",
-                doc=("Roll angle in degrees of the implanted optical fiber (rotation around anterior-posterior axis, "
-                     "+ is rotating the right side downward)."),
+                doc=(
+                    "Roll angle in degrees of the implanted optical fiber (rotation around anterior-posterior axis, "
+                    "+ is rotating the right side downward)."
+                ),
                 dtype="float",
                 quantity="?",
             ),
@@ -268,7 +294,7 @@ def main():
             ),
             NWBDatasetSpec(
                 # TODO: make this optional here and in OptogeneticStimulusSite
-                # for cases when the fiber is implanted but the excitation source was not turned on 
+                # for cases when the fiber is implanted but the excitation source was not turned on
                 name="excitation_source",
                 neurodata_type_inc="VectorData",
                 doc="The excitation source device connected to the optical fiber.",
@@ -286,13 +312,15 @@ def main():
                     target_type="OpticalFiber",
                     reftype="object",
                 ),
-            )
+            ),
         ],
         attributes=[
             NWBAttributeSpec(
                 name="reference",
-                doc=('Zero point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., '
-                     '"Bregma at the cortical surface".'),
+                doc=(
+                    "Zero point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., "
+                    '"Bregma at the cortical surface".'
+                ),
                 dtype="text",
             ),
             # Set a fixed value for the description attribute to override the description in DynamicTable
@@ -343,9 +371,11 @@ def main():
     optogenetic_virus_injection = NWBGroupSpec(
         neurodata_type_def="OptogeneticVirusInjection",
         neurodata_type_inc="NWBContainer",
-        doc=("Information about the injection of a virus for optogenetic experiments. "
-             'The name should be the virus name, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP". '
-             "Use two OptogeneticVirusInjection objects for a bilateral injection, one per hemisphere."),
+        doc=(
+            "Information about the injection of a virus for optogenetic experiments. "
+            'The name should be the virus name, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP". '
+            "Use two OptogeneticVirusInjection objects for a bilateral injection, one per hemisphere."
+        ),
         attributes=[
             NWBAttributeSpec(
                 name="description",
@@ -360,52 +390,68 @@ def main():
             ),
             NWBAttributeSpec(
                 name="hemisphere",
-                doc=('The hemisphere ("left" or "right") of the targeted location of the optogenetic virus '
-                     'injection. Should be consistent with `ml_in_mm` coordinate.'),
+                doc=(
+                    'The hemisphere ("left" or "right") of the targeted location of the optogenetic virus '
+                    "injection. Should be consistent with `ml_in_mm` coordinate."
+                ),
                 dtype="text",
             ),
             NWBAttributeSpec(
                 name="reference",
-                doc=('Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., '
-                     '"Bregma at the cortical surface".'),
+                doc=(
+                    "Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., "
+                    '"Bregma at the cortical surface".'
+                ),
                 dtype="text",
             ),
             NWBAttributeSpec(
                 name="ap_in_mm",
-                doc=("Anteroposterior coordinate in mm of the optogenetic virus injection site (+ is anterior), "
-                     "with reference to `reference`."),
+                doc=(
+                    "Anteroposterior coordinate in mm of the optogenetic virus injection site (+ is anterior), "
+                    "with reference to `reference`."
+                ),
                 dtype="float",
             ),
             NWBAttributeSpec(
                 name="ml_in_mm",
-                doc=("Mediolateral coordinate in mm of the optogenetic virus injection site (+ is right), "
-                     "with reference to `reference`."),
+                doc=(
+                    "Mediolateral coordinate in mm of the optogenetic virus injection site (+ is right), "
+                    "with reference to `reference`."
+                ),
                 dtype="float",
             ),
             NWBAttributeSpec(
                 name="dv_in_mm",
-                doc=("Dorsoventral coordinate in mm of the optogenetic virus injection site "
-                     "(+ is dorsal/above the brain), with reference to `reference`."),
+                doc=(
+                    "Dorsoventral coordinate in mm of the optogenetic virus injection site "
+                    "(+ is dorsal/above the brain), with reference to `reference`."
+                ),
                 dtype="float",
             ),
             NWBAttributeSpec(
                 name="pitch_in_deg",
-                doc=("Pitch angle in degrees of the optogenetic virus injection (rotation around left-right axis, "
-                    "+ is rotating the nose upward)."),
+                doc=(
+                    "Pitch angle in degrees of the optogenetic virus injection (rotation around left-right axis, "
+                    "+ is rotating the nose upward)."
+                ),
                 dtype="float",
                 required=False,
             ),
             NWBAttributeSpec(
                 name="yaw_in_deg",
-                doc=("Yaw angle in degrees of the optogenetic virus injection (rotation around dorsal-ventral axis, "
-                     "+ is rotating the nose rightward)."),
+                doc=(
+                    "Yaw angle in degrees of the optogenetic virus injection (rotation around dorsal-ventral axis, "
+                    "+ is rotating the nose rightward)."
+                ),
                 dtype="float",
                 required=False,
             ),
             NWBAttributeSpec(
                 name="roll_in_deg",
-                doc=("Roll angle in degrees of the optogenetic virus injection (rotation around anterior-posterior "
-                     "axis, + is rotating the right side downward)."),
+                doc=(
+                    "Roll angle in degrees of the optogenetic virus injection (rotation around anterior-posterior "
+                    "axis, + is rotating the right side downward)."
+                ),
                 dtype="float",
                 required=False,
             ),
@@ -439,7 +485,7 @@ def main():
                 doc=("Link to OptogeneticVirus object with metadata about the name, manufacturer, and titer."),
                 target_type="OptogeneticVirus",
             )
-        ]
+        ],
     )
 
     optogenetic_viruses = NWBGroupSpec(
@@ -480,7 +526,7 @@ def main():
         neurodata_type_def="OptogeneticExperimentMetadata",
         neurodata_type_inc="LabMetaData",
         doc="General metadata about the optogenetic stimulation.",
-        name="optogenetic_experiment_metadata",  # this goes against best practices but is consistent with core schema naming
+        name="optogenetic_experiment_metadata",
         attributes=[
             NWBAttributeSpec(
                 name="stimulation_software",
@@ -492,8 +538,10 @@ def main():
             NWBGroupSpec(
                 name="optical_fiber_locations_table",
                 neurodata_type_inc="OpticalFiberLocationsTable",
-                doc=("Information about the targeted stereotactic coordinates of the tip of the implanted optical "
-                     "fiber and the angles of the optical fiber in the brain."),
+                doc=(
+                    "Information about the targeted stereotactic coordinates of the tip of the implanted optical "
+                    "fiber and the angles of the optical fiber in the brain."
+                ),
             ),
             NWBGroupSpec(
                 name="optogenetic_viruses",
@@ -505,20 +553,24 @@ def main():
                 neurodata_type_inc="OptogeneticVirusInjections",
                 doc="Group containing one or more OptogeneticVirusInjection objects.",
             ),
-        ]
+        ],
     )
 
     optogenetic_epochs_table = NWBGroupSpec(
         neurodata_type_def="OptogeneticEpochsTable",
         neurodata_type_inc="TimeIntervals",
-        doc=("General metadata about the optogenetic stimulation that may change per epoch. Some epochs have no "
-             "stimulation and are used as control epochs. If the stimulation is on, then the epoch is a stimulation."),
+        doc=(
+            "General metadata about the optogenetic stimulation that may change per epoch. Some epochs have no "
+            "stimulation and are used as control epochs. If the stimulation is on, then the epoch is a stimulation."
+        ),
         datasets=[
             NWBDatasetSpec(
                 name="stimulation_on",
                 neurodata_type_inc="VectorData",
-                doc=("Whether optogenetic stimulation was used at any time during this epoch. If False, then "
-                     "all other metadata values should be 0."),
+                doc=(
+                    "Whether optogenetic stimulation was used at any time during this epoch. If False, then "
+                    "all other metadata values should be 0."
+                ),
                 dtype="bool",
             ),
             NWBDatasetSpec(
@@ -530,30 +582,38 @@ def main():
             NWBDatasetSpec(
                 name="period_in_ms",
                 neurodata_type_inc="VectorData",
-                doc=("Duration between the starts of two pulses, in ms. Use NaN if stimulation was off."
-                     "Note that the interpulse interval = `period_ms` - `pulse_length_ms`"),
+                doc=(
+                    "Duration between the starts of two pulses, in ms. Use NaN if stimulation was off."
+                    "Note that the interpulse interval = `period_ms` - `pulse_length_ms`"
+                ),
                 dtype="float",
             ),
             NWBDatasetSpec(
                 name="number_pulses_per_pulse_train",
                 neurodata_type_inc="VectorData",
-                doc=("Number of pulses in one pulse train. After this number of pulses, no more stimulation "
-                     "occurs until the next train begins (see `intertrain_interval_ms`). "
-                     "Use -1 if stimulation was off."),
+                doc=(
+                    "Number of pulses in one pulse train. After this number of pulses, no more stimulation "
+                    "occurs until the next train begins (see `intertrain_interval_ms`). "
+                    "Use -1 if stimulation was off."
+                ),
                 dtype="int",
             ),
             NWBDatasetSpec(
                 name="number_trains",
                 neurodata_type_inc="VectorData",
-                doc=("Number of trains per stimulus. After this number of trains, no more stimulation "
-                     "occurs until stimulation is re-triggered. Use -1 if stimulation was off."),
+                doc=(
+                    "Number of trains per stimulus. After this number of trains, no more stimulation "
+                    "occurs until stimulation is re-triggered. Use -1 if stimulation was off."
+                ),
                 dtype="int",
             ),
             NWBDatasetSpec(
                 name="intertrain_interval_in_ms",
                 neurodata_type_inc="VectorData",
-                doc=("Duration between the starts of two consecutive pulse trains, in ms. "
-                     "Determines the frequency of stimulation. Use NaN if stimulation was off."),
+                doc=(
+                    "Duration between the starts of two consecutive pulse trains, in ms. "
+                    "Determines the frequency of stimulation. Use NaN if stimulation was off."
+                ),
                 dtype="float",
             ),
             # TODO allow time series representing changing power of excitation source over time
