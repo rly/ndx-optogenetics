@@ -104,9 +104,7 @@ def test_example_usage():
         virus=virus,
         volume_in_uL=0.45,
     )
-    optogenetic_virus_injections = OptogeneticVirusInjections(
-        optogenetic_virus_injections=[virus_injection]
-    )
+    optogenetic_virus_injections = OptogeneticVirusInjections(optogenetic_virus_injections=[virus_injection])
 
     # Create experiment metadata container
     optogenetic_experiment_metadata = OptogeneticExperimentMetadata(
@@ -137,7 +135,7 @@ def test_example_usage():
 
     # Write the file
     path = "test_optogenetics.nwb"
-    with NWBHDF5IO(path, mode='w') as io:
+    with NWBHDF5IO(path, mode="w") as io:
         io.write(nwbfile)
 
     # read the NWBFile from disk and print out TODO
