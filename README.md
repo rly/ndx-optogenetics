@@ -54,13 +54,15 @@ Information about a virus injection with attributes:
 - Links to the corresponding `OptogeneticVirus`
 
 #### OpticalFiberLocationsTable
-A table for documenting implanted optical fiber locations with columns for:
+A dynamic table for documenting implanted optical fiber locations with columns for:
 - Stereotactic coordinates (AP, ML, DV)
 - Implant angles (pitch, yaw, roll)
-- Links to corresponding `ExcitationSource` and `OpticalFiber` devices
+- Links to the corresponding `ExcitationSource` and `OpticalFiber` devices
+
+Because this type extends the `DynamicTable` class, you can add new columns to it without having to define a new type. You can also annotate a row of it with anatomical localization information using the [ndx-anatomical-localization](https://github.com/bendichter/ndx-anatomical-localization) extension.
 
 #### OptogeneticEpochsTable
-A table for documenting stimulation parameters per epoch:
+A dynamic table for documenting stimulation parameters per epoch:
 - `stimulation_on`: Whether stimulation was active
 - `pulse_length_in_ms`: Duration of each pulse
 - `period_in_ms`: Time between pulse starts
@@ -69,12 +71,19 @@ A table for documenting stimulation parameters per epoch:
 - `intertrain_interval_in_ms`: Time between train starts
 - `power_in_mW`: Stimulation power
 
+Because this type extends the `DynamicTable` class, you can add new columns to it without having to define a new type.
+
 #### OptogeneticExperimentMetadata
 Container for all optogenetics-related metadata including:
 - `OpticalFiberLocationsTable`
 - Collection of `OptogeneticVirus` objects
 - Collection of `OptogeneticVirusInjection` objects
 - `stimulation_software`: Name of software used for stimulation
+
+You can define extensions to this ndx-optogenetics extension to store additional metadata in a structured
+way. For example, the upcoming update to the
+[ndx-franklab-novela extension](https://github.com/LorenFrankLab/ndx-franklab-novela) 
+defines a `FrankLabOptogeneticEpochsTable` that extends the `OptogeneticEpochsTable` defined here to store Frank Lab-specific optogenetic stimulation parameters for each epoch.
 
 ## Usage Example
 
