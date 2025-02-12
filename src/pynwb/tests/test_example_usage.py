@@ -104,7 +104,9 @@ def test_example_usage():
         virus=virus,
         volume_in_uL=0.45,
     )
-    optogenetic_virus_injections = OptogeneticVirusInjections(optogenetic_virus_injections=[virus_injection])
+    optogenetic_virus_injections = OptogeneticVirusInjections(
+        optogenetic_virus_injections=[virus_injection]
+    )
 
     # Create experiment metadata container
     optogenetic_experiment_metadata = OptogeneticExperimentMetadata(
@@ -118,7 +120,7 @@ def test_example_usage():
     # Create stimulation epochs table
     opto_epochs_table = OptogeneticEpochsTable(
         name="optogenetic_epochs",
-        description="Metadata about the optogenetic stimulation parameters per epoch.",
+        description="Metadata about optogenetic stimulation parameters per epoch",
     )
     opto_epochs_table.add_row(
         start_time=0.0,
@@ -133,9 +135,9 @@ def test_example_usage():
     )
     nwbfile.add_time_intervals(opto_epochs_table)
 
-    # write the NWBFile to disk
+    # Write the file
     path = "test_optogenetics.nwb"
-    with NWBHDF5IO(path, mode="w") as io:
+    with NWBHDF5IO(path, mode='w') as io:
         io.write(nwbfile)
 
     # read the NWBFile from disk and print out TODO
@@ -232,7 +234,7 @@ def test_example_usage():
         assert type(read_optogenetic_epochs_table) is OptogeneticEpochsTable
         assert read_optogenetic_epochs_table.name == "optogenetic_epochs"
         assert read_optogenetic_epochs_table.description == (
-            "Metadata about the optogenetic stimulation parameters per epoch."
+            "Metadata about optogenetic stimulation parameters per epoch"
         )
         assert len(read_optogenetic_epochs_table) == 1
         assert read_optogenetic_epochs_table[0, "start_time"] == 0.0
