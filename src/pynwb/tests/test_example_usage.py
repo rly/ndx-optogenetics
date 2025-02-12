@@ -1,5 +1,5 @@
 def test_example_usage():
-    import datetime
+    from datetime import datetime, timezone
     from pynwb import NWBFile, NWBHDF5IO
     from ndx_optogenetics import (
         ExcitationSourceModel,
@@ -15,13 +15,14 @@ def test_example_usage():
         OptogeneticEpochsTable,
     )
 
-    # initialize an NWBFile object
+    # Initialize NWB file
     nwbfile = NWBFile(
         session_description="session_description",
         identifier="identifier",
-        session_start_time=datetime.datetime.now(datetime.timezone.utc),
+        session_start_time=datetime.now(timezone.utc),
     )
 
+    # Create and add excitation source devices
     excitation_source_model = ExcitationSourceModel(
         name="Omicron LuxX+ 488-100 Model",
         description="Laser for optogenetic stimulation.",
@@ -39,6 +40,7 @@ def test_example_usage():
     nwbfile.add_device(excitation_source_model)
     nwbfile.add_device(excitation_source)
 
+    # Create and add optical fiber devices
     optical_fiber_model = OpticalFiberModel(
         name="Lambda Model",
         description="Lambda fiber (tapered fiber) from Optogenix.",
@@ -58,11 +60,9 @@ def test_example_usage():
     nwbfile.add_device(optical_fiber_model)
     nwbfile.add_device(optical_fiber)
 
+    # Create optical fiber locations table
     optical_fiber_locations_table = OpticalFiberLocationsTable(
-        description=(
-            "Information about the targeted stereotactic coordinates of the tip of the implanted optical "
-            "fiber and the angles of the optical fiber in the brain."
-        ),
+        description="Information about implanted optical fiber locations",
         reference="Bregma at the cortical surface",
     )
     optical_fiber_locations_table.add_row(
@@ -79,12 +79,11 @@ def test_example_usage():
         optical_fiber=optical_fiber,
     )
 
+    # Create virus and injection metadata
     virus = OptogeneticVirus(
         name="AAV-EF1a-DIO-hChR2(H134R)-EYFP",
         construct_name="AAV-EF1a-DIO-hChR2(H134R)-EYFP",
-        description=(
-            "Excitatory optogenetic construct designed to make neurons express the light sensitive opsin, hChR2-EYFP."
-        ),
+        description="Excitatory optogenetic construct for ChR2-EYFP expression",
         manufacturer="UNC Vector Core",
         titer_in_vg_per_ml=1.0e12,
     )
@@ -107,22 +106,20 @@ def test_example_usage():
     )
     optogenetic_virus_injections = OptogeneticVirusInjections(optogenetic_virus_injections=[virus_injection])
 
+    # Create experiment metadata container
     optogenetic_experiment_metadata = OptogeneticExperimentMetadata(
         optical_fiber_locations_table=optical_fiber_locations_table,
         optogenetic_viruses=optogenetic_viruses,
         optogenetic_virus_injections=optogenetic_virus_injections,
         stimulation_software="FSGUI 2.0",
     )
-    # when the extension is merged to core,
-    # this should be added to the NWBFile under the nwbfile/general/optogenetics group instead of labmetadata
     nwbfile.add_lab_meta_data(optogenetic_experiment_metadata)
 
+    # Create stimulation epochs table
     opto_epochs_table = OptogeneticEpochsTable(
         name="optogenetic_epochs",
-        description="Metadata about the optogenetic stimulation parameters that change per epoch.",
+        description="Metadata about the optogenetic stimulation parameters per epoch.",
     )
-
-    # test add one epoch
     opto_epochs_table.add_row(
         start_time=0.0,
         stop_time=100.0,
@@ -185,10 +182,7 @@ def test_example_usage():
 
         read_fiber_locations_table = read_optogenetic_experiment_metadata.optical_fiber_locations_table
         assert type(read_fiber_locations_table) is OpticalFiberLocationsTable
-        assert read_fiber_locations_table.description == (
-            "Information about the targeted stereotactic coordinates of the tip of the implanted optical fiber "
-            "and the angles of the optical fiber in the brain."
-        )
+        assert read_fiber_locations_table.description == "Information about implanted optical fiber locations"
         assert read_fiber_locations_table.reference == "Bregma at the cortical surface"
 
         assert len(read_fiber_locations_table) == 1
@@ -210,10 +204,7 @@ def test_example_usage():
         ]
         assert read_virus.name == "AAV-EF1a-DIO-hChR2(H134R)-EYFP"
         assert read_virus.construct_name == "AAV-EF1a-DIO-hChR2(H134R)-EYFP"
-        assert read_virus.description == (
-            "Excitatory optogenetic construct designed to make neurons express the light sensitive opsin, "
-            "hChR2-EYFP."
-        )
+        assert read_virus.description == "Excitatory optogenetic construct for ChR2-EYFP expression"
         assert read_virus.manufacturer == "UNC Vector Core"
         assert read_virus.titer_in_vg_per_ml == int(1.0e12)
 
@@ -241,7 +232,7 @@ def test_example_usage():
         assert type(read_optogenetic_epochs_table) is OptogeneticEpochsTable
         assert read_optogenetic_epochs_table.name == "optogenetic_epochs"
         assert read_optogenetic_epochs_table.description == (
-            "Metadata about the optogenetic stimulation parameters that change per epoch."
+            "Metadata about the optogenetic stimulation parameters per epoch."
         )
         assert len(read_optogenetic_epochs_table) == 1
         assert read_optogenetic_epochs_table[0, "start_time"] == 0.0
