@@ -40,6 +40,12 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
 }
 
+# -- Options for linkcheck builder -----------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-the-linkcheck-builder
+linkcheck_ignore = [
+    'https://www.optogenix.com/lambda-fibers/',  # Requires JavaScript
+]
+
 
 ############################################################################
 #  CUSTOM CONFIGURATIONS ADDED BY THE NWB TOOL FOR GENERATING FORMAT DOCS
