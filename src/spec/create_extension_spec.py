@@ -154,8 +154,8 @@ def main():
                 required=False,
             ),
             NWBAttributeSpec(
-                name="ferrule_manufacturer_code",
-                doc="Code / product ID of the ferrule from the manufacturer.",
+                name="ferrule_model",
+                doc="Model (or product ID) of the ferrule from the manufacturer.",
                 dtype="text",
                 required=False,
             ),

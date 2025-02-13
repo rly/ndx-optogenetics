@@ -68,9 +68,9 @@ groups:
     dtype: text
     doc: Product name of the ferrule.
     required: false
-  - name: ferrule_manufacturer_code
+  - name: ferrule_model
     dtype: text
-    doc: Code / product ID of the ferrule from the manufacturer.
+    doc: Model (or product ID) of the ferrule from the manufacturer.
     required: false
   - name: ferrule_diameter_in_mm
     dtype: float
