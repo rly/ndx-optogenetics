@@ -25,13 +25,13 @@ def main():
         ],
         contact=[
             "rly@lbl.gov",
-            "rly@lbl.gov",  # TODO add Horea's email address
+            "uni@chymera.eu",
             "ben.dichter@catalystneuro.com",
         ],
     )
     ns_builder.include_namespace("core")
 
-    # This is adopted from ndx-ophys-devices
+    # This is adapted from ndx-ophys-devices
     excitation_source_model = NWBGroupSpec(
         neurodata_type_def="ExcitationSourceModel",
         neurodata_type_inc="Device",  # TODO inherit from DeviceModel after NWB core adopts DeviceModel
@@ -59,7 +59,7 @@ def main():
         ],
     )
 
-    # This is adopted from ndx-ophys-devices
+    # This is adapted from ndx-ophys-devices
     # NOTE that lasers used in optogenetics have different typical ranges of power and intensity than lasers used in
     # microscopy.
     excitation_source = NWBGroupSpec(

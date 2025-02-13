@@ -5,7 +5,7 @@ namespaces:
   - Ben Dichter
   contact:
   - rly@lbl.gov
-  - rly@lbl.gov
+  - uni@chymera.eu
   - ben.dichter@catalystneuro.com
   doc: NWB extension to improve support for optogenetics data and metadata
   name: ndx-optogenetics
