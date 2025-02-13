@@ -32,7 +32,7 @@ A model of an optical fiber with attributes for the fiber and ferrule specificat
 - `numerical_aperture`: Numerical aperture value
 - `core_diameter_in_um`: Core diameter in micrometers
 - `active_length_in_mm`: Active length for tapered fibers
-- Various ferrule specifications (name, manufacturer code, diameter)
+- Various ferrule specifications (name, model, diameter)
 
 #### OpticalFiber
 A specific optical fiber device instance that links to its corresponding `OpticalFiberModel`
