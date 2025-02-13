@@ -85,6 +85,169 @@ way. For example, the upcoming update to the
 [ndx-franklab-novela extension](https://github.com/LorenFrankLab/ndx-franklab-novela) 
 defines a `FrankLabOptogeneticEpochsTable` that extends the `OptogeneticEpochsTable` defined here to store Frank Lab-specific optogenetic stimulation parameters for each epoch.
 
+## Entity Relationship Diagram
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', "primaryBorderColor': '#144E73', 'lineColor': '#D96F32'}}}%%
+classDiagram
+    direction LR
+
+    class OptogeneticEpochsTable {
+        <<TimeIntervals>>
+        --------------------------------------
+        attributes
+        --------------------------------------
+        name : str
+        description : str
+
+        --------------------------------------
+        columns
+        --------------------------------------
+        start_time : VectorData[float]
+        stop_time : VectorData[float]
+        stimulation_on : VectorData[bool]
+        pulse_length_in_ms : VectorData[float]
+        period_in_ms : VectorData[float]
+        number_pulses_per_pulse_train : VectorData[int]
+        number_trains : VectorData[int]
+        intertrain_interval_in_ms : VectorData[float]
+        power_in_mW : VectorData[float]
+    }
+
+    class OptogeneticExperimentMetadata {
+        <<LabMetaData>>
+        --------------------------------------
+        attributes
+        --------------------------------------
+        stimulation_software : str
+    }
+
+    class OpticalFiberLocationsTable {
+        <<DynamicTable>>
+        --------------------------------------
+        attributes
+        --------------------------------------
+        description : str
+        reference : str
+
+        --------------------------------------
+        columns
+        --------------------------------------
+        implanted_fiber_description : VectorData[str]
+        location : VectorData[str]
+        hemisphere : VectorData[str]
+        ap_in_mm : VectorData[float]
+        ml_in_mm : VectorData[float]
+        dv_in_mm : VectorData[float]
+        roll_in_deg : VectorData[float]
+        pitch_in_deg : VectorData[float]
+        yaw_in_deg : VectorData[float]
+        excitation_source : VectorData[ExcitationSource]
+        optical_fiber : VectorData[OpticalFiber]
+    }
+
+    namespace Devices {
+        class ExcitationSourceModel {
+            <<Device>>
+            --------------------------------------
+            attributes
+            --------------------------------------
+            illumination_type : str
+            wavelength_range_in_nm : float[2]
+        }
+
+        class ExcitationSource {
+            <<Device>>
+            --------------------------------------
+            attributes
+            --------------------------------------
+            wavelength_in_nm : float
+            power_in_W : float
+            intensity_in_W_per_m2 : float
+            model : ExcitationSourceModel
+        }
+
+        class OpticalFiberModel {
+            <<Device>>
+            --------------------------------------
+            attributes
+            --------------------------------------
+            fiber_name : str
+            fiber_model : str
+            numerical_aperture : float
+            core_diameter_in_um : float
+            active_length_in_mm : float
+            ferrule_name : str
+            ferrule_diameter_in_mm : float
+        }
+
+        class OpticalFiber {
+            <<Device>>
+            --------------------------------------
+            attributes
+            --------------------------------------
+            model : OpticalFiberModel
+        }
+    }
+
+    namespace Virus {
+        class OptogeneticVirus {
+            <<NWBContainer>>
+            --------------------------------------
+            attributes
+            --------------------------------------
+            construct_name : str
+            manufacturer : str
+            titer_in_vg_per_ml : float
+        }
+
+        class OptogeneticVirusInjection {
+            <<NWBContainer>>
+            --------------------------------------
+            attributes
+            --------------------------------------
+            location : str
+            hemisphere : str
+            ap_in_mm : float
+            ml_in_mm : float
+            dv_in_mm : float
+            roll_in_deg : float
+            pitch_in_deg : float
+            yaw_in_deg : float
+            reference : str
+            volume_in_uL : float
+            virus : OptogeneticVirus
+        }
+
+        class OptogeneticViruses {
+            <<NWBContainer>>
+            --------------------------------------
+            contains
+            --------------------------------------
+            optogenetic_virus : OptogeneticVirus[]
+        }
+
+        class OptogeneticVirusInjections {
+            <<NWBContainer>>
+            --------------------------------------
+            contains
+            --------------------------------------
+            optogenetic_virus_injections : OptogeneticVirusInjection[]
+        }
+    }
+
+    OptogeneticExperimentMetadata *--> OpticalFiberLocationsTable
+    OptogeneticExperimentMetadata *--> OptogeneticViruses
+    OptogeneticExperimentMetadata *--> OptogeneticVirusInjections
+    OpticalFiberLocationsTable ..> ExcitationSource
+    OpticalFiberLocationsTable ..> OpticalFiber
+    ExcitationSource *..> ExcitationSourceModel
+    OpticalFiber *..> OpticalFiberModel
+    OptogeneticVirusInjection *..> OptogeneticVirus
+    OptogeneticViruses *--> OptogeneticVirus
+    OptogeneticVirusInjections *--> OptogeneticVirusInjection
+```
+
 ## Usage Example
 
 ```python
