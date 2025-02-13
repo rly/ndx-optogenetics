@@ -119,6 +119,9 @@ classDiagram
         --------------------------------------
         attributes
         --------------------------------------
+        optical_fiber_locations_table : OpticalFiberLocationsTable
+        optogenetic_viruses : OptogeneticViruses
+        optogenetic_virus_injections : OptogeneticVirusInjections
         stimulation_software : str
     }
 
@@ -142,6 +145,8 @@ classDiagram
         roll_in_deg : VectorData[float]
         pitch_in_deg : VectorData[float]
         yaw_in_deg : VectorData[float]
+        stereotactic_rotation_in_deg : VectorData[float]
+        stereotactic_tilt_in_deg : VectorData[float]
         excitation_source : VectorData[ExcitationSource]
         optical_fiber : VectorData[OpticalFiber]
     }
@@ -178,6 +183,7 @@ classDiagram
             core_diameter_in_um : float
             active_length_in_mm : float
             ferrule_name : str
+            ferrule_model : str
             ferrule_diameter_in_mm : float
         }
 
@@ -214,6 +220,8 @@ classDiagram
             roll_in_deg : float
             pitch_in_deg : float
             yaw_in_deg : float
+            stereotactic_rotation_in_deg : float
+            stereotactic_tilt_in_deg : float
             reference : str
             volume_in_uL : float
             virus : OptogeneticVirus
