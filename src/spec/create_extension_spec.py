@@ -547,11 +547,13 @@ def main():
                 name="optogenetic_viruses",
                 neurodata_type_inc="OptogeneticViruses",
                 doc="Group containing of one or more OptogeneticVirus objects.",
+                quantity="?",
             ),
             NWBGroupSpec(
                 name="optogenetic_virus_injections",
                 neurodata_type_inc="OptogeneticVirusInjections",
                 doc="Group containing one or more OptogeneticVirusInjection objects.",
+                quantity="?",
             ),
         ],
     )
