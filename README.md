@@ -76,8 +76,8 @@ Because this type extends the `DynamicTable` class, you can add new columns to i
 #### OptogeneticExperimentMetadata
 Container for all optogenetics-related metadata including:
 - `OpticalFiberLocationsTable`
-- Collection of `OptogeneticVirus` objects
-- Collection of `OptogeneticVirusInjection` objects
+- Collection of `OptogeneticVirus` objects (optional)
+- Collection of `OptogeneticVirusInjection` objects (optional)
 - `stimulation_software`: Name of software used for stimulation
 
 You can define extensions to this ndx-optogenetics extension to store additional metadata in a structured
