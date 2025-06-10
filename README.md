@@ -70,6 +70,7 @@ A dynamic table for documenting stimulation parameters per epoch:
 - `number_trains`: Number of trains per stimulus
 - `intertrain_interval_in_ms`: Time between train starts
 - `power_in_mW`: Stimulation power
+- `optical_fiber_locations_table_region`: A link to the row(s) of the `OpticalFiberLocationsTable` that correspond to this epoch
 
 Because this type extends the `DynamicTable` class, you can add new columns to it without having to define a new type.
 
@@ -112,6 +113,7 @@ classDiagram
         number_trains : VectorData[int]
         intertrain_interval_in_ms : VectorData[float]
         power_in_mW : VectorData[float]
+        optical_fiber_locations_table_region : DynamicTableRegion
     }
 
     class OptogeneticExperimentMetadata {
@@ -261,6 +263,7 @@ classDiagram
 ```python
 from datetime import datetime, timezone
 from pynwb import NWBFile, NWBHDF5IO
+from hdmf.common import DynamicTableRegion
 from ndx_optogenetics import (
     ExcitationSourceModel,
     ExcitationSource,
@@ -382,6 +385,12 @@ opto_epochs_table = OptogeneticEpochsTable(
     name="optogenetic_epochs",
     description="Metadata about optogenetic stimulation parameters per epoch",
 )
+optical_fiber_locations_table_region = DynamicTableRegion(
+    name="optical_fiber_locations_table_region", # The name MUST be exactly as it appears here
+    description="Region of the optical fiber locations table corresponding to this epoch.",
+    data=[0],
+    table=optical_fiber_locations_table,
+)
 opto_epochs_table.add_row(
     start_time=0.0,
     stop_time=100.0,
@@ -392,6 +401,7 @@ opto_epochs_table.add_row(
     number_trains=1,
     intertrain_interval_in_ms=0.0,
     power_in_mW=77.0,
+    optical_fiber_locations_table_region=optical_fiber_locations_table_region,
 )
 nwbfile.add_time_intervals(opto_epochs_table)
 
