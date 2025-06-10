@@ -23,7 +23,8 @@ OptogeneticVirusInjection = get_class("OptogeneticVirusInjection", "ndx-optogene
 OptogeneticViruses = get_class("OptogeneticViruses", "ndx-optogenetics")
 OptogeneticVirusInjections = get_class("OptogeneticVirusInjections", "ndx-optogenetics")
 OptogeneticExperimentMetadata = get_class("OptogeneticExperimentMetadata", "ndx-optogenetics")
-OptogeneticEpochsTable = get_class("OptogeneticEpochsTable", "ndx-optogenetics")
+
+from .optogenetics import OptogeneticEpochsTable
 
 __all__ = [
     "ExcitationSourceModel",

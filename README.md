@@ -263,7 +263,6 @@ classDiagram
 ```python
 from datetime import datetime, timezone
 from pynwb import NWBFile, NWBHDF5IO
-from hdmf.common import DynamicTableRegion
 from ndx_optogenetics import (
     ExcitationSourceModel,
     ExcitationSource,
@@ -367,9 +366,7 @@ virus_injection = OptogeneticVirusInjection(
     virus=virus,
     volume_in_uL=0.45,
 )
-optogenetic_virus_injections = OptogeneticVirusInjections(
-    optogenetic_virus_injections=[virus_injection]
-)
+optogenetic_virus_injections = OptogeneticVirusInjections(optogenetic_virus_injections=[virus_injection])
 
 # Create experiment metadata container
 optogenetic_experiment_metadata = OptogeneticExperimentMetadata(
@@ -384,12 +381,7 @@ nwbfile.add_lab_meta_data(optogenetic_experiment_metadata)
 opto_epochs_table = OptogeneticEpochsTable(
     name="optogenetic_epochs",
     description="Metadata about optogenetic stimulation parameters per epoch",
-)
-optical_fiber_locations_table_region = DynamicTableRegion(
-    name="optical_fiber_locations_table_region", # The name MUST be exactly as it appears here
-    description="Region of the optical fiber locations table corresponding to this epoch.",
-    data=[0],
-    table=optical_fiber_locations_table,
+    target_tables={"optical_fiber_locations_table_region": optical_fiber_locations_table},
 )
 opto_epochs_table.add_row(
     start_time=0.0,
@@ -401,12 +393,13 @@ opto_epochs_table.add_row(
     number_trains=1,
     intertrain_interval_in_ms=0.0,
     power_in_mW=77.0,
-    optical_fiber_locations_table_region=optical_fiber_locations_table_region,
+    optical_fiber_locations_table_region=0,
 )
 nwbfile.add_time_intervals(opto_epochs_table)
 
 # Write the file
-with NWBHDF5IO('example.nwb', mode='w') as io:
+path = "example.nwb"
+with NWBHDF5IO(path, mode="w") as io:
     io.write(nwbfile)
 ```
 
