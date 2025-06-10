@@ -327,3 +327,6 @@ groups:
     dtype: float
     doc: Constant power of excitation source throughout the epoch, in mW, e.g., 77
       mW.
+  - name: optical_fiber_locations_table_region
+    neurodata_type_inc: DynamicTableRegion
+    doc: References row(s) of OpticalFiberLocationsTable.
