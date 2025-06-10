@@ -558,6 +558,81 @@ def main():
         ],
     )
 
+    optogenetic_epochs_table = NWBGroupSpec(
+        neurodata_type_def="OptogeneticEpochsTable",
+        neurodata_type_inc="TimeIntervals",
+        doc=(
+            "General metadata about the optogenetic stimulation that may change per epoch. Some epochs have no "
+            "stimulation and are used as control epochs. If the stimulation is on, then the epoch is a stimulation."
+        ),
+        datasets=[
+            NWBDatasetSpec(
+                name="stimulation_on",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Whether optogenetic stimulation was used at any time during this epoch. If False, then "
+                    "all other metadata values should be 0."
+                ),
+                dtype="bool",
+            ),
+            NWBDatasetSpec(
+                name="pulse_length_in_ms",
+                neurodata_type_inc="VectorData",
+                doc=("Duration of one pulse, in ms. Use NaN if stimulation was off."),
+                dtype="float",
+            ),
+            NWBDatasetSpec(
+                name="period_in_ms",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Duration between the starts of two pulses, in ms. Use NaN if stimulation was off."
+                    "Note that the interpulse interval = `period_ms` - `pulse_length_ms`"
+                ),
+                dtype="float",
+            ),
+            NWBDatasetSpec(
+                name="number_pulses_per_pulse_train",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Number of pulses in one pulse train. After this number of pulses, no more stimulation "
+                    "occurs until the next train begins (see `intertrain_interval_ms`). "
+                    "Use -1 if stimulation was off."
+                ),
+                dtype="int",
+            ),
+            NWBDatasetSpec(
+                name="number_trains",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Number of trains per stimulus. After this number of trains, no more stimulation "
+                    "occurs until stimulation is re-triggered. Use -1 if stimulation was off."
+                ),
+                dtype="int",
+            ),
+            NWBDatasetSpec(
+                name="intertrain_interval_in_ms",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Duration between the starts of two consecutive pulse trains, in ms. "
+                    "Determines the frequency of stimulation. Use NaN if stimulation was off."
+                ),
+                dtype="float",
+            ),
+            # TODO allow time series representing changing power of excitation source over time
+            NWBDatasetSpec(
+                name="power_in_mW",
+                neurodata_type_inc="VectorData",
+                doc="Constant power of excitation source throughout the epoch, in mW, e.g., 77 mW.",
+                dtype="float",
+            ),
+            NWBDatasetSpec(
+                name="optical_fiber_locations_table_region",
+                doc="References row(s) of OpticalFiberLocationsTable.",
+                neurodata_type_inc="DynamicTableRegion",
+            ),
+        ],
+    )
+
     new_data_types = [
         excitation_source_model,
         excitation_source,
@@ -569,6 +644,7 @@ def main():
         optogenetic_viruses,
         optogenetic_virus_injections,
         optogenetic_experiment_metadata,
+        optogenetic_epochs_table,
     ]
 
     # export the spec to yaml files in the spec folder
