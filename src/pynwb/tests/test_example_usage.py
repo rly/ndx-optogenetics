@@ -247,3 +247,4 @@ def test_example_usage():
         assert read_optogenetic_epochs_table[0, "intertrain_interval_in_ms"] == 0.0
         assert read_optogenetic_epochs_table[0, "power_in_mW"] == 77.0
         assert read_optogenetic_epochs_table.optical_fiber_locations_table_region.data[:] == [0]
+        assert read_optogenetic_epochs_table.optical_fiber_locations_table_region.table is optical_fiber_locations_table
