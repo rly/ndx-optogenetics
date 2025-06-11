@@ -626,7 +626,7 @@ def main():
                 dtype="float",
             ),
             NWBDatasetSpec(
-                name="optical_fiber_locations_table_region",
+                name="optical_fiber_locations",
                 doc="References row(s) of OpticalFiberLocationsTable.",
                 neurodata_type_inc="DynamicTableRegion",
             ),
