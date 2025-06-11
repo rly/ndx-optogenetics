@@ -113,7 +113,7 @@ classDiagram
         number_trains : VectorData[int]
         intertrain_interval_in_ms : VectorData[float]
         power_in_mW : VectorData[float]
-        optical_fiber_locations_table_region : DynamicTableRegion
+        optical_fiber_locations_table_region : DynamicTableRegion[OpticalFiberLocationsTable]
     }
 
     class OptogeneticExperimentMetadata {
