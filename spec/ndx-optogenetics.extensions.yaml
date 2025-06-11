@@ -332,3 +332,6 @@ groups:
   - name: optical_fiber_locations
     neurodata_type_inc: DynamicTableRegion
     doc: References row(s) of OpticalFiberLocationsTable.
+  - name: optical_fiber_locations_index
+    neurodata_type_inc: VectorIndex
+    doc: Index to allow reference to multiple rows of the OpticalFiberLocationsTable.

@@ -630,6 +630,11 @@ def main():
                 doc="References row(s) of OpticalFiberLocationsTable.",
                 neurodata_type_inc="DynamicTableRegion",
             ),
+            NWBDatasetSpec(
+                name="optical_fiber_locations_index",
+                doc="Index to allow reference to multiple rows of the OpticalFiberLocationsTable.",
+                neurodata_type_inc="VectorIndex",
+            )
         ],
     )
 
