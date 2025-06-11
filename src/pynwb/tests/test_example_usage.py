@@ -131,8 +131,7 @@ def test_example_usage():
         number_trains=1,
         intertrain_interval_in_ms=0.0,
         power_in_mW=77.0,
-        optical_fiber_locations_index=[1],
-        optical_fiber_locations=0,
+        optical_fiber_locations=[0],
     )
     nwbfile.add_time_intervals(opto_epochs_table)
 
@@ -247,5 +246,7 @@ def test_example_usage():
         assert read_optogenetic_epochs_table[0, "number_trains"] == 1
         assert read_optogenetic_epochs_table[0, "intertrain_interval_in_ms"] == 0.0
         assert read_optogenetic_epochs_table[0, "power_in_mW"] == 77.0
+        assert read_optogenetic_epochs_table.optical_fiber_locations_index.data[:] == [1]
         assert read_optogenetic_epochs_table.optical_fiber_locations.data[:] == [0]
         assert read_optogenetic_epochs_table.optical_fiber_locations.table is read_fiber_locations_table
+        assert read_optogenetic_epochs_table[0, "optical_fiber_locations"].equals(read_fiber_locations_table.to_dataframe()[0:1])

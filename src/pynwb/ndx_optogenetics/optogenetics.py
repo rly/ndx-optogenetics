@@ -9,7 +9,7 @@ from pynwb.epoch import TimeIntervals
 @register_class('OptogeneticEpochsTable', "ndx-optogenetics")
 class OptogeneticEpochsTable(TimeIntervals):
     """
-    General metadata about the optogenetic stimulation that may change per epoch. Some epochs have no 
+    General metadata about the optogenetic stimulation that may change per epoch. Some epochs have no
     stimulation and are used as control epochs. If the stimulation is on, then the epoch is a stimulation.
     """
 
@@ -25,8 +25,7 @@ class OptogeneticEpochsTable(TimeIntervals):
         {'name': 'number_trains', 'description': 'Number of trains per stimulus. After this number of trains, no more stimulation occurs until stimulation is re-triggered. Use -1 if stimulation was off.', 'required': True},
         {'name': 'intertrain_interval_in_ms', 'description': 'Duration between the starts of two consecutive pulse trains, in ms. Determines the frequency of stimulation. Use NaN if stimulation was off.', 'required': True},
         {'name': 'power_in_mW', 'description': 'Constant power of excitation source throughout the epoch, in mW, e.g., 77 mW.', 'required': True},
-        {'name': 'optical_fiber_locations_index', 'description': "Index to allow reference to multiple rows of the OpticalFiberLocationsTable.", 'index': True},
-        {'name': 'optical_fiber_locations', 'description': 'References row(s) of OpticalFiberLocationsTable.', 'required': True, "table": True},
+        {'name': 'optical_fiber_locations', 'description': 'References row(s) of OpticalFiberLocationsTable.', 'required': True, "table": True, "index": True},
     )
 
     @docval({'name': 'name', 'type': str, 'doc': 'name of this OptogeneticEpochsTable'},
