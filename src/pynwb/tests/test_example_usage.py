@@ -131,8 +131,8 @@ def test_example_usage():
         number_trains=1,
         intertrain_interval_in_ms=0.0,
         power_in_mW=77.0,
-        optical_fiber_locations=[0],
         optical_fiber_locations_index=[1],
+        optical_fiber_locations=0,
     )
     nwbfile.add_time_intervals(opto_epochs_table)
 

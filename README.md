@@ -381,7 +381,7 @@ nwbfile.add_lab_meta_data(optogenetic_experiment_metadata)
 opto_epochs_table = OptogeneticEpochsTable(
     name="optogenetic_epochs",
     description="Metadata about optogenetic stimulation parameters per epoch",
-    target_tables={"optical_fiber_locations_table_region": optical_fiber_locations_table},
+    target_tables={"optical_fiber_locations": optical_fiber_locations_table},
 )
 opto_epochs_table.add_row(
     start_time=0.0,
@@ -393,7 +393,8 @@ opto_epochs_table.add_row(
     number_trains=1,
     intertrain_interval_in_ms=0.0,
     power_in_mW=77.0,
-    optical_fiber_locations_table_region=0,
+    optical_fiber_locations_index=[1],
+    optical_fiber_locations=0,
 )
 nwbfile.add_time_intervals(opto_epochs_table)
 
