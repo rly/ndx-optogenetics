@@ -70,6 +70,7 @@ A dynamic table for documenting stimulation parameters per epoch:
 - `number_trains`: Number of trains per stimulus
 - `intertrain_interval_in_ms`: Time between train starts
 - `power_in_mW`: Stimulation power
+- `optical_fiber_locations`: A link to the row(s) of the `OpticalFiberLocationsTable` that correspond to this epoch
 
 Because this type extends the `DynamicTable` class, you can add new columns to it without having to define a new type.
 
@@ -112,6 +113,7 @@ classDiagram
         number_trains : VectorData[int]
         intertrain_interval_in_ms : VectorData[float]
         power_in_mW : VectorData[float]
+        optical_fiber_locations : DynamicTableRegion[OpticalFiberLocationsTable]
     }
 
     class OptogeneticExperimentMetadata {
@@ -364,9 +366,7 @@ virus_injection = OptogeneticVirusInjection(
     virus=virus,
     volume_in_uL=0.45,
 )
-optogenetic_virus_injections = OptogeneticVirusInjections(
-    optogenetic_virus_injections=[virus_injection]
-)
+optogenetic_virus_injections = OptogeneticVirusInjections(optogenetic_virus_injections=[virus_injection])
 
 # Create experiment metadata container
 optogenetic_experiment_metadata = OptogeneticExperimentMetadata(
@@ -381,6 +381,7 @@ nwbfile.add_lab_meta_data(optogenetic_experiment_metadata)
 opto_epochs_table = OptogeneticEpochsTable(
     name="optogenetic_epochs",
     description="Metadata about optogenetic stimulation parameters per epoch",
+    target_tables={"optical_fiber_locations": optical_fiber_locations_table},
 )
 opto_epochs_table.add_row(
     start_time=0.0,
@@ -392,11 +393,13 @@ opto_epochs_table.add_row(
     number_trains=1,
     intertrain_interval_in_ms=0.0,
     power_in_mW=77.0,
+    optical_fiber_locations=[0],
 )
 nwbfile.add_time_intervals(opto_epochs_table)
 
 # Write the file
-with NWBHDF5IO('example.nwb', mode='w') as io:
+path = "example.nwb"
+with NWBHDF5IO(path, mode="w") as io:
     io.write(nwbfile)
 ```
 

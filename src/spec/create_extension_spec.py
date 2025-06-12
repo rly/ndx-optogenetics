@@ -625,6 +625,16 @@ def main():
                 doc="Constant power of excitation source throughout the epoch, in mW, e.g., 77 mW.",
                 dtype="float",
             ),
+            NWBDatasetSpec(
+                name="optical_fiber_locations_index",
+                doc="Index to allow reference to multiple rows of the OpticalFiberLocationsTable.",
+                neurodata_type_inc="VectorIndex",
+            ),
+            NWBDatasetSpec(
+                name="optical_fiber_locations",
+                doc="References row(s) of OpticalFiberLocationsTable.",
+                neurodata_type_inc="DynamicTableRegion",
+            ),
         ],
     )
 
