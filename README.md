@@ -70,7 +70,7 @@ A dynamic table for documenting stimulation parameters per epoch:
 - `number_trains`: Number of trains per stimulus
 - `intertrain_interval_in_ms`: Time between train starts
 - `power_in_mW`: Stimulation power
-- `optical_fiber_locations_table_region`: A link to the row(s) of the `OpticalFiberLocationsTable` that correspond to this epoch
+- `optical_fiber_locations`: A link to the row(s) of the `OpticalFiberLocationsTable` that correspond to this epoch
 
 Because this type extends the `DynamicTable` class, you can add new columns to it without having to define a new type.
 
@@ -113,7 +113,7 @@ classDiagram
         number_trains : VectorData[int]
         intertrain_interval_in_ms : VectorData[float]
         power_in_mW : VectorData[float]
-        optical_fiber_locations_table_region : DynamicTableRegion[OpticalFiberLocationsTable]
+        optical_fiber_locations : DynamicTableRegion[OpticalFiberLocationsTable]
     }
 
     class OptogeneticExperimentMetadata {
