@@ -1,11 +1,14 @@
 def test_example_usage():
     from datetime import datetime, timezone
     from pynwb import NWBFile, NWBHDF5IO
-    from ndx_optogenetics import (
+    from ndx_ophys_devices import(
         ExcitationSourceModel,
         ExcitationSource,
         OpticalFiberModel,
         OpticalFiber,
+        FiberInsertion,
+    )
+    from ndx_optogenetics import (
         OpticalFiberLocationsTable,
         OptogeneticVirus,
         OptogeneticVirusInjection,
@@ -27,13 +30,14 @@ def test_example_usage():
         name="Omicron LuxX+ 488-100 Model",
         description="Laser for optogenetic stimulation.",
         manufacturer="Omicron",
-        illumination_type="laser",
+        source_type="laser",
+        excitation_mode="one-photon",
         wavelength_range_in_nm=[488.0, 488.0],
     )
     excitation_source = ExcitationSource(
         name="Omicron LuxX+ 488-100",
         model=excitation_source_model,
-        wavelength_in_nm=488.0,
+        # wavelength_in_nm=488.0,
         power_in_W=0.077,
         intensity_in_W_per_m2=1.0e10,
     )
@@ -44,18 +48,30 @@ def test_example_usage():
     optical_fiber_model = OpticalFiberModel(
         name="Lambda Model",
         description="Lambda fiber (tapered fiber) from Optogenix.",
-        fiber_name="Lambda",
-        fiber_model="lambda_b5",
+        model_number="lambda_b5",
         manufacturer="Optogenix",
         numerical_aperture=0.39,
         core_diameter_in_um=200.0,
-        active_length_in_mm=2.0,
-        ferrule_name="cFCF - ∅2.5mm Ceramic Ferrule",
-        ferrule_diameter_in_mm=2.5,
+        # active_length_in_mm=2.0,
+        # ferrule_name="cFCF - ∅2.5mm Ceramic Ferrule",
+        # ferrule_diameter_in_mm=2.5,
+    )
+    fiber_insertion = FiberInsertion(
+        name="fiber_insertion",
+        depth_in_mm=2.0,
+        insertion_position_ap_in_mm=-1.5,
+        insertion_position_ml_in_mm=3.2,
+        insertion_position_dv_in_mm=-5.8,
+        position_reference="Bregma at the cortical surface",
+        hemisphere="right",
+        insertion_angle_pitch_in_deg=0.0,
     )
     optical_fiber = OpticalFiber(
         name="Lambda",
+        description="Lambda fiber implanted into right GPe.",
+        serial_number="123456",
         model=optical_fiber_model,
+        fiber_insertion=fiber_insertion, 
     )
     nwbfile.add_device(optical_fiber_model)
     nwbfile.add_device(optical_fiber)
@@ -149,14 +165,15 @@ def test_example_usage():
         assert read_excitation_source_model.name == "Omicron LuxX+ 488-100 Model"
         assert read_excitation_source_model.description == "Laser for optogenetic stimulation."
         assert read_excitation_source_model.manufacturer == "Omicron"
-        assert read_excitation_source_model.illumination_type == "laser"
+        assert read_excitation_source_model.source_type == "laser"
+        assert read_excitation_source_model.excitation_mode == "one-photon"
         assert all(read_excitation_source_model.wavelength_range_in_nm == [488.0, 488.0])
 
         read_excitation_source = read_nwbfile.devices["Omicron LuxX+ 488-100"]
         assert type(read_excitation_source) is ExcitationSource
         assert read_excitation_source.name == "Omicron LuxX+ 488-100"
         assert read_excitation_source.model is read_excitation_source_model
-        assert read_excitation_source.wavelength_in_nm == 488.0
+        # assert read_excitation_source.wavelength_in_nm == 488.0
         assert read_excitation_source.power_in_W == 0.077
         assert read_excitation_source.intensity_in_W_per_m2 == 1.0e10
 
@@ -164,19 +181,20 @@ def test_example_usage():
         assert type(read_optical_fiber_model) is OpticalFiberModel
         assert read_optical_fiber_model.name == "Lambda Model"
         assert read_optical_fiber_model.description == "Lambda fiber (tapered fiber) from Optogenix."
-        assert read_optical_fiber_model.fiber_name == "Lambda"
-        assert read_optical_fiber_model.fiber_model == "lambda_b5"
+        assert read_optical_fiber_model.model_number == "lambda_b5"
         assert read_optical_fiber_model.manufacturer == "Optogenix"
         assert read_optical_fiber_model.numerical_aperture == 0.39
         assert read_optical_fiber_model.core_diameter_in_um == 200
-        assert read_optical_fiber_model.active_length_in_mm == 2.0
-        assert read_optical_fiber_model.ferrule_name == "cFCF - ∅2.5mm Ceramic Ferrule"
-        assert read_optical_fiber_model.ferrule_diameter_in_mm == 2.5
+        # assert read_optical_fiber_model.active_length_in_mm == 2.0
+        # assert read_optical_fiber_model.ferrule_name == "cFCF - ∅2.5mm Ceramic Ferrule"
+        # assert read_optical_fiber_model.ferrule_diameter_in_mm == 2.5
 
         read_optical_fiber = read_nwbfile.devices["Lambda"]
         assert type(read_optical_fiber) is OpticalFiber
         assert read_optical_fiber.name == "Lambda"
         assert read_optical_fiber.model is read_optical_fiber_model
+        assert read_optical_fiber.description == "Lambda fiber implanted into right GPe."
+        assert read_optical_fiber.serial_number == "123456"
 
         read_optogenetic_experiment_metadata = read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"]
         assert type(read_optogenetic_experiment_metadata) is OptogeneticExperimentMetadata

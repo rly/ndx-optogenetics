@@ -11,6 +11,14 @@ from pynwb.spec import (
     NWBRefSpec,
 )
 
+from ndx_ophys_devices import (
+    Effector,
+    FiberInsertion,
+    OpticalFiberModel,
+    ExcitationSourceModel,
+    OpticalFiber,
+    ExcitationSource,
+)
 
 def main():
     # these arguments were auto-generated from your cookiecutter inputs
@@ -30,162 +38,7 @@ def main():
         ],
     )
     ns_builder.include_namespace("core")
-
-    # This is adapted from ndx-ophys-devices
-    excitation_source_model = NWBGroupSpec(
-        neurodata_type_def="ExcitationSourceModel",
-        neurodata_type_inc="Device",  # TODO inherit from DeviceModel after NWB core adopts DeviceModel
-        doc="Excitation source model. Currently there are no additional attributes.",
-        attributes=[
-            NWBAttributeSpec(
-                name="illumination_type",
-                doc=(
-                    "Type of illumination. Suggested values: LED, Gas Laser (e.g., Argon, Krypton), "
-                    "Solid-State Laser (e.g., Diode, DPSS)."
-                ),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="wavelength_range_in_nm",
-                doc=(
-                    "Excitation wavelength range of the stimulation light in nm. "
-                    "For LEDs, this is the center wavelength +/- half of the full width at half maximum (FWHM). "
-                    "For lasers, this is the peak wavelength (use as both min and max)."
-                ),
-                dtype="float",
-                shape=(2,),
-                required=False,
-            ),
-        ],
-    )
-
-    # This is adapted from ndx-ophys-devices
-    # NOTE that lasers used in optogenetics have different typical ranges of power and intensity than lasers used in
-    # microscopy.
-    excitation_source = NWBGroupSpec(
-        neurodata_type_def="ExcitationSource",
-        neurodata_type_inc="Device",
-        doc="Excitation source device.",
-        attributes=[
-            NWBAttributeSpec(
-                name="wavelength_in_nm",
-                doc=("Peak excitation wavelength of the stimulation light in nm."),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="power_in_W",
-                doc=("Excitation power of the stimulation light in W."),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="intensity_in_W_per_m2",
-                doc=("Intensity of the stimulation light in W/m^2."),
-                dtype="float",
-                required=False,
-            ),
-        ],
-        links=[
-            NWBLinkSpec(
-                name="model",
-                target_type="ExcitationSourceModel",
-                doc="The model of the excitation source.",
-            )
-        ],
-    )
-
-    optical_fiber_model = NWBGroupSpec(
-        neurodata_type_def="OpticalFiberModel",
-        neurodata_type_inc="Device",  # TODO inherit from DeviceModel after NWB core adopts DeviceModel
-        doc="Optical fiber device model.",
-        # refs:
-        # - https://www.thorlabs.com/newgrouppage9.cfm?objectgroup_id=6742
-        # - https://www.thorlabs.com/newgrouppage9.cfm?objectgroup_id=6313
-        # - https://www.optogenix.com/product/lambda-fiber-stubs-one-5-pack/
-        # - https://plexon.com/blog-post/choosing-a-light-source-patch-cable-and-fiber-stub/
-        attributes=[
-            NWBAttributeSpec(
-                name="description",
-                doc="Description of the optical fiber and ferrule equipment, including cleave type or tapering.",
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="fiber_name",
-                doc="Name of the optical fiber.",
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="fiber_model",
-                doc="Model (or product ID) of the optical fiber.",
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="manufacturer",
-                doc="Manufacturer of the optical fiber and ferrule.",
-                dtype="text",
-                # NOTE it is assumed that the fiber and ferrule are from the same manufacturer.
-                # Device has only one manufacturer attribute
-            ),
-            NWBAttributeSpec(
-                name="numerical_aperture",
-                doc="Numerical aperture, e.g., 0.39 NA.",
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="core_diameter_in_um",  # TODO is cladding diameter important?
-                doc="Cannula core diameter in um, e.g., 200.0 um.",
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="active_length_in_mm",
-                doc=(
-                    "Active length in mm for a tapered fiber, e.g., Optogenix Lambda fiber. "
-                    "See https://www.optogenix.com/lambda-fibers/ for details of one example."
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="ferrule_name",
-                doc="Product name of the ferrule.",
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="ferrule_model",
-                doc="Model (or product ID) of the ferrule from the manufacturer.",
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(  # TODO is this important to store? what about ferrule material? manufacturer?
-                name="ferrule_diameter_in_mm",
-                doc="Ferrule diameter in mm, e.g., 1.25 mm (LC) or 2.5 mm (FC).",
-                dtype="float",
-                required=False,
-            ),
-            # NWBAttributeSpec(  # TODO what is this? property of the tissue or of the fiber? measured where?
-            #     name="transmittance",
-            #     doc="",
-            #     dtype="float",
-            #     required=False,
-            # ),
-        ],
-    )
-
-    optical_fiber = NWBGroupSpec(
-        neurodata_type_def="OpticalFiber",
-        neurodata_type_inc="Device",
-        doc="Optical fiber device.",
-        links=[
-            NWBLinkSpec(
-                name="model",
-                target_type="OpticalFiberModel",
-                doc="The model of the optical fiber.",
-            )
-        ],
-    )
+    ns_builder.include_namespace("ndx-ophys-devices")
 
     # NOTE: These columns could all be properties of OpticalFiber, or the optical fiber model and serial number
     # from OpticalFiber and the excitation source model and serial number from ExcitationSource could be moved into
@@ -639,10 +492,6 @@ def main():
     )
 
     new_data_types = [
-        excitation_source_model,
-        excitation_source,
-        optical_fiber_model,
-        optical_fiber,
         optical_fiber_locations_table,
         optogenetic_virus,
         optogenetic_virus_injection,
