@@ -18,10 +18,9 @@ ExcitationSource = get_class("ExcitationSource", "ndx-optogenetics")
 OpticalFiberModel = get_class("OpticalFiberModel", "ndx-optogenetics")
 OpticalFiber = get_class("OpticalFiber", "ndx-optogenetics")
 OpticalFiberLocationsTable = get_class("OpticalFiberLocationsTable", "ndx-optogenetics")
-OptogeneticVirus = get_class("OptogeneticVirus", "ndx-optogenetics")
-OptogeneticVirusInjection = get_class("OptogeneticVirusInjection", "ndx-optogenetics")
 OptogeneticViruses = get_class("OptogeneticViruses", "ndx-optogenetics")
 OptogeneticVirusInjections = get_class("OptogeneticVirusInjections", "ndx-optogenetics")
+OptogeneticEffectors = get_class("OptogeneticEffectors", "ndx-optogenetics")
 OptogeneticExperimentMetadata = get_class("OptogeneticExperimentMetadata", "ndx-optogenetics")
 
 from .optogenetics import OptogeneticEpochsTable
@@ -32,10 +31,9 @@ __all__ = [
     "OpticalFiberModel",
     "OpticalFiber",
     "OpticalFiberLocationsTable",
-    "OptogeneticVirus",
-    "OptogeneticVirusInjection",
     "OptogeneticViruses",
     "OptogeneticVirusInjections",
+    "OptogeneticEffectors",
     "OptogeneticExperimentMetadata",
     "OptogeneticEpochsTable",
 ]

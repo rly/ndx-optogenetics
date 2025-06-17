@@ -11,6 +11,16 @@ from pynwb.spec import (
     NWBRefSpec,
 )
 
+from ndx_ophys_devices import (
+    ViralVector,
+    ViralVectorInjection,
+    Effector,
+    FiberInsertion,
+    OpticalFiberModel,
+    ExcitationSourceModel,
+    OpticalFiber,
+    ExcitationSource,
+)
 
 def main():
     # these arguments were auto-generated from your cookiecutter inputs
@@ -30,162 +40,7 @@ def main():
         ],
     )
     ns_builder.include_namespace("core")
-
-    # This is adapted from ndx-ophys-devices
-    excitation_source_model = NWBGroupSpec(
-        neurodata_type_def="ExcitationSourceModel",
-        neurodata_type_inc="Device",  # TODO inherit from DeviceModel after NWB core adopts DeviceModel
-        doc="Excitation source model. Currently there are no additional attributes.",
-        attributes=[
-            NWBAttributeSpec(
-                name="illumination_type",
-                doc=(
-                    "Type of illumination. Suggested values: LED, Gas Laser (e.g., Argon, Krypton), "
-                    "Solid-State Laser (e.g., Diode, DPSS)."
-                ),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="wavelength_range_in_nm",
-                doc=(
-                    "Excitation wavelength range of the stimulation light in nm. "
-                    "For LEDs, this is the center wavelength +/- half of the full width at half maximum (FWHM). "
-                    "For lasers, this is the peak wavelength (use as both min and max)."
-                ),
-                dtype="float",
-                shape=(2,),
-                required=False,
-            ),
-        ],
-    )
-
-    # This is adapted from ndx-ophys-devices
-    # NOTE that lasers used in optogenetics have different typical ranges of power and intensity than lasers used in
-    # microscopy.
-    excitation_source = NWBGroupSpec(
-        neurodata_type_def="ExcitationSource",
-        neurodata_type_inc="Device",
-        doc="Excitation source device.",
-        attributes=[
-            NWBAttributeSpec(
-                name="wavelength_in_nm",
-                doc=("Peak excitation wavelength of the stimulation light in nm."),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="power_in_W",
-                doc=("Excitation power of the stimulation light in W."),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="intensity_in_W_per_m2",
-                doc=("Intensity of the stimulation light in W/m^2."),
-                dtype="float",
-                required=False,
-            ),
-        ],
-        links=[
-            NWBLinkSpec(
-                name="model",
-                target_type="ExcitationSourceModel",
-                doc="The model of the excitation source.",
-            )
-        ],
-    )
-
-    optical_fiber_model = NWBGroupSpec(
-        neurodata_type_def="OpticalFiberModel",
-        neurodata_type_inc="Device",  # TODO inherit from DeviceModel after NWB core adopts DeviceModel
-        doc="Optical fiber device model.",
-        # refs:
-        # - https://www.thorlabs.com/newgrouppage9.cfm?objectgroup_id=6742
-        # - https://www.thorlabs.com/newgrouppage9.cfm?objectgroup_id=6313
-        # - https://www.optogenix.com/product/lambda-fiber-stubs-one-5-pack/
-        # - https://plexon.com/blog-post/choosing-a-light-source-patch-cable-and-fiber-stub/
-        attributes=[
-            NWBAttributeSpec(
-                name="description",
-                doc="Description of the optical fiber and ferrule equipment, including cleave type or tapering.",
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="fiber_name",
-                doc="Name of the optical fiber.",
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="fiber_model",
-                doc="Model (or product ID) of the optical fiber.",
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="manufacturer",
-                doc="Manufacturer of the optical fiber and ferrule.",
-                dtype="text",
-                # NOTE it is assumed that the fiber and ferrule are from the same manufacturer.
-                # Device has only one manufacturer attribute
-            ),
-            NWBAttributeSpec(
-                name="numerical_aperture",
-                doc="Numerical aperture, e.g., 0.39 NA.",
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="core_diameter_in_um",  # TODO is cladding diameter important?
-                doc="Cannula core diameter in um, e.g., 200.0 um.",
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="active_length_in_mm",
-                doc=(
-                    "Active length in mm for a tapered fiber, e.g., Optogenix Lambda fiber. "
-                    "See https://www.optogenix.com/lambda-fibers/ for details of one example."
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="ferrule_name",
-                doc="Product name of the ferrule.",
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="ferrule_model",
-                doc="Model (or product ID) of the ferrule from the manufacturer.",
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(  # TODO is this important to store? what about ferrule material? manufacturer?
-                name="ferrule_diameter_in_mm",
-                doc="Ferrule diameter in mm, e.g., 1.25 mm (LC) or 2.5 mm (FC).",
-                dtype="float",
-                required=False,
-            ),
-            # NWBAttributeSpec(  # TODO what is this? property of the tissue or of the fiber? measured where?
-            #     name="transmittance",
-            #     doc="",
-            #     dtype="float",
-            #     required=False,
-            # ),
-        ],
-    )
-
-    optical_fiber = NWBGroupSpec(
-        neurodata_type_def="OpticalFiber",
-        neurodata_type_inc="Device",
-        doc="Optical fiber device.",
-        links=[
-            NWBLinkSpec(
-                name="model",
-                target_type="OpticalFiberModel",
-                doc="The model of the optical fiber.",
-            )
-        ],
-    )
+    ns_builder.include_namespace("ndx-ophys-devices")
 
     # NOTE: These columns could all be properties of OpticalFiber, or the optical fiber model and serial number
     # from OpticalFiber and the excitation source model and serial number from ExcitationSource could be moved into
@@ -334,172 +189,18 @@ def main():
             # ),
         ],
     )
-
-    # TODO should this and OptogeneticViruses be combined into a DynamicTable of viruses?
-    # This could also be considered more of a DeviceModel though, and how many viruses are typically used in a
-    # single session?
-    optogenetic_virus = NWBGroupSpec(
-        neurodata_type_def="OptogeneticVirus",
-        neurodata_type_inc="NWBContainer",
-        doc="Metadata about the optogenetic virus.",
-        attributes=[
-            NWBAttributeSpec(
-                name="construct_name",
-                doc=('Name of the virus construct/vector, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP".'),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="description",
-                doc=("Description of the optogenetic virus."),
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="manufacturer",
-                doc=("Manufacturer of the optogenetic virus."),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="titer_in_vg_per_ml",
-                doc=("Titer of the optogenetic virus, in vg/ml, e.g., 1x10^12 vg/ml."),
-                dtype="float",
-            ),
-        ],
-    )
-
-    # TODO should this and OptogeneticVirusInjections be combined into a DynamicTable of virus injections?
-    optogenetic_virus_injection = NWBGroupSpec(
-        neurodata_type_def="OptogeneticVirusInjection",
-        neurodata_type_inc="NWBContainer",
-        doc=(
-            "Information about the injection of a virus for optogenetic experiments. "
-            'The name should be the virus name, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP". '
-            "Use two OptogeneticVirusInjection objects for a bilateral injection, one per hemisphere."
-        ),
-        attributes=[
-            NWBAttributeSpec(
-                name="description",
-                doc=("Description of the optogenetic virus injection."),
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="location",
-                doc=("Name of the targeted location of the optogenetic virus injection."),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="hemisphere",
-                doc=(
-                    'The hemisphere ("left" or "right") of the targeted location of the optogenetic virus '
-                    "injection. Should be consistent with `ml_in_mm` coordinate."
-                ),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="reference",
-                doc=(
-                    "Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., "
-                    '"Bregma at the cortical surface".'
-                ),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="ap_in_mm",
-                doc=(
-                    "Anteroposterior coordinate in mm of the optogenetic virus injection site (+ is anterior), "
-                    "with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="ml_in_mm",
-                doc=(
-                    "Mediolateral coordinate in mm of the optogenetic virus injection site (+ is right), "
-                    "with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="dv_in_mm",
-                doc=(
-                    "Dorsoventral coordinate in mm of the optogenetic virus injection site "
-                    "(+ is dorsal/above the brain), with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="pitch_in_deg",
-                doc=(
-                    "Pitch angle in degrees of the optogenetic virus injection (rotation around left-right axis, "
-                    "+ is rotating the nose upward)."
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="yaw_in_deg",
-                doc=(
-                    "Yaw angle in degrees of the optogenetic virus injection (rotation around dorsal-ventral axis, "
-                    "+ is rotating the nose rightward)."
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="roll_in_deg",
-                doc=(
-                    "Roll angle in degrees of the optogenetic virus injection (rotation around anterior-posterior "
-                    "axis, + is rotating the right side downward)."
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="stereotactic_rotation_in_deg",
-                doc=("TODO"),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="stereotactic_tilt_in_deg",
-                doc=("TODO"),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="volume_in_uL",
-                doc=("Volume of injection, in uL., e.g., 0.45 uL (450 nL)"),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="injection_date",
-                doc=("Date of injection."),
-                dtype="isodatetime",
-                required=False,
-            ),
-        ],
-        links=[
-            NWBLinkSpec(
-                name="virus",
-                doc=("Link to OptogeneticVirus object with metadata about the name, manufacturer, and titer."),
-                target_type="OptogeneticVirus",
-            )
-        ],
-    )
-
     optogenetic_viruses = NWBGroupSpec(
         name="optogenetic_viruses",  # use fixed name, for use in OptogeneticExperimentMetadata
         neurodata_type_def="OptogeneticViruses",
         neurodata_type_inc="NWBContainer",
         doc=(
-            "Group containing one or more OptogeneticVirus objects, to be used within an "
+            "Group containing one or more ViralVector objects, to be used within an "
             "OptogeneticExperimentMetadata object."
         ),
         groups=[
             NWBGroupSpec(
-                neurodata_type_inc="OptogeneticVirus",
-                doc="OptogeneticVirus object(s).",
+                neurodata_type_inc="ViralVector",
+                doc="ViralVector object(s).",
                 quantity="+",
             ),
         ],
@@ -510,13 +211,30 @@ def main():
         neurodata_type_def="OptogeneticVirusInjections",
         neurodata_type_inc="NWBContainer",
         doc=(
-            "Group containing one or more OptogeneticVirusInjection objects, to be used within an "
+            "Group containing one or more ViralVectorInjection objects, to be used within an "
             "OptogeneticExperimentMetadata object."
         ),
         groups=[
             NWBGroupSpec(
-                neurodata_type_inc="OptogeneticVirusInjection",
-                doc="OptogeneticVirusInjection object(s).",
+                neurodata_type_inc="ViralVectorInjection",
+                doc="ViralVectorInjection object(s).",
+                quantity="+",
+            ),
+        ],
+    )
+
+    optogenetic_effectors = NWBGroupSpec(
+        name="optogenetic_effectors",  # use fixed name, for use in OptogeneticExperimentMetadata
+        neurodata_type_def="OptogeneticEffectors",
+        neurodata_type_inc="NWBContainer",
+        doc=(
+            "Group containing one or more Effector objects, to be used within an "
+            "OptogeneticExperimentMetadata object."
+        ),
+        groups=[
+            NWBGroupSpec(
+                neurodata_type_inc="Effector",
+                doc="Effector object(s).",
                 quantity="+",
             ),
         ],
@@ -554,6 +272,11 @@ def main():
                 neurodata_type_inc="OptogeneticVirusInjections",
                 doc="Group containing one or more OptogeneticVirusInjection objects.",
                 quantity="?",
+            ),
+            NWBGroupSpec(
+                name="optogenetic_effectors",
+                neurodata_type_inc="OptogeneticEffectors",
+                doc="Group containing one or more OptogeneticEffector objects.",
             ),
         ],
     )
@@ -639,15 +362,10 @@ def main():
     )
 
     new_data_types = [
-        excitation_source_model,
-        excitation_source,
-        optical_fiber_model,
-        optical_fiber,
         optical_fiber_locations_table,
-        optogenetic_virus,
-        optogenetic_virus_injection,
         optogenetic_viruses,
         optogenetic_virus_injections,
+        optogenetic_effectors,
         optogenetic_experiment_metadata,
         optogenetic_epochs_table,
     ]

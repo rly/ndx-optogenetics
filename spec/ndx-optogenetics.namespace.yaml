@@ -11,5 +11,6 @@ namespaces:
   name: ndx-optogenetics
   schema:
   - namespace: core
+  - namespace: ndx-ophys-devices
   - source: ndx-optogenetics.extensions.yaml
   version: 0.2.0
