@@ -12,6 +12,8 @@ from pynwb.spec import (
 )
 
 from ndx_ophys_devices import (
+    ViralVector,
+    ViralVectorInjection,
     Effector,
     FiberInsertion,
     OpticalFiberModel,
@@ -187,172 +189,18 @@ def main():
             # ),
         ],
     )
-
-    # TODO should this and OptogeneticViruses be combined into a DynamicTable of viruses?
-    # This could also be considered more of a DeviceModel though, and how many viruses are typically used in a
-    # single session?
-    optogenetic_virus = NWBGroupSpec(
-        neurodata_type_def="OptogeneticVirus",
-        neurodata_type_inc="NWBContainer",
-        doc="Metadata about the optogenetic virus.",
-        attributes=[
-            NWBAttributeSpec(
-                name="construct_name",
-                doc=('Name of the virus construct/vector, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP".'),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="description",
-                doc=("Description of the optogenetic virus."),
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="manufacturer",
-                doc=("Manufacturer of the optogenetic virus."),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="titer_in_vg_per_ml",
-                doc=("Titer of the optogenetic virus, in vg/ml, e.g., 1x10^12 vg/ml."),
-                dtype="float",
-            ),
-        ],
-    )
-
-    # TODO should this and OptogeneticVirusInjections be combined into a DynamicTable of virus injections?
-    optogenetic_virus_injection = NWBGroupSpec(
-        neurodata_type_def="OptogeneticVirusInjection",
-        neurodata_type_inc="NWBContainer",
-        doc=(
-            "Information about the injection of a virus for optogenetic experiments. "
-            'The name should be the virus name, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP". '
-            "Use two OptogeneticVirusInjection objects for a bilateral injection, one per hemisphere."
-        ),
-        attributes=[
-            NWBAttributeSpec(
-                name="description",
-                doc=("Description of the optogenetic virus injection."),
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="location",
-                doc=("Name of the targeted location of the optogenetic virus injection."),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="hemisphere",
-                doc=(
-                    'The hemisphere ("left" or "right") of the targeted location of the optogenetic virus '
-                    "injection. Should be consistent with `ml_in_mm` coordinate."
-                ),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="reference",
-                doc=(
-                    "Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., "
-                    '"Bregma at the cortical surface".'
-                ),
-                dtype="text",
-            ),
-            NWBAttributeSpec(
-                name="ap_in_mm",
-                doc=(
-                    "Anteroposterior coordinate in mm of the optogenetic virus injection site (+ is anterior), "
-                    "with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="ml_in_mm",
-                doc=(
-                    "Mediolateral coordinate in mm of the optogenetic virus injection site (+ is right), "
-                    "with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="dv_in_mm",
-                doc=(
-                    "Dorsoventral coordinate in mm of the optogenetic virus injection site "
-                    "(+ is dorsal/above the brain), with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="pitch_in_deg",
-                doc=(
-                    "Pitch angle in degrees of the optogenetic virus injection (rotation around left-right axis, "
-                    "+ is rotating the nose upward)."
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="yaw_in_deg",
-                doc=(
-                    "Yaw angle in degrees of the optogenetic virus injection (rotation around dorsal-ventral axis, "
-                    "+ is rotating the nose rightward)."
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="roll_in_deg",
-                doc=(
-                    "Roll angle in degrees of the optogenetic virus injection (rotation around anterior-posterior "
-                    "axis, + is rotating the right side downward)."
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="stereotactic_rotation_in_deg",
-                doc=("TODO"),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="stereotactic_tilt_in_deg",
-                doc=("TODO"),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="volume_in_uL",
-                doc=("Volume of injection, in uL., e.g., 0.45 uL (450 nL)"),
-                dtype="float",
-            ),
-            NWBAttributeSpec(
-                name="injection_date",
-                doc=("Date of injection."),
-                dtype="isodatetime",
-                required=False,
-            ),
-        ],
-        links=[
-            NWBLinkSpec(
-                name="virus",
-                doc=("Link to OptogeneticVirus object with metadata about the name, manufacturer, and titer."),
-                target_type="OptogeneticVirus",
-            )
-        ],
-    )
-
     optogenetic_viruses = NWBGroupSpec(
         name="optogenetic_viruses",  # use fixed name, for use in OptogeneticExperimentMetadata
         neurodata_type_def="OptogeneticViruses",
         neurodata_type_inc="NWBContainer",
         doc=(
-            "Group containing one or more OptogeneticVirus objects, to be used within an "
+            "Group containing one or more ViralVector objects, to be used within an "
             "OptogeneticExperimentMetadata object."
         ),
         groups=[
             NWBGroupSpec(
-                neurodata_type_inc="OptogeneticVirus",
-                doc="OptogeneticVirus object(s).",
+                neurodata_type_inc="ViralVector",
+                doc="ViralVector object(s).",
                 quantity="+",
             ),
         ],
@@ -363,13 +211,30 @@ def main():
         neurodata_type_def="OptogeneticVirusInjections",
         neurodata_type_inc="NWBContainer",
         doc=(
-            "Group containing one or more OptogeneticVirusInjection objects, to be used within an "
+            "Group containing one or more ViralVectorInjection objects, to be used within an "
             "OptogeneticExperimentMetadata object."
         ),
         groups=[
             NWBGroupSpec(
-                neurodata_type_inc="OptogeneticVirusInjection",
-                doc="OptogeneticVirusInjection object(s).",
+                neurodata_type_inc="ViralVectorInjection",
+                doc="ViralVectorInjection object(s).",
+                quantity="+",
+            ),
+        ],
+    )
+
+    optogenetic_effectors = NWBGroupSpec(
+        name="optogenetic_effectors",  # use fixed name, for use in OptogeneticExperimentMetadata
+        neurodata_type_def="OptogeneticEffectors",
+        neurodata_type_inc="NWBContainer",
+        doc=(
+            "Group containing one or more Effector objects, to be used within an "
+            "OptogeneticExperimentMetadata object."
+        ),
+        groups=[
+            NWBGroupSpec(
+                neurodata_type_inc="Effector",
+                doc="Effector object(s).",
                 quantity="+",
             ),
         ],
@@ -407,6 +272,11 @@ def main():
                 neurodata_type_inc="OptogeneticVirusInjections",
                 doc="Group containing one or more OptogeneticVirusInjection objects.",
                 quantity="?",
+            ),
+            NWBGroupSpec(
+                name="optogenetic_effectors",
+                neurodata_type_inc="OptogeneticEffectors",
+                doc="Group containing one or more OptogeneticEffector objects.",
             ),
         ],
     )
@@ -493,10 +363,9 @@ def main():
 
     new_data_types = [
         optical_fiber_locations_table,
-        optogenetic_virus,
-        optogenetic_virus_injection,
         optogenetic_viruses,
         optogenetic_virus_injections,
+        optogenetic_effectors,
         optogenetic_experiment_metadata,
         optogenetic_epochs_table,
     ]

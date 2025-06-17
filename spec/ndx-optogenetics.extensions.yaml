@@ -80,108 +80,32 @@ groups:
       target_type: OpticalFiber
       reftype: object
     doc: The optical fiber device.
-- neurodata_type_def: OptogeneticVirus
-  neurodata_type_inc: NWBContainer
-  doc: Metadata about the optogenetic virus.
-  attributes:
-  - name: construct_name
-    dtype: text
-    doc: Name of the virus construct/vector, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP".
-  - name: description
-    dtype: text
-    doc: Description of the optogenetic virus.
-    required: false
-  - name: manufacturer
-    dtype: text
-    doc: Manufacturer of the optogenetic virus.
-  - name: titer_in_vg_per_ml
-    dtype: float
-    doc: Titer of the optogenetic virus, in vg/ml, e.g., 1x10^12 vg/ml.
-- neurodata_type_def: OptogeneticVirusInjection
-  neurodata_type_inc: NWBContainer
-  doc: Information about the injection of a virus for optogenetic experiments. The
-    name should be the virus name, e.g., "AAV-EF1a-DIO-hChR2(H134R)-EYFP". Use two
-    OptogeneticVirusInjection objects for a bilateral injection, one per hemisphere.
-  attributes:
-  - name: description
-    dtype: text
-    doc: Description of the optogenetic virus injection.
-    required: false
-  - name: location
-    dtype: text
-    doc: Name of the targeted location of the optogenetic virus injection.
-  - name: hemisphere
-    dtype: text
-    doc: The hemisphere ("left" or "right") of the targeted location of the optogenetic
-      virus injection. Should be consistent with `ml_in_mm` coordinate.
-  - name: reference
-    dtype: text
-    doc: Reference point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g.,
-      "Bregma at the cortical surface".
-  - name: ap_in_mm
-    dtype: float
-    doc: Anteroposterior coordinate in mm of the optogenetic virus injection site
-      (+ is anterior), with reference to `reference`.
-  - name: ml_in_mm
-    dtype: float
-    doc: Mediolateral coordinate in mm of the optogenetic virus injection site (+
-      is right), with reference to `reference`.
-  - name: dv_in_mm
-    dtype: float
-    doc: Dorsoventral coordinate in mm of the optogenetic virus injection site (+
-      is dorsal/above the brain), with reference to `reference`.
-  - name: pitch_in_deg
-    dtype: float
-    doc: Pitch angle in degrees of the optogenetic virus injection (rotation around
-      left-right axis, + is rotating the nose upward).
-    required: false
-  - name: yaw_in_deg
-    dtype: float
-    doc: Yaw angle in degrees of the optogenetic virus injection (rotation around
-      dorsal-ventral axis, + is rotating the nose rightward).
-    required: false
-  - name: roll_in_deg
-    dtype: float
-    doc: Roll angle in degrees of the optogenetic virus injection (rotation around
-      anterior-posterior axis, + is rotating the right side downward).
-    required: false
-  - name: stereotactic_rotation_in_deg
-    dtype: float
-    doc: TODO
-    required: false
-  - name: stereotactic_tilt_in_deg
-    dtype: float
-    doc: TODO
-    required: false
-  - name: volume_in_uL
-    dtype: float
-    doc: Volume of injection, in uL., e.g., 0.45 uL (450 nL)
-  - name: injection_date
-    dtype: isodatetime
-    doc: Date of injection.
-    required: false
-  links:
-  - name: virus
-    target_type: OptogeneticVirus
-    doc: Link to OptogeneticVirus object with metadata about the name, manufacturer,
-      and titer.
 - neurodata_type_def: OptogeneticViruses
   neurodata_type_inc: NWBContainer
   name: optogenetic_viruses
-  doc: Group containing one or more OptogeneticVirus objects, to be used within an
-    OptogeneticExperimentMetadata object.
+  doc: Group containing one or more ViralVector objects, to be used within an OptogeneticExperimentMetadata
+    object.
   groups:
-  - neurodata_type_inc: OptogeneticVirus
-    doc: OptogeneticVirus object(s).
+  - neurodata_type_inc: ViralVector
+    doc: ViralVector object(s).
     quantity: +
 - neurodata_type_def: OptogeneticVirusInjections
   neurodata_type_inc: NWBContainer
   name: optogenetic_virus_injections
-  doc: Group containing one or more OptogeneticVirusInjection objects, to be used
-    within an OptogeneticExperimentMetadata object.
+  doc: Group containing one or more ViralVectorInjection objects, to be used within
+    an OptogeneticExperimentMetadata object.
   groups:
-  - neurodata_type_inc: OptogeneticVirusInjection
-    doc: OptogeneticVirusInjection object(s).
+  - neurodata_type_inc: ViralVectorInjection
+    doc: ViralVectorInjection object(s).
+    quantity: +
+- neurodata_type_def: OptogeneticEffectors
+  neurodata_type_inc: NWBContainer
+  name: optogenetic_effectors
+  doc: Group containing one or more Effector objects, to be used within an OptogeneticExperimentMetadata
+    object.
+  groups:
+  - neurodata_type_inc: Effector
+    doc: Effector object(s).
     quantity: +
 - neurodata_type_def: OptogeneticExperimentMetadata
   neurodata_type_inc: LabMetaData
@@ -204,6 +128,9 @@ groups:
     neurodata_type_inc: OptogeneticVirusInjections
     doc: Group containing one or more OptogeneticVirusInjection objects.
     quantity: '?'
+  - name: optogenetic_effectors
+    neurodata_type_inc: OptogeneticEffectors
+    doc: Group containing one or more OptogeneticEffector objects.
 - neurodata_type_def: OptogeneticEpochsTable
   neurodata_type_inc: TimeIntervals
   doc: General metadata about the optogenetic stimulation that may change per epoch.

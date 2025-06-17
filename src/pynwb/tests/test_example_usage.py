@@ -2,6 +2,9 @@ def test_example_usage():
     from datetime import datetime, timezone
     from pynwb import NWBFile, NWBHDF5IO
     from ndx_ophys_devices import(
+        ViralVector,
+        ViralVectorInjection,
+        Effector,
         ExcitationSourceModel,
         ExcitationSource,
         OpticalFiberModel,
@@ -10,10 +13,9 @@ def test_example_usage():
     )
     from ndx_optogenetics import (
         OpticalFiberLocationsTable,
-        OptogeneticVirus,
-        OptogeneticVirusInjection,
         OptogeneticViruses,
         OptogeneticVirusInjections,
+        OptogeneticEffectors,
         OptogeneticExperimentMetadata,
         OptogeneticEpochsTable,
     )
@@ -96,16 +98,16 @@ def test_example_usage():
     )
 
     # Create virus and injection metadata
-    virus = OptogeneticVirus(
+    virus = ViralVector(
         name="AAV-EF1a-DIO-hChR2(H134R)-EYFP",
         construct_name="AAV-EF1a-DIO-hChR2(H134R)-EYFP",
         description="Excitatory optogenetic construct for ChR2-EYFP expression",
         manufacturer="UNC Vector Core",
         titer_in_vg_per_ml=1.0e12,
     )
-    optogenetic_viruses = OptogeneticViruses(optogenetic_virus=[virus])
+    optogenetic_viruses = OptogeneticViruses(viral_vectors=[virus])
 
-    virus_injection = OptogeneticVirusInjection(
+    virus_injection = ViralVectorInjection(
         name="AAV-EF1a-DIO-hChR2(H134R)-EYFP Injection",
         description="AAV-EF1a-DIO-hChR2(H134R)-EYFP injection into GPe.",
         hemisphere="right",
@@ -117,16 +119,25 @@ def test_example_usage():
         pitch_in_deg=0.0,
         yaw_in_deg=0.0,
         reference="Bregma at the cortical surface",
-        virus=virus,
+        viral_vector=virus,
         volume_in_uL=0.45,
     )
-    optogenetic_virus_injections = OptogeneticVirusInjections(optogenetic_virus_injections=[virus_injection])
+    optogenetic_virus_injections = OptogeneticVirusInjections(viral_vector_injections=[virus_injection])
+
+    effector = Effector(
+        name="effector",
+        description="Excitatory opsin",
+        label="hChR2-EYFP",
+        viral_vector_injection=virus_injection,
+    )
+    optogenetic_effectors = OptogeneticEffectors(effectors=[effector])
 
     # Create experiment metadata container
     optogenetic_experiment_metadata = OptogeneticExperimentMetadata(
         optical_fiber_locations_table=optical_fiber_locations_table,
         optogenetic_viruses=optogenetic_viruses,
         optogenetic_virus_injections=optogenetic_virus_injections,
+        optogenetic_effectors=optogenetic_effectors,
         stimulation_software="FSGUI 2.0",
     )
     nwbfile.add_lab_meta_data(optogenetic_experiment_metadata)
@@ -218,8 +229,8 @@ def test_example_usage():
         assert read_fiber_locations_table[0, "excitation_source"] is read_nwbfile.devices["Omicron LuxX+ 488-100"]
         assert read_fiber_locations_table[0, "optical_fiber"] is read_nwbfile.devices["Lambda"]
 
-        assert len(read_optogenetic_experiment_metadata.optogenetic_viruses.optogenetic_virus) == 1
-        read_virus = read_optogenetic_experiment_metadata.optogenetic_viruses.optogenetic_virus[
+        assert len(read_optogenetic_experiment_metadata.optogenetic_viruses.viral_vectors) == 1
+        read_virus = read_optogenetic_experiment_metadata.optogenetic_viruses.viral_vectors[
             "AAV-EF1a-DIO-hChR2(H134R)-EYFP"
         ]
         assert read_virus.name == "AAV-EF1a-DIO-hChR2(H134R)-EYFP"
@@ -228,9 +239,9 @@ def test_example_usage():
         assert read_virus.manufacturer == "UNC Vector Core"
         assert read_virus.titer_in_vg_per_ml == int(1.0e12)
 
-        assert len(read_optogenetic_experiment_metadata.optogenetic_virus_injections.optogenetic_virus_injections) == 1
+        assert len(read_optogenetic_experiment_metadata.optogenetic_virus_injections.viral_vector_injections) == 1
         read_virus_injection = (
-            read_optogenetic_experiment_metadata.optogenetic_virus_injections.optogenetic_virus_injections[
+            read_optogenetic_experiment_metadata.optogenetic_virus_injections.viral_vector_injections[
                 "AAV-EF1a-DIO-hChR2(H134R)-EYFP Injection"
             ]
         )
@@ -245,8 +256,15 @@ def test_example_usage():
         assert read_virus_injection.pitch_in_deg == 0.0
         assert read_virus_injection.yaw_in_deg == 0.0
         assert read_virus_injection.reference == "Bregma at the cortical surface"
-        assert read_virus_injection.virus == read_virus
+        assert read_virus_injection.viral_vector == read_virus
         assert read_virus_injection.volume_in_uL == 0.45
+
+        assert len(read_optogenetic_experiment_metadata.optogenetic_effectors.effectors) == 1
+        read_effector = read_optogenetic_experiment_metadata.optogenetic_effectors.effectors["effector"]
+        assert read_effector.name == "effector"
+        assert read_effector.description == "Excitatory opsin"
+        assert read_effector.label == "hChR2-EYFP"
+        assert read_effector.viral_vector_injection is read_virus_injection
 
         read_optogenetic_epochs_table = read_nwbfile.intervals["optogenetic_epochs"]
         assert type(read_optogenetic_epochs_table) is OptogeneticEpochsTable
