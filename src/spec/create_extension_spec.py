@@ -42,111 +42,15 @@ def main():
     ns_builder.include_namespace("core")
     ns_builder.include_namespace("ndx-ophys-devices")
 
-    # NOTE: These columns could all be properties of OpticalFiber, or the optical fiber model and serial number
-    # from OpticalFiber and the excitation source model and serial number from ExcitationSource could be moved into
-    # this table. This split representation is more consistent with how device instances and device locations are
-    # represented in other extensions.
-    optical_fiber_locations_table = NWBGroupSpec(
-        neurodata_type_def="OpticalFiberLocationsTable",
+    optogenetic_sites_table = NWBGroupSpec(
+        neurodata_type_def="OptogeneticSitesTable",
         neurodata_type_inc="DynamicTable",
         doc=(
-            "Information about the targeted stereotactic coordinates of the tip of the implanted optical fiber "
-            "and the angles of the optical fiber in the brain."
+            "This table contains information about the optogenetic stimulation sites, including the excitation source, "
+            "the optical fiber, and targeted effector." 
         ),
-        default_name="optical_fiber_locations_table",
+        default_name="optogenetic_sites_table",
         datasets=[
-            NWBDatasetSpec(
-                name="implanted_fiber_description",
-                neurodata_type_inc="VectorData",
-                doc=("Description of the implanted optical fiber, e.g., 'Lambda fiber implanted into right GPe'."),
-                dtype="text",
-            ),
-            NWBDatasetSpec(
-                name="location",
-                neurodata_type_inc="VectorData",
-                doc=("Name of the targeted location of the tip of the optical fiber in the brain."),
-                dtype="text",
-            ),
-            NWBDatasetSpec(
-                name="hemisphere",
-                neurodata_type_inc="VectorData",
-                doc=(
-                    'The hemisphere ("left" or "right") of the targeted location of the tip of the optical fiber. '
-                    "Should be consistent with `ml_in_mm` coordinate."
-                ),
-                dtype="text",
-            ),
-            NWBDatasetSpec(
-                name="ap_in_mm",
-                neurodata_type_inc="VectorData",
-                doc=(
-                    "Anteroposterior coordinate in mm of the targeted location of the tip of the optical fiber "
-                    "(+ is anterior), with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBDatasetSpec(
-                name="ml_in_mm",
-                neurodata_type_inc="VectorData",
-                doc=(
-                    "Mediolateral coordinate in mm of the targeted location of the tip of the optical fiber "
-                    "(+ is right), with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBDatasetSpec(
-                name="dv_in_mm",
-                neurodata_type_inc="VectorData",
-                doc=(
-                    "Dorsoventral coordinate in mm of the targeted location of the tip of the optical fiber "
-                    "(+ is dorsal/above the brain), with reference to `reference`."
-                ),
-                dtype="float",
-            ),
-            NWBDatasetSpec(
-                name="pitch_in_deg",
-                neurodata_type_inc="VectorData",
-                doc=(
-                    "Pitch angle in degrees of the implanted optical fiber (rotation around left-right axis, "
-                    "+ is rotating the nose upward)."
-                ),
-                dtype="float",
-                quantity="?",
-            ),
-            NWBDatasetSpec(
-                name="yaw_in_deg",
-                neurodata_type_inc="VectorData",
-                doc=(
-                    "Yaw angle in degrees of the implanted optical fiber (rotation around dorsal-ventral axis, "
-                    "+ is rotating the nose rightward)."
-                ),
-                dtype="float",
-                quantity="?",
-            ),
-            NWBDatasetSpec(
-                name="roll_in_deg",
-                neurodata_type_inc="VectorData",
-                doc=(
-                    "Roll angle in degrees of the implanted optical fiber (rotation around anterior-posterior axis, "
-                    "+ is rotating the right side downward)."
-                ),
-                dtype="float",
-                quantity="?",
-            ),
-            NWBDatasetSpec(
-                name="stereotactic_rotation_in_deg",
-                neurodata_type_inc="VectorData",
-                doc=("TODO"),
-                dtype="float",
-                quantity="?",
-            ),
-            NWBDatasetSpec(
-                name="stereotactic_tilt_in_deg",
-                neurodata_type_inc="VectorData",
-                doc=("TODO"),
-                dtype="float",
-                quantity="?",
-            ),
             NWBDatasetSpec(
                 # TODO: make this optional here and in OptogeneticStimulusSite
                 # for cases when the fiber is implanted but the excitation source was not turned on
@@ -168,25 +72,15 @@ def main():
                     reftype="object",
                 ),
             ),
-        ],
-        attributes=[
-            NWBAttributeSpec(
-                name="reference",
-                doc=(
-                    "Zero point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g., "
-                    '"Bregma at the cortical surface".'
+            NWBDatasetSpec(
+                name="effector",
+                neurodata_type_inc="VectorData",
+                doc="The effector protein, e.g., ChR2.",
+                dtype=NWBRefSpec(
+                    target_type="Effector",
+                    reftype="object",
                 ),
-                dtype="text",
             ),
-            # Set a fixed value for the description attribute to override the description in DynamicTable
-            # TODO this does not work as expected
-            # NWBAttributeSpec(
-            #     name="description",
-            #     doc=("Description of what is in this dynamic table."),
-            #     dtype="text",
-            #     value=("Information about the targeted stereotactic coordinates of the tip of the implanted optical "
-            #            "fiber and the angles of the optical fiber in the brain."),
-            # ),
         ],
     )
     optogenetic_viruses = NWBGroupSpec(
@@ -254,8 +148,8 @@ def main():
         ],
         groups=[
             NWBGroupSpec(
-                name="optical_fiber_locations_table",
-                neurodata_type_inc="OpticalFiberLocationsTable",
+                name="optogenetic_sites_table",
+                neurodata_type_inc="OptogeneticSitesTable",
                 doc=(
                     "Information about the targeted stereotactic coordinates of the tip of the implanted optical "
                     "fiber and the angles of the optical fiber in the brain."
@@ -349,20 +243,20 @@ def main():
                 dtype="float",
             ),
             NWBDatasetSpec(
-                name="optical_fiber_locations_index",
-                doc="Index to allow reference to multiple rows of the OpticalFiberLocationsTable.",
+                name="optogenetic_sites_index",
+                doc="Index to allow reference to multiple rows of the OptogeneticSitesTable.",
                 neurodata_type_inc="VectorIndex",
             ),
             NWBDatasetSpec(
-                name="optical_fiber_locations",
-                doc="References row(s) of OpticalFiberLocationsTable.",
+                name="optogenetic_sites",
+                doc="References row(s) of OptogeneticSitesTable.",
                 neurodata_type_inc="DynamicTableRegion",
             ),
         ],
     )
 
     new_data_types = [
-        optical_fiber_locations_table,
+        optogenetic_sites_table,
         optogenetic_viruses,
         optogenetic_virus_injections,
         optogenetic_effectors,

@@ -12,7 +12,7 @@ def test_example_usage():
         FiberInsertion,
     )
     from ndx_optogenetics import (
-        OpticalFiberLocationsTable,
+        OptogeneticSitesTable,
         OptogeneticViruses,
         OptogeneticVirusInjections,
         OptogeneticEffectors,
@@ -78,25 +78,6 @@ def test_example_usage():
     nwbfile.add_device(optical_fiber_model)
     nwbfile.add_device(optical_fiber)
 
-    # Create optical fiber locations table
-    optical_fiber_locations_table = OpticalFiberLocationsTable(
-        description="Information about implanted optical fiber locations",
-        reference="Bregma at the cortical surface",
-    )
-    optical_fiber_locations_table.add_row(
-        implanted_fiber_description="Lambda fiber implanted into right GPe.",
-        location="GPe",
-        hemisphere="right",
-        ap_in_mm=-1.5,
-        ml_in_mm=3.2,
-        dv_in_mm=-5.8,
-        roll_in_deg=0.0,
-        pitch_in_deg=0.0,
-        yaw_in_deg=0.0,
-        excitation_source=excitation_source,
-        optical_fiber=optical_fiber,
-    )
-
     # Create virus and injection metadata
     virus = ViralVector(
         name="AAV-EF1a-DIO-hChR2(H134R)-EYFP",
@@ -132,9 +113,17 @@ def test_example_usage():
     )
     optogenetic_effectors = OptogeneticEffectors(effectors=[effector])
 
+    # Create OptogeneticSitesTable
+    optogenetic_sites_table = OptogeneticSitesTable(description="Information about implanted optical fiber locations")
+    optogenetic_sites_table.add_row(
+        excitation_source=excitation_source,
+        optical_fiber=optical_fiber,
+        effector=effector,
+    )
+
     # Create experiment metadata container
     optogenetic_experiment_metadata = OptogeneticExperimentMetadata(
-        optical_fiber_locations_table=optical_fiber_locations_table,
+        optogenetic_sites_table=optogenetic_sites_table,
         optogenetic_viruses=optogenetic_viruses,
         optogenetic_virus_injections=optogenetic_virus_injections,
         optogenetic_effectors=optogenetic_effectors,
@@ -146,7 +135,7 @@ def test_example_usage():
     opto_epochs_table = OptogeneticEpochsTable(
         name="optogenetic_epochs",
         description="Metadata about optogenetic stimulation parameters per epoch",
-        target_tables={"optical_fiber_locations": optical_fiber_locations_table},
+        target_tables={"optogenetic_sites": optogenetic_sites_table},
     )
     opto_epochs_table.add_row(
         start_time=0.0,
@@ -158,7 +147,7 @@ def test_example_usage():
         number_trains=1,
         intertrain_interval_in_ms=0.0,
         power_in_mW=77.0,
-        optical_fiber_locations=[0],
+        optogenetic_sites=[0],
     )
     nwbfile.add_time_intervals(opto_epochs_table)
 
@@ -211,23 +200,14 @@ def test_example_usage():
         assert type(read_optogenetic_experiment_metadata) is OptogeneticExperimentMetadata
         assert read_optogenetic_experiment_metadata.stimulation_software == "FSGUI 2.0"
 
-        read_fiber_locations_table = read_optogenetic_experiment_metadata.optical_fiber_locations_table
-        assert type(read_fiber_locations_table) is OpticalFiberLocationsTable
-        assert read_fiber_locations_table.description == "Information about implanted optical fiber locations"
-        assert read_fiber_locations_table.reference == "Bregma at the cortical surface"
+        read_optogenetic_sites_table = read_optogenetic_experiment_metadata.optogenetic_sites_table
+        assert type(read_optogenetic_sites_table) is OptogeneticSitesTable
+        assert read_optogenetic_sites_table.description == "Information about implanted optical fiber locations"
 
-        assert len(read_fiber_locations_table) == 1
-        assert read_fiber_locations_table[0, "implanted_fiber_description"] == "Lambda fiber implanted into right GPe."
-        assert read_fiber_locations_table[0, "location"] == "GPe"
-        assert read_fiber_locations_table[0, "hemisphere"] == "right"
-        assert read_fiber_locations_table[0, "ap_in_mm"] == -1.5
-        assert read_fiber_locations_table[0, "ml_in_mm"] == 3.2
-        assert read_fiber_locations_table[0, "dv_in_mm"] == -5.8
-        assert read_fiber_locations_table[0, "roll_in_deg"] == 0.0
-        assert read_fiber_locations_table[0, "pitch_in_deg"] == 0.0
-        assert read_fiber_locations_table[0, "yaw_in_deg"] == 0.0
-        assert read_fiber_locations_table[0, "excitation_source"] is read_nwbfile.devices["Omicron LuxX+ 488-100"]
-        assert read_fiber_locations_table[0, "optical_fiber"] is read_nwbfile.devices["Lambda"]
+        assert len(read_optogenetic_sites_table) == 1
+        assert read_optogenetic_sites_table[0, "excitation_source"] is read_nwbfile.devices["Omicron LuxX+ 488-100"]
+        assert read_optogenetic_sites_table[0, "optical_fiber"] is read_nwbfile.devices["Lambda"]
+        assert read_optogenetic_sites_table[0, "effector"] is read_optogenetic_experiment_metadata.optogenetic_effectors.effectors["effector"]
 
         assert len(read_optogenetic_experiment_metadata.optogenetic_viruses.viral_vectors) == 1
         read_virus = read_optogenetic_experiment_metadata.optogenetic_viruses.viral_vectors[
@@ -282,7 +262,6 @@ def test_example_usage():
         assert read_optogenetic_epochs_table[0, "number_trains"] == 1
         assert read_optogenetic_epochs_table[0, "intertrain_interval_in_ms"] == 0.0
         assert read_optogenetic_epochs_table[0, "power_in_mW"] == 77.0
-        assert read_optogenetic_epochs_table.optical_fiber_locations_index.data[:] == [1]
-        assert read_optogenetic_epochs_table.optical_fiber_locations.data[:] == [0]
-        assert read_optogenetic_epochs_table.optical_fiber_locations.table is read_fiber_locations_table
-        assert read_optogenetic_epochs_table[0, "optical_fiber_locations"].equals(read_fiber_locations_table.to_dataframe()[0:1])
+        assert read_optogenetic_epochs_table.optogenetic_sites_index.data[:] == [1]
+        assert read_optogenetic_epochs_table.optogenetic_sites.table is read_optogenetic_sites_table
+        assert read_optogenetic_epochs_table[0, "optogenetic_sites"].equals(read_optogenetic_sites_table.to_dataframe()[0:1])

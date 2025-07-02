@@ -1,72 +1,10 @@
 groups:
-- neurodata_type_def: OpticalFiberLocationsTable
+- neurodata_type_def: OptogeneticSitesTable
   neurodata_type_inc: DynamicTable
-  default_name: optical_fiber_locations_table
-  doc: Information about the targeted stereotactic coordinates of the tip of the implanted
-    optical fiber and the angles of the optical fiber in the brain.
-  attributes:
-  - name: reference
-    dtype: text
-    doc: Zero point for `ap_in_mm`, `ml_in_mm`, and `dv_in_mm` coordinates, e.g.,
-      "Bregma at the cortical surface".
+  default_name: optogenetic_sites_table
+  doc: This table contains information about the optogenetic stimulation sites, including
+    the excitation source, the optical fiber, and targeted effector.
   datasets:
-  - name: implanted_fiber_description
-    neurodata_type_inc: VectorData
-    dtype: text
-    doc: Description of the implanted optical fiber, e.g., 'Lambda fiber implanted
-      into right GPe'.
-  - name: location
-    neurodata_type_inc: VectorData
-    dtype: text
-    doc: Name of the targeted location of the tip of the optical fiber in the brain.
-  - name: hemisphere
-    neurodata_type_inc: VectorData
-    dtype: text
-    doc: The hemisphere ("left" or "right") of the targeted location of the tip of
-      the optical fiber. Should be consistent with `ml_in_mm` coordinate.
-  - name: ap_in_mm
-    neurodata_type_inc: VectorData
-    dtype: float
-    doc: Anteroposterior coordinate in mm of the targeted location of the tip of the
-      optical fiber (+ is anterior), with reference to `reference`.
-  - name: ml_in_mm
-    neurodata_type_inc: VectorData
-    dtype: float
-    doc: Mediolateral coordinate in mm of the targeted location of the tip of the
-      optical fiber (+ is right), with reference to `reference`.
-  - name: dv_in_mm
-    neurodata_type_inc: VectorData
-    dtype: float
-    doc: Dorsoventral coordinate in mm of the targeted location of the tip of the
-      optical fiber (+ is dorsal/above the brain), with reference to `reference`.
-  - name: pitch_in_deg
-    neurodata_type_inc: VectorData
-    dtype: float
-    doc: Pitch angle in degrees of the implanted optical fiber (rotation around left-right
-      axis, + is rotating the nose upward).
-    quantity: '?'
-  - name: yaw_in_deg
-    neurodata_type_inc: VectorData
-    dtype: float
-    doc: Yaw angle in degrees of the implanted optical fiber (rotation around dorsal-ventral
-      axis, + is rotating the nose rightward).
-    quantity: '?'
-  - name: roll_in_deg
-    neurodata_type_inc: VectorData
-    dtype: float
-    doc: Roll angle in degrees of the implanted optical fiber (rotation around anterior-posterior
-      axis, + is rotating the right side downward).
-    quantity: '?'
-  - name: stereotactic_rotation_in_deg
-    neurodata_type_inc: VectorData
-    dtype: float
-    doc: TODO
-    quantity: '?'
-  - name: stereotactic_tilt_in_deg
-    neurodata_type_inc: VectorData
-    dtype: float
-    doc: TODO
-    quantity: '?'
   - name: excitation_source
     neurodata_type_inc: VectorData
     dtype:
@@ -80,6 +18,12 @@ groups:
       target_type: OpticalFiber
       reftype: object
     doc: The optical fiber device.
+  - name: effector
+    neurodata_type_inc: VectorData
+    dtype:
+      target_type: Effector
+      reftype: object
+    doc: The effector protein, e.g., ChR2.
 - neurodata_type_def: OptogeneticViruses
   neurodata_type_inc: NWBContainer
   name: optogenetic_viruses
@@ -116,8 +60,8 @@ groups:
     dtype: text
     doc: Name of the software used to deliver optogenetic stimulation.
   groups:
-  - name: optical_fiber_locations_table
-    neurodata_type_inc: OpticalFiberLocationsTable
+  - name: optogenetic_sites_table
+    neurodata_type_inc: OptogeneticSitesTable
     doc: Information about the targeted stereotactic coordinates of the tip of the
       implanted optical fiber and the angles of the optical fiber in the brain.
   - name: optogenetic_viruses
@@ -172,9 +116,9 @@ groups:
     dtype: float
     doc: Constant power of excitation source throughout the epoch, in mW, e.g., 77
       mW.
-  - name: optical_fiber_locations_index
+  - name: optogenetic_sites_index
     neurodata_type_inc: VectorIndex
-    doc: Index to allow reference to multiple rows of the OpticalFiberLocationsTable.
-  - name: optical_fiber_locations
+    doc: Index to allow reference to multiple rows of the OptogeneticSitesTable.
+  - name: optogenetic_sites
     neurodata_type_inc: DynamicTableRegion
-    doc: References row(s) of OpticalFiberLocationsTable.
+    doc: References row(s) of OptogeneticSitesTable.
