@@ -114,7 +114,7 @@ def test_example_usage():
     optogenetic_effectors = OptogeneticEffectors(effectors=[effector])
 
     # Create OptogeneticSitesTable
-    optogenetic_sites_table = OptogeneticSitesTable(description="Information about implanted optical fiber locations")
+    optogenetic_sites_table = OptogeneticSitesTable(description="Information about the optogenetic stimulation sites.")
     optogenetic_sites_table.add_row(
         excitation_source=excitation_source,
         optical_fiber=optical_fiber,
@@ -202,7 +202,7 @@ def test_example_usage():
 
         read_optogenetic_sites_table = read_optogenetic_experiment_metadata.optogenetic_sites_table
         assert type(read_optogenetic_sites_table) is OptogeneticSitesTable
-        assert read_optogenetic_sites_table.description == "Information about implanted optical fiber locations"
+        assert read_optogenetic_sites_table.description == "Information about the optogenetic stimulation sites."
 
         assert len(read_optogenetic_sites_table) == 1
         assert read_optogenetic_sites_table[0, "excitation_source"] is read_nwbfile.devices["Omicron LuxX+ 488-100"]

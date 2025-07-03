@@ -151,8 +151,8 @@ def main():
                 name="optogenetic_sites_table",
                 neurodata_type_inc="OptogeneticSitesTable",
                 doc=(
-                    "Information about the targeted stereotactic coordinates of the tip of the implanted optical "
-                    "fiber and the angles of the optical fiber in the brain."
+                    "This table contains information about the optogenetic stimulation sites, "
+                    "including the excitation source, the optical fiber, and targeted effector."
                 ),
             ),
             NWBGroupSpec(
