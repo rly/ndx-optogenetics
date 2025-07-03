@@ -39,7 +39,6 @@ def test_example_usage():
     excitation_source = ExcitationSource(
         name="Omicron LuxX+ 488-100",
         model=excitation_source_model,
-        # wavelength_in_nm=488.0,
         power_in_W=0.077,
         intensity_in_W_per_m2=1.0e10,
     )
