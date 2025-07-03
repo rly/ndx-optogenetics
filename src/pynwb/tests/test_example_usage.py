@@ -53,9 +53,9 @@ def test_example_usage():
         manufacturer="Optogenix",
         numerical_aperture=0.39,
         core_diameter_in_um=200.0,
-        # active_length_in_mm=2.0,
-        # ferrule_name="cFCF - ∅2.5mm Ceramic Ferrule",
-        # ferrule_diameter_in_mm=2.5,
+        active_length_in_mm=2.0,
+        ferrule_name="cFCF - ∅2.5mm Ceramic Ferrule",
+        ferrule_diameter_in_mm=2.5,
     )
     fiber_insertion = FiberInsertion(
         name="fiber_insertion",
@@ -184,9 +184,9 @@ def test_example_usage():
         assert read_optical_fiber_model.manufacturer == "Optogenix"
         assert read_optical_fiber_model.numerical_aperture == 0.39
         assert read_optical_fiber_model.core_diameter_in_um == 200
-        # assert read_optical_fiber_model.active_length_in_mm == 2.0
-        # assert read_optical_fiber_model.ferrule_name == "cFCF - ∅2.5mm Ceramic Ferrule"
-        # assert read_optical_fiber_model.ferrule_diameter_in_mm == 2.5
+        assert read_optical_fiber_model.active_length_in_mm == 2.0
+        assert read_optical_fiber_model.ferrule_name == "cFCF - ∅2.5mm Ceramic Ferrule"
+        assert read_optical_fiber_model.ferrule_diameter_in_mm == 2.5
 
         read_optical_fiber = read_nwbfile.devices["Lambda"]
         assert type(read_optical_fiber) is OpticalFiber
