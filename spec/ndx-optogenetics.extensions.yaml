@@ -116,6 +116,10 @@ groups:
     dtype: float
     doc: Constant power of excitation source throughout the epoch, in mW, e.g., 77
       mW.
+  - name: wavelength_in_nm
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Wavelength of the excitation source, in nm.
   - name: optogenetic_sites_index
     neurodata_type_inc: VectorIndex
     doc: Index to allow reference to multiple rows of the OptogeneticSitesTable.

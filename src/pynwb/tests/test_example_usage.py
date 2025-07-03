@@ -147,6 +147,7 @@ def test_example_usage():
         number_trains=1,
         intertrain_interval_in_ms=0.0,
         power_in_mW=77.0,
+        wavelength_in_nm=488.0,
         optogenetic_sites=[0],
     )
     nwbfile.add_time_intervals(opto_epochs_table)
@@ -173,7 +174,6 @@ def test_example_usage():
         assert type(read_excitation_source) is ExcitationSource
         assert read_excitation_source.name == "Omicron LuxX+ 488-100"
         assert read_excitation_source.model is read_excitation_source_model
-        # assert read_excitation_source.wavelength_in_nm == 488.0
         assert read_excitation_source.power_in_W == 0.077
         assert read_excitation_source.intensity_in_W_per_m2 == 1.0e10
 
@@ -262,6 +262,7 @@ def test_example_usage():
         assert read_optogenetic_epochs_table[0, "number_trains"] == 1
         assert read_optogenetic_epochs_table[0, "intertrain_interval_in_ms"] == 0.0
         assert read_optogenetic_epochs_table[0, "power_in_mW"] == 77.0
+        assert read_optogenetic_epochs_table[0, "wavelength_in_nm"] == 488.0
         assert read_optogenetic_epochs_table.optogenetic_sites_index.data[:] == [1]
         assert read_optogenetic_epochs_table.optogenetic_sites.table is read_optogenetic_sites_table
         assert read_optogenetic_epochs_table[0, "optogenetic_sites"].equals(read_optogenetic_sites_table.to_dataframe()[0:1])

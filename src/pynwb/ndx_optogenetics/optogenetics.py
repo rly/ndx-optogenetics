@@ -25,6 +25,7 @@ class OptogeneticEpochsTable(TimeIntervals):
         {'name': 'number_trains', 'description': 'Number of trains per stimulus. After this number of trains, no more stimulation occurs until stimulation is re-triggered. Use -1 if stimulation was off.', 'required': True},
         {'name': 'intertrain_interval_in_ms', 'description': 'Duration between the starts of two consecutive pulse trains, in ms. Determines the frequency of stimulation. Use NaN if stimulation was off.', 'required': True},
         {'name': 'power_in_mW', 'description': 'Constant power of excitation source throughout the epoch, in mW, e.g., 77 mW.', 'required': True},
+        {'name': 'wavelength_in_nm', 'description': 'Wavelength of the excitation source, in nm, e.g., 488 nm.', 'required': True},
         {'name': 'optogenetic_sites', 'description': 'References row(s) of OptogeneticSitesTable.', 'required': True, "table": True, "index": True},
     )
 

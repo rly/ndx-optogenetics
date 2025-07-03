@@ -243,6 +243,12 @@ def main():
                 dtype="float",
             ),
             NWBDatasetSpec(
+                name="wavelength_in_nm",
+                neurodata_type_inc="VectorData",
+                doc="Wavelength of the excitation source, in nm.",
+                dtype="float",
+            ),
+            NWBDatasetSpec(
                 name="optogenetic_sites_index",
                 doc="Index to allow reference to multiple rows of the OptogeneticSitesTable.",
                 neurodata_type_inc="VectorIndex",
