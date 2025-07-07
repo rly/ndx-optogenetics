@@ -101,6 +101,7 @@ def test_example_usage():
         reference="Bregma at the cortical surface",
         viral_vector=virus,
         volume_in_uL=0.45,
+        injection_date="1970-01-01T00:00:00+00:00",
     )
     optogenetic_virus_injections = OptogeneticVirusInjections(viral_vector_injections=[virus_injection])
 
