@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ndx-optogenetics"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
     { name="Ryan Ly", email="rly@lbl.gov" },
     { name="Horea Christian", email="rly@lbl.gov" },  # TODO
@@ -36,6 +36,7 @@ keywords = [
 dependencies = [
     "pynwb>=2.8.0",
     "hdmf>=3.14.1",
+    "ndx_ophys_devices>=0.3.0",
 ]
 
 [project.optional-dependencies]
@@ -63,6 +64,7 @@ dev = [
 min-reqs = [
     "pynwb==2.8.0",
     "hdmf==3.14.1",
+    "ndx_ophys_devices==0.3.0",
 ]
 
 # TODO: add URLs before release
