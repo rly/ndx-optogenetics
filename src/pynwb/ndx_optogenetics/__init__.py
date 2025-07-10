@@ -11,6 +11,9 @@ if not os.path.exists(__spec_path):
     __spec_path = __location_of_this_file.parent.parent.parent / "spec" / "ndx-optogenetics.namespace.yaml"
 
 # Load the namespace
+# ndx-optogenetics depends on ndx-ophys-devices,
+# so importing it here prevents namespace errors when users import this package directly
+import ndx_ophys_devices  # noqa: F401
 load_namespaces(str(__spec_path))
 
 ExcitationSourceModel = get_class("ExcitationSourceModel", "ndx-optogenetics")
