@@ -6,20 +6,8 @@ from pynwb.spec import (
     export_spec,
     NWBGroupSpec,
     NWBAttributeSpec,
-    NWBLinkSpec,
     NWBDatasetSpec,
     NWBRefSpec,
-)
-
-from ndx_ophys_devices import (
-    ViralVector,
-    ViralVectorInjection,
-    Effector,
-    FiberInsertion,
-    OpticalFiberModel,
-    ExcitationSourceModel,
-    OpticalFiber,
-    ExcitationSource,
 )
 
 def main():
