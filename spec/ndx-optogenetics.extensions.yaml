@@ -2,8 +2,8 @@ groups:
 - neurodata_type_def: OptogeneticSitesTable
   neurodata_type_inc: DynamicTable
   default_name: optogenetic_sites_table
-  doc: This table contains information about the optogenetic stimulation sites, including
-    the excitation source, the optical fiber, and targeted effector.
+  doc: This table contains information about the optogenetic stimulation sites, 
+    including the excitation source, the optical fiber, and targeted effector.
   datasets:
   - name: excitation_source
     neurodata_type_inc: VectorData
@@ -27,8 +27,8 @@ groups:
 - neurodata_type_def: OptogeneticViruses
   neurodata_type_inc: NWBContainer
   name: optogenetic_viruses
-  doc: Group containing one or more ViralVector objects, to be used within an OptogeneticExperimentMetadata
-    object.
+  doc: Group containing one or more ViralVector objects, to be used within an 
+    OptogeneticExperimentMetadata object.
   groups:
   - neurodata_type_inc: ViralVector
     doc: ViralVector object(s).
@@ -36,8 +36,8 @@ groups:
 - neurodata_type_def: OptogeneticVirusInjections
   neurodata_type_inc: NWBContainer
   name: optogenetic_virus_injections
-  doc: Group containing one or more ViralVectorInjection objects, to be used within
-    an OptogeneticExperimentMetadata object.
+  doc: Group containing one or more ViralVectorInjection objects, to be used 
+    within an OptogeneticExperimentMetadata object.
   groups:
   - neurodata_type_inc: ViralVectorInjection
     doc: ViralVectorInjection object(s).
@@ -45,8 +45,8 @@ groups:
 - neurodata_type_def: OptogeneticEffectors
   neurodata_type_inc: NWBContainer
   name: optogenetic_effectors
-  doc: Group containing one or more Effector objects, to be used within an OptogeneticExperimentMetadata
-    object.
+  doc: Group containing one or more Effector objects, to be used within an 
+    OptogeneticExperimentMetadata object.
   groups:
   - neurodata_type_inc: Effector
     doc: Effector object(s).
@@ -62,8 +62,9 @@ groups:
   groups:
   - name: optogenetic_sites_table
     neurodata_type_inc: OptogeneticSitesTable
-    doc: This table contains information about the optogenetic stimulation sites,
-      including the excitation source, the optical fiber, and targeted effector.
+    doc: This table contains information about the optogenetic stimulation 
+      sites, including the excitation source, the optical fiber, and targeted 
+      effector.
   - name: optogenetic_viruses
     neurodata_type_inc: OptogeneticViruses
     doc: Group containing of one or more OptogeneticVirus objects.
@@ -77,15 +78,15 @@ groups:
     doc: Group containing one or more OptogeneticEffector objects.
 - neurodata_type_def: OptogeneticEpochsTable
   neurodata_type_inc: TimeIntervals
-  doc: General metadata about the optogenetic stimulation that may change per epoch.
-    Some epochs have no stimulation and are used as control epochs. If the stimulation
-    is on, then the epoch is a stimulation.
+  doc: General metadata about the optogenetic stimulation that may change per 
+    epoch. Some epochs have no stimulation and are used as control epochs. If 
+    the stimulation is on, then the epoch is a stimulation.
   datasets:
   - name: stimulation_on
     neurodata_type_inc: VectorData
     dtype: bool
-    doc: Whether optogenetic stimulation was used at any time during this epoch. If
-      False, then all other metadata values should be 0.
+    doc: Whether optogenetic stimulation was used at any time during this epoch.
+      If False, then all other metadata values should be 0.
   - name: pulse_length_in_ms
     neurodata_type_inc: VectorData
     dtype: float
@@ -93,29 +94,31 @@ groups:
   - name: period_in_ms
     neurodata_type_inc: VectorData
     dtype: float
-    doc: Duration between the starts of two pulses, in ms. Use NaN if stimulation
-      was off.Note that the interpulse interval = `period_ms` - `pulse_length_ms`
+    doc: Duration between the starts of two pulses, in ms. Use NaN if 
+      stimulation was off.Note that the interpulse interval = `period_ms` - 
+      `pulse_length_ms`
   - name: number_pulses_per_pulse_train
     neurodata_type_inc: VectorData
     dtype: int
-    doc: Number of pulses in one pulse train. After this number of pulses, no more
-      stimulation occurs until the next train begins (see `intertrain_interval_ms`).
-      Use -1 if stimulation was off.
+    doc: Number of pulses in one pulse train. After this number of pulses, no 
+      more stimulation occurs until the next train begins (see 
+      `intertrain_interval_ms`). Use -1 if stimulation was off.
   - name: number_trains
     neurodata_type_inc: VectorData
     dtype: int
-    doc: Number of trains per stimulus. After this number of trains, no more stimulation
-      occurs until stimulation is re-triggered. Use -1 if stimulation was off.
+    doc: Number of trains per stimulus. After this number of trains, no more 
+      stimulation occurs until stimulation is re-triggered. Use -1 if 
+      stimulation was off.
   - name: intertrain_interval_in_ms
     neurodata_type_inc: VectorData
     dtype: float
-    doc: Duration between the starts of two consecutive pulse trains, in ms. Determines
-      the frequency of stimulation. Use NaN if stimulation was off.
+    doc: Duration between the starts of two consecutive pulse trains, in ms. 
+      Determines the frequency of stimulation. Use NaN if stimulation was off.
   - name: power_in_mW
     neurodata_type_inc: VectorData
     dtype: float
-    doc: Constant power of excitation source throughout the epoch, in mW, e.g., 77
-      mW.
+    doc: Constant power of excitation source throughout the epoch, in mW, e.g., 
+      77 mW.
   - name: wavelength_in_nm
     neurodata_type_inc: VectorData
     dtype: float

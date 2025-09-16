@@ -20,11 +20,13 @@ def main():
             "Ryan Ly",
             "Horea Christian",
             "Ben Dichter",
+            "Paul Adkisson",
         ],
         contact=[
             "rly@lbl.gov",
             "uni@chymera.eu",
             "ben.dichter@catalystneuro.com",
+            "paul.adkisson@catalystneuro.com",
         ],
     )
     ns_builder.include_namespace("core")
@@ -35,7 +37,7 @@ def main():
         neurodata_type_inc="DynamicTable",
         doc=(
             "This table contains information about the optogenetic stimulation sites, including the excitation source, "
-            "the optical fiber, and targeted effector." 
+            "the optical fiber, and targeted effector."
         ),
         default_name="optogenetic_sites_table",
         datasets=[
