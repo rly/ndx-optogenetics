@@ -10,7 +10,7 @@ project = 'ndx-optogenetics'
 copyright = '2025, Ryan Ly, Horea Christian, Ben Dichter'
 author = 'Ryan Ly, Horea Christian, Ben Dichter'
 
-version = '0.2.0'
+version = '0.3.0'
 release = 'alpha'
 
 # -- General configuration ---------------------------------------------------

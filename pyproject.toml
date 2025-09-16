@@ -4,10 +4,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ndx-optogenetics"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
     { name="Ryan Ly", email="rly@lbl.gov" },
-    { name="Horea Christian", email="rly@lbl.gov" },  # TODO
+    { name="Horea Christian", email="uni@chymera.eu" },
     { name="Ben Dichter", email="ben.dichter@catalystneuro.com" },
 ]
 description = "NWB extension to enhance support for optogenetics data and metadata in NWB"
@@ -34,7 +34,7 @@ keywords = [
     'ndx-extension',
 ]
 dependencies = [
-    "pynwb>=2.8.0",
+    "pynwb>=3.1.0",
     "hdmf>=3.14.1",
 ]
 
@@ -61,7 +61,7 @@ dev = [
 
 # minimum requirements of project dependencies for testing (see .github/workflows/run_all_tests.yml)
 min-reqs = [
-    "pynwb==2.8.0",
+    "pynwb==3.1.0",
     "hdmf==3.14.1",
 ]
 

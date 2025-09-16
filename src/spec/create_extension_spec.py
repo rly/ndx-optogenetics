@@ -16,7 +16,7 @@ def main():
     # these arguments were auto-generated from your cookiecutter inputs
     ns_builder = NWBNamespaceBuilder(
         name="""ndx-optogenetics""",
-        version="""0.2.0""",
+        version="""0.3.0""",
         doc="""NWB extension to improve support for optogenetics data and metadata""",
         author=[
             "Ryan Ly",
@@ -34,7 +34,7 @@ def main():
     # This is adapted from ndx-ophys-devices
     excitation_source_model = NWBGroupSpec(
         neurodata_type_def="ExcitationSourceModel",
-        neurodata_type_inc="Device",  # TODO inherit from DeviceModel after NWB core adopts DeviceModel
+        neurodata_type_inc="DeviceModel",
         doc="Excitation source model. Currently there are no additional attributes.",
         attributes=[
             NWBAttributeSpec(
@@ -96,7 +96,7 @@ def main():
 
     optical_fiber_model = NWBGroupSpec(
         neurodata_type_def="OpticalFiberModel",
-        neurodata_type_inc="Device",  # TODO inherit from DeviceModel after NWB core adopts DeviceModel
+        neurodata_type_inc="DeviceModel",
         doc="Optical fiber device model.",
         # refs:
         # - https://www.thorlabs.com/newgrouppage9.cfm?objectgroup_id=6742
