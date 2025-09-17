@@ -363,7 +363,7 @@ classDiagram
 ```python
 from datetime import datetime, timezone
 from pynwb import NWBFile, NWBHDF5IO
-from ndx_ophys_devices import(
+from ndx_ophys_devices import (
     ViralVector,
     ViralVectorInjection,
     Effector,
@@ -404,7 +404,7 @@ excitation_source = ExcitationSource(
     power_in_W=0.077,
     intensity_in_W_per_m2=1.0e10,
 )
-nwbfile.add_device(excitation_source_model)
+nwbfile.add_device_model(excitation_source_model)
 nwbfile.add_device(excitation_source)
 
 # Create and add optical fiber devices
@@ -434,9 +434,9 @@ optical_fiber = OpticalFiber(
     description="Lambda fiber implanted into right GPe.",
     serial_number="123456",
     model=optical_fiber_model,
-    fiber_insertion=fiber_insertion, 
+    fiber_insertion=fiber_insertion,
 )
-nwbfile.add_device(optical_fiber_model)
+nwbfile.add_device_model(optical_fiber_model)
 nwbfile.add_device(optical_fiber)
 
 # Create virus and injection metadata
@@ -515,7 +515,7 @@ opto_epochs_table.add_row(
 nwbfile.add_time_intervals(opto_epochs_table)
 
 # Write the file
-path = "example.nwb"
+path = "test_optogenetics.nwb"
 with NWBHDF5IO(path, mode="w") as io:
     io.write(nwbfile)
 ```

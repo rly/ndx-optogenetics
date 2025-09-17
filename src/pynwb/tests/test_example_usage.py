@@ -42,7 +42,7 @@ def test_example_usage():
         power_in_W=0.077,
         intensity_in_W_per_m2=1.0e10,
     )
-    nwbfile.add_device(excitation_source_model)
+    nwbfile.add_device_model(excitation_source_model)
     nwbfile.add_device(excitation_source)
 
     # Create and add optical fiber devices
@@ -74,7 +74,7 @@ def test_example_usage():
         model=optical_fiber_model,
         fiber_insertion=fiber_insertion,
     )
-    nwbfile.add_device(optical_fiber_model)
+    nwbfile.add_device_model(optical_fiber_model)
     nwbfile.add_device(optical_fiber)
 
     # Create virus and injection metadata
@@ -161,7 +161,7 @@ def test_example_usage():
     with NWBHDF5IO(path, mode="r", load_namespaces=True) as io:
         read_nwbfile = io.read()
 
-        read_excitation_source_model = read_nwbfile.devices["Omicron LuxX+ 488-100 Model"]
+        read_excitation_source_model = read_nwbfile.device_models["Omicron LuxX+ 488-100 Model"]
         assert type(read_excitation_source_model) is ExcitationSourceModel
         assert read_excitation_source_model.name == "Omicron LuxX+ 488-100 Model"
         assert read_excitation_source_model.description == "Laser for optogenetic stimulation."
@@ -177,7 +177,7 @@ def test_example_usage():
         assert read_excitation_source.power_in_W == 0.077
         assert read_excitation_source.intensity_in_W_per_m2 == 1.0e10
 
-        read_optical_fiber_model = read_nwbfile.devices["Lambda Model"]
+        read_optical_fiber_model = read_nwbfile.device_models["Lambda Model"]
         assert type(read_optical_fiber_model) is OpticalFiberModel
         assert read_optical_fiber_model.name == "Lambda Model"
         assert read_optical_fiber_model.description == "Lambda fiber (tapered fiber) from Optogenix."
