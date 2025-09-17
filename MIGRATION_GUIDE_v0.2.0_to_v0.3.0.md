@@ -1,16 +1,16 @@
 # Migration Guide: ndx-optogenetics v0.2.0 to v0.3.0
 
 This guide provides detailed instructions for migrating from ndx-optogenetics version 0.2.0 to version 0.3.0. Version 0.3.0 introduces significant architectural changes that improve modularity and coordination with the [ndx-ophys-devices](https://github.com/catalystneuro/ndx-ophys-devices/) extension,
-which is being reviewed by the NWB TAB for [integration with the core NWB standard](https://github.com/nwb-extensions/nwbep-review/issues/6) and which is used in [ndx-microscopy](https://github.com/catalystneuro/ndx-microscopy/) and will be used in [ndx-fiber-photometry](https://github.com/catalystneuro/ndx-fiber-photometry/pull/37).
+which is being reviewed by the NWB Technical Advisory Board for [integration with the core NWB standard](https://github.com/nwb-extensions/nwbep-review/issues/6) and which is used in [ndx-microscopy](https://github.com/catalystneuro/ndx-microscopy/) and will be used in [ndx-fiber-photometry](https://github.com/catalystneuro/ndx-fiber-photometry/pull/37).
 
 ## Overview of Changes
 
 Version 0.3.0 represents a major refactoring that:
 
 1. **Introduces dependency on ndx-ophys-devices**: Device and biological component specifications are now handled by the ndx-ophys-devices extension
-2. **Consolidates location tracking**: Replaces `OpticalFiberLocationsTable` with `OptogeneticSitesTable` for better organization
+2. **Consolidates location tracking**: Replaces `OpticalFiberLocationsTable` with `OptogeneticSitesTable` and `FiberInsertion` for better organization and cross-linking
 3. **Updates virus/injection handling**: Uses `ViralVector`, `ViralVectorInjection`, and `Effector` from ndx-ophys-devices
-4. **Enhances epochs table**: Adds excitation wavelength tracking and updates table references
+4. **Enhances epochs table**: Adds excitation wavelength tracking per-epoch and new link to rows of the `OptogeneticSitesTable`
 
 ## Breaking Changes
 
@@ -202,7 +202,46 @@ optical_fiber = OpticalFiber(
 When migrating from v0.2.0 to v0.3.0, take the coordinate and location data from each row in your `OpticalFiberLocationsTable` and use it to create `FiberInsertion` objects that get attached to your `OpticalFiber` instances. The `OptogeneticSitesTable` is then used only to link these fibers with their corresponding excitation sources and effectors.
 
 
-### 6. Virus and Injection Changes
+### 6. OpticalFiberLocationsTable → OptogeneticSitesTable
+
+See also Section 5. "OpticalFiber Changes and OpticalFiberLocationsTable Migration" above.
+
+**Before (v0.2.0):**
+```python
+optical_fiber_locations_table = OpticalFiberLocationsTable(
+    description="Information about implanted optical fiber locations",
+    reference="Bregma at the cortical surface",
+)
+optical_fiber_locations_table.add_row(
+    implanted_fiber_description="Lambda fiber implanted into right GPe.",
+    location="GPe",
+    hemisphere="right",
+    ap_in_mm=-1.5,
+    ml_in_mm=3.2,
+    dv_in_mm=-5.8,
+    roll_in_deg=0.0,
+    pitch_in_deg=0.0,
+    yaw_in_deg=0.0,
+    excitation_source=excitation_source,  # This linkage moves to OptogeneticSitesTable
+    optical_fiber=optical_fiber,  # This linkage moves to OptogeneticSitesTable
+)
+```
+
+**After (v0.3.0):**
+```python
+# New table that consolidates all site information
+optogenetic_sites_table = OptogeneticSitesTable(
+    description="Information about the optogenetic stimulation sites."
+)
+optogenetic_sites_table.add_row(
+    excitation_source=excitation_source,
+    optical_fiber=optical_fiber,
+    effector=effector,  # NEW REQUIRED reference to effector
+)
+```
+
+
+### 7. Virus and Injection Changes
 
 **Before (v0.2.0):**
 ```python
@@ -258,7 +297,7 @@ virus_injection = ViralVectorInjection(
 )
 ```
 
-### 7. Container Changes
+### 8. Container Changes
 
 **Before (v0.2.0):**
 ```python
@@ -283,44 +322,6 @@ effector = Effector(
     viral_vector_injection=virus_injection,
 )
 optogenetic_effectors = OptogeneticEffectors(effectors=[effector])
-```
-
-### 8. OpticalFiberLocationsTable → OptogeneticSitesTable
-
-See also Section 5. "OpticalFiber Changes and OpticalFiberLocationsTable Migration" above.
-
-**Before (v0.2.0):**
-```python
-optical_fiber_locations_table = OpticalFiberLocationsTable(
-    description="Information about implanted optical fiber locations",
-    reference="Bregma at the cortical surface",
-)
-optical_fiber_locations_table.add_row(
-    implanted_fiber_description="Lambda fiber implanted into right GPe.",
-    location="GPe",
-    hemisphere="right",
-    ap_in_mm=-1.5,
-    ml_in_mm=3.2,
-    dv_in_mm=-5.8,
-    roll_in_deg=0.0,
-    pitch_in_deg=0.0,
-    yaw_in_deg=0.0,
-    excitation_source=excitation_source,  # This linkage moves to OptogeneticSitesTable
-    optical_fiber=optical_fiber,  # This linkage moves to OptogeneticSitesTable
-)
-```
-
-**After (v0.3.0):**
-```python
-# New table that consolidates all site information
-optogenetic_sites_table = OptogeneticSitesTable(
-    description="Information about the optogenetic stimulation sites."
-)
-optogenetic_sites_table.add_row(
-    excitation_source=excitation_source,
-    optical_fiber=optical_fiber,
-    effector=effector,  # NEW REQUIRED reference to effector
-)
 ```
 
 ### 9. OptogeneticExperimentMetadata Changes
@@ -365,7 +366,6 @@ opto_epochs_table.add_row(
     number_trains=1,
     intertrain_interval_in_ms=0.0,
     power_in_mW=77.0,
-    optical_fiber_locations=[0],  # OLD list of references to row indices of the linked OpticalFiberLocationsTable
 )
 ```
 
@@ -496,28 +496,9 @@ opto_epochs_table = OptogeneticEpochsTable(
 opto_epochs_table.add_row(
     # ... existing parameters ...
     wavelength_in_nm=488.0,  # New
-    optogenetic_sites=[0],  # Changed from optical_fiber_locations
+    optogenetic_sites=[0],  # New
 )
 ```
-
-## Benefits of Migration
-
-The v0.3.0 architecture provides several advantages:
-
-1. **Better Modularity**: Device specifications are now handled by the specialized ndx-ophys-devices extension
-2. **Improved Organization**: The OptogeneticSitesTable consolidates all site-related information in one place
-3. **Enhanced Flexibility**: Wavelength can now be specified per epoch rather than per device
-4. **Better Coordination**: Consistent device handling across optogenetics and ophys extensions
-5. **Cleaner API**: More logical separation of concerns between device hardware and experimental metadata
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Import Errors**: Make sure you've installed ndx-ophys-devices and updated your imports
-2. **Attribute Errors**: Check for renamed attributes (e.g., `illumination_type` → `source_type`)
-3. **Missing Required Attributes**: Ensure you've added new required attributes like `fiber_insertion`
-4. **Table Reference Errors**: Update table names in epochs table (`optical_fiber_locations` → `optogenetic_sites`)
 
 ### Validation
 
