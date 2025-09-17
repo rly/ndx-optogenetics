@@ -3,13 +3,16 @@ namespaces:
   - Ryan Ly
   - Horea Christian
   - Ben Dichter
+  - Paul Adkisson
   contact:
   - rly@lbl.gov
   - uni@chymera.eu
   - ben.dichter@catalystneuro.com
+  - paul.adkisson@catalystneuro.com
   doc: NWB extension to improve support for optogenetics data and metadata
   name: ndx-optogenetics
   schema:
   - namespace: core
+  - namespace: ndx-ophys-devices
   - source: ndx-optogenetics.extensions.yaml
-  version: 0.2.0
+  version: 0.3.0

@@ -53,6 +53,7 @@ linkcheck_ignore = [
 
 import sphinx_rtd_theme  # noqa: E402
 import textwrap  # noqa: E402
+import ndx_ophys_devices  # noqa: E402
 
 # -- Options for intersphinx  ---------------------------------------------
 intersphinx_mapping.update({
