@@ -433,7 +433,7 @@ from ndx_ophys_devices import (
 Modify your device creation code according to the examples above, paying special attention to:
 - Attribute name changes (`illumination_type` → `source_type`, `fiber_model` → `model_number`)
 - New required attributes (`excitation_mode`, `serial_number`, `fiber_insertion`)
-- Removed attributes (`wavelength_in_nm` from ExcitationSource)
+- Removed attributes (`wavelength_in_nm` from `ExcitationSource`, `fiber_name` from `OpticalFiberModel`)
 
 ### 3. Update Virus and Injection Handling
 
