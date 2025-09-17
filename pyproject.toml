@@ -34,8 +34,8 @@ keywords = [
     'ndx-extension',
 ]
 dependencies = [
-    "pynwb>=2.8.0",
-    "hdmf>=3.14.1",
+    "pynwb>=3.1.0",
+    "hdmf>=4.1.0",
     "ndx_ophys_devices>=0.3.0",
 ]
 
@@ -62,8 +62,8 @@ dev = [
 
 # minimum requirements of project dependencies for testing (see .github/workflows/run_all_tests.yml)
 min-reqs = [
-    "pynwb==2.8.0",
-    "hdmf==3.14.1",
+    "pynwb==3.1.0",
+    "hdmf==4.1.0",
     "ndx_ophys_devices==0.3.0",
 ]
 
