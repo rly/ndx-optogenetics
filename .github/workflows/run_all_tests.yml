@@ -20,10 +20,10 @@ on:
 
 jobs:
   run-all-tests:
-    name: {{ matrix.name }}
-    runs-on: {{ matrix.os }}
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
     concurrency:
-      group: {{ github.workflow }}-{{ github.ref }}-{{ matrix.name }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.name }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -56,10 +56,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: {{ matrix.python-ver }}
+          python-version: ${{ matrix.python-ver }}
 
       - name: Install run requirements (minimum)
-        if: {{ matrix.requirements == 'minimum' }}
+        if: ${{ matrix.requirements == 'minimum' }}
         run: |
           python -m pip install --upgrade pip
           python -m pip install ".[min-reqs,test]"
@@ -67,7 +67,7 @@ jobs:
           python -m pip check
 
       - name: Install run requirements (upgraded)
-        if: {{ matrix.requirements == 'upgraded' }}
+        if: ${{ matrix.requirements == 'upgraded' }}
         run: |
           python -m pip install --upgrade pip
           # force upgrade of all dependencies to latest versions within allowed range
@@ -155,7 +155,7 @@ jobs:
         run: python -m pip install archive/archive.tgz
 
       - name: Check installed package
-        run: python -c "import {{ cookiecutter.py_pkg_name }}"
+        run: python -c "import ${{ cookiecutter.py_pkg_name }}"
 
       - name: Checkout repo to access tests
         uses: actions/checkout@v4
