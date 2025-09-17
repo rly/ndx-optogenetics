@@ -249,4 +249,6 @@ def test_example_usage():
         assert read_optogenetic_epochs_table.optical_fiber_locations_index.data[:] == [1]
         assert read_optogenetic_epochs_table.optical_fiber_locations.data[:] == [0]
         assert read_optogenetic_epochs_table.optical_fiber_locations.table is read_fiber_locations_table
-        assert read_optogenetic_epochs_table[0, "optical_fiber_locations"].equals(read_fiber_locations_table.to_dataframe()[0:1])
+        assert read_optogenetic_epochs_table[0, "optical_fiber_locations"].equals(
+            read_fiber_locations_table.to_dataframe()[0:1]
+        )
