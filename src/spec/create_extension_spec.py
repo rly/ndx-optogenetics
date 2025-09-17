@@ -10,6 +10,7 @@ from pynwb.spec import (
     NWBRefSpec,
 )
 
+
 def main():
     # these arguments were auto-generated from your cookiecutter inputs
     ns_builder = NWBNamespaceBuilder(

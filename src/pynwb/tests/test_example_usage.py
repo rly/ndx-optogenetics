@@ -1,7 +1,7 @@
 def test_example_usage():
     from datetime import datetime, timezone
     from pynwb import NWBFile, NWBHDF5IO
-    from ndx_ophys_devices import(
+    from ndx_ophys_devices import (
         ViralVector,
         ViralVectorInjection,
         Effector,
@@ -72,7 +72,7 @@ def test_example_usage():
         description="Lambda fiber implanted into right GPe.",
         serial_number="123456",
         model=optical_fiber_model,
-        fiber_insertion=fiber_insertion, 
+        fiber_insertion=fiber_insertion,
     )
     nwbfile.add_device(optical_fiber_model)
     nwbfile.add_device(optical_fiber)
@@ -207,7 +207,10 @@ def test_example_usage():
         assert len(read_optogenetic_sites_table) == 1
         assert read_optogenetic_sites_table[0, "excitation_source"] is read_nwbfile.devices["Omicron LuxX+ 488-100"]
         assert read_optogenetic_sites_table[0, "optical_fiber"] is read_nwbfile.devices["Lambda"]
-        assert read_optogenetic_sites_table[0, "effector"] is read_optogenetic_experiment_metadata.optogenetic_effectors.effectors["effector"]
+        assert (
+            read_optogenetic_sites_table[0, "effector"]
+            is read_optogenetic_experiment_metadata.optogenetic_effectors.effectors["effector"]
+        )
 
         assert len(read_optogenetic_experiment_metadata.optogenetic_viruses.viral_vectors) == 1
         read_virus = read_optogenetic_experiment_metadata.optogenetic_viruses.viral_vectors[
@@ -265,4 +268,6 @@ def test_example_usage():
         assert read_optogenetic_epochs_table[0, "wavelength_in_nm"] == 488.0
         assert read_optogenetic_epochs_table.optogenetic_sites_index.data[:] == [1]
         assert read_optogenetic_epochs_table.optogenetic_sites.table is read_optogenetic_sites_table
-        assert read_optogenetic_epochs_table[0, "optogenetic_sites"].equals(read_optogenetic_sites_table.to_dataframe()[0:1])
+        assert read_optogenetic_epochs_table[0, "optogenetic_sites"].equals(
+            read_optogenetic_sites_table.to_dataframe()[0:1]
+        )

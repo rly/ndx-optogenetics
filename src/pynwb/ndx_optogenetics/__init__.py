@@ -14,6 +14,7 @@ if not os.path.exists(__spec_path):
 # ndx-optogenetics depends on ndx-ophys-devices,
 # so importing it here prevents namespace errors when users import this package directly
 import ndx_ophys_devices  # noqa: F401
+
 load_namespaces(str(__spec_path))
 
 ExcitationSourceModel = get_class("ExcitationSourceModel", "ndx-optogenetics")
