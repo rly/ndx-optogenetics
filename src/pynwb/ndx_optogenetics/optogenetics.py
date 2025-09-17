@@ -74,8 +74,13 @@ class OptogeneticEpochsTable(TimeIntervals):
             "required": True,
         },
         {
-            "name": "optical_fiber_locations",
-            "description": "References row(s) of OpticalFiberLocationsTable.",
+            "name": "wavelength_in_nm",
+            "description": "Wavelength of the excitation source, in nm, e.g., 488 nm.",
+            "required": True,
+        },
+        {
+            "name": "optogenetic_sites",
+            "description": "References row(s) of OptogeneticSitesTable.",
             "required": True,
             "table": True,
             "index": True,
