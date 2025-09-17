@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os.path
+from pathlib import Path
 
 from pynwb.spec import (
     NWBNamespaceBuilder,
@@ -261,8 +261,8 @@ def main():
         optogenetic_epochs_table,
     ]
 
-    # export the spec to yaml files in the spec folder
-    output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "spec"))
+    # export the spec to yaml files in the root spec folder
+    output_dir = str((Path(__file__).parent.parent.parent / "spec").absolute())
     export_spec(ns_builder, new_data_types, output_dir)
 
 

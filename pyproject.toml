@@ -7,7 +7,7 @@ name = "ndx-optogenetics"
 version = "0.3.0"
 authors = [
     { name="Ryan Ly", email="rly@lbl.gov" },
-    { name="Horea Christian", email="rly@lbl.gov" },  # TODO
+    { name="Horea Christian", email="uni@chymera.eu" },
     { name="Ben Dichter", email="ben.dichter@catalystneuro.com" },
 ]
 description = "NWB extension to enhance support for optogenetics data and metadata in NWB"
@@ -132,6 +132,7 @@ exclude = [
 line-length = 120
 
 [tool.ruff.lint.per-file-ignores]
+"src/pynwb/ndx_optogenetics/__init__.py" = ["E402"]
 "src/spec/create_extension_spec.py" = ["T201"]
 
 [tool.ruff.lint.mccabe]

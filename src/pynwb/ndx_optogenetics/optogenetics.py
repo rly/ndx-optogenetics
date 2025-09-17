@@ -26,7 +26,8 @@ class OptogeneticEpochsTable(TimeIntervals):
         {
             "name": "stimulation_on",
             "description": (
-                "Whether optogenetic stimulation was used at any time during this epoch. If False, then all other metadata values should be 0."
+                "Whether optogenetic stimulation was used at any time during this epoch. If False, then all other "
+                "metadata values should be 0."
             ),
             "required": True,
         },
@@ -38,28 +39,32 @@ class OptogeneticEpochsTable(TimeIntervals):
         {
             "name": "period_in_ms",
             "description": (
-                "Duration between the starts of two pulses, in ms. Use NaN if stimulation was off.Note that the interpulse interval = `period_ms` - `pulse_length_ms`"
+                "Duration between the starts of two pulses, in ms. Use NaN if stimulation was off. Note that the "
+                "interpulse interval = `period_ms` - `pulse_length_ms`"
             ),
             "required": True,
         },
         {
             "name": "number_pulses_per_pulse_train",
             "description": (
-                "Number of pulses in one pulse train. After this number of pulses, no more stimulation occurs until the next train begins (see `intertrain_interval_ms`). Use -1 if stimulation was off."
+                "Number of pulses in one pulse train. After this number of pulses, no more stimulation occurs until "
+                "the next train begins (see `intertrain_interval_ms`). Use -1 if stimulation was off."
             ),
             "required": True,
         },
         {
             "name": "number_trains",
             "description": (
-                "Number of trains per stimulus. After this number of trains, no more stimulation occurs until stimulation is re-triggered. Use -1 if stimulation was off."
+                "Number of trains per stimulus. After this number of trains, no more stimulation occurs until "
+                "stimulation is re-triggered. Use -1 if stimulation was off."
             ),
             "required": True,
         },
         {
             "name": "intertrain_interval_in_ms",
             "description": (
-                "Duration between the starts of two consecutive pulse trains, in ms. Determines the frequency of stimulation. Use NaN if stimulation was off."
+                "Duration between the starts of two consecutive pulse trains, in ms. Determines the frequency of "
+                "stimulation. Use NaN if stimulation was off."
             ),
             "required": True,
         },
