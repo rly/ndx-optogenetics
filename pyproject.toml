@@ -9,13 +9,13 @@ authors = [
     { name="Ryan Ly", email="rly@lbl.gov" },
     { name="Horea Christian", email="uni@chymera.eu" },
     { name="Ben Dichter", email="ben.dichter@catalystneuro.com" },
+    { name="Paul Adkisson", email="paul.adkisson@catalystneuro.com" },
 ]
 description = "NWB extension to enhance support for optogenetics data and metadata in NWB"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "BSD-3-Clause"
 classifiers = [
-    # TODO: update these classifiers before release
     "Programming Language :: Python",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
