@@ -95,3 +95,48 @@ class OptogeneticEpochsTable(TimeIntervals):
     )
     def __init__(self, **kwargs):
         DynamicTable.__init__(self, **kwargs)
+
+@register_class("OptogeneticPulsesTable", "ndx-optogenetics")
+class OptogeneticPulsesTable(TimeIntervals):
+    """
+    General metadata about the optogenetic stimulation recorded on a per-pulse basis.
+    """
+
+    __columns__ = (
+        {"name": "start_time", "description": "Start time of pulse, in seconds", "required": True},
+        {"name": "stop_time", "description": "Stop time of pulse, in seconds", "required": True},
+        {"name": "tags", "description": "user-defined tags", "index": True},
+        {
+            "name": "timeseries",
+            "description": "index into a TimeSeries object",
+            "index": True,
+            "class": TimeSeriesReferenceVectorData,
+        },
+        {
+            "name": "power_in_mW",
+            "description": "Constant power of excitation source throughout the pulse, in mW, e.g., 77 mW.",
+            "required": True,
+        },
+        {
+            "name": "wavelength_in_nm",
+            "description": "Wavelength of the excitation source, in nm, e.g., 488 nm.",
+            "required": True,
+        },
+        {
+            "name": "optogenetic_sites",
+            "description": "References row(s) of OptogeneticSitesTable.",
+            "required": True,
+            "table": True,
+            "index": True,
+        },
+    )
+
+    @docval(
+        {"name": "name", "type": str, "doc": "name of this OptogeneticPulsesTable"},
+        {"name": "description", "type": str, "doc": "Description of this OptogeneticPulsesTable"},
+        *get_docval(DynamicTable.__init__, "id", "columns", "colnames", "target_tables"),
+        allow_positional=AllowPositional.WARNING,
+    )
+    def __init__(self, **kwargs):
+        DynamicTable.__init__(self, **kwargs)
+

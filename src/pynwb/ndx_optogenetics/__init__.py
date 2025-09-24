@@ -26,7 +26,7 @@ OptogeneticVirusInjections = get_class("OptogeneticVirusInjections", "ndx-optoge
 OptogeneticEffectors = get_class("OptogeneticEffectors", "ndx-optogenetics")
 OptogeneticExperimentMetadata = get_class("OptogeneticExperimentMetadata", "ndx-optogenetics")
 
-from .optogenetics import OptogeneticEpochsTable
+from .optogenetics import OptogeneticEpochsTable, OptogeneticPulsesTable
 
 __all__ = [
     "ExcitationSourceModel",
@@ -39,6 +39,7 @@ __all__ = [
     "OptogeneticEffectors",
     "OptogeneticExperimentMetadata",
     "OptogeneticEpochsTable",
+    "OptogeneticPulsesTable",
 ]
 
 # Remove these functions/modules from the package

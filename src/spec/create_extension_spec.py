@@ -252,6 +252,36 @@ def main():
         ],
     )
 
+    optogenetic_pulses_table = NWBGroupSpec(
+        neurodata_type_def="OptogeneticPulsesTable",
+        neurodata_type_inc="TimeIntervals",
+        doc="General metadata about the optogenetic stimulation recorded on a per-pulse basis.",
+        datasets=[
+            NWBDatasetSpec(
+                name="power_in_mW",
+                neurodata_type_inc="VectorData",
+                doc="Constant power of excitation source throughout the pulse, in mW, e.g., 77 mW.",
+                dtype="float",
+            ),
+            NWBDatasetSpec(
+                name="wavelength_in_nm",
+                neurodata_type_inc="VectorData",
+                doc="Wavelength of the excitation source, in nm.",
+                dtype="float",
+            ),
+            NWBDatasetSpec(
+                name="optogenetic_sites_index",
+                doc="Index to allow reference to multiple rows of the OptogeneticSitesTable.",
+                neurodata_type_inc="VectorIndex",
+            ),
+            NWBDatasetSpec(
+                name="optogenetic_sites",
+                doc="References row(s) of OptogeneticSitesTable.",
+                neurodata_type_inc="DynamicTableRegion",
+            ),
+        ],
+    )
+
     new_data_types = [
         optogenetic_sites_table,
         optogenetic_viruses,
@@ -259,6 +289,7 @@ def main():
         optogenetic_effectors,
         optogenetic_experiment_metadata,
         optogenetic_epochs_table,
+        optogenetic_pulses_table,
     ]
 
     # export the spec to yaml files in the root spec folder
