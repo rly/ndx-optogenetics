@@ -18,6 +18,7 @@ def test_example_usage():
         OptogeneticEffectors,
         OptogeneticExperimentMetadata,
         OptogeneticEpochsTable,
+        OptogeneticPulsesTable,
     )
 
     # Initialize NWB file
@@ -152,6 +153,21 @@ def test_example_usage():
     )
     nwbfile.add_time_intervals(opto_epochs_table)
 
+    # Create stimulation pulses table
+    opto_pulses_table = OptogeneticPulsesTable(
+        name="optogenetic_pulses",
+        description="Metadata about optogenetic stimulation per pulse",
+        target_tables={"optogenetic_sites": optogenetic_sites_table},
+    )
+    opto_pulses_table.add_row(
+        start_time=10.0,
+        stop_time=10.04,
+        power_in_mW=77.0,
+        wavelength_in_nm=488.0,
+        optogenetic_sites=[0],
+    )
+    nwbfile.add_time_intervals(opto_pulses_table)
+
     # Write the file
     path = "test_optogenetics.nwb"
     with NWBHDF5IO(path, mode="w") as io:
@@ -269,5 +285,20 @@ def test_example_usage():
         assert read_optogenetic_epochs_table.optogenetic_sites_index.data[:] == [1]
         assert read_optogenetic_epochs_table.optogenetic_sites.table is read_optogenetic_sites_table
         assert read_optogenetic_epochs_table[0, "optogenetic_sites"].equals(
+            read_optogenetic_sites_table.to_dataframe()[0:1]
+        )
+
+        read_optogenetic_pulses_table = read_nwbfile.intervals["optogenetic_pulses"]
+        assert type(read_optogenetic_pulses_table) is OptogeneticPulsesTable
+        assert read_optogenetic_pulses_table.name == "optogenetic_pulses"
+        assert read_optogenetic_pulses_table.description == "Metadata about optogenetic stimulation per pulse"
+        assert len(read_optogenetic_pulses_table) == 1
+        assert read_optogenetic_pulses_table[0, "start_time"] == 10.0
+        assert read_optogenetic_pulses_table[0, "stop_time"] == 10.04
+        assert read_optogenetic_pulses_table[0, "power_in_mW"] == 77.0
+        assert read_optogenetic_pulses_table[0, "wavelength_in_nm"] == 488.0
+        assert read_optogenetic_pulses_table.optogenetic_sites_index.data[:] == [1]
+        assert read_optogenetic_pulses_table.optogenetic_sites.table is read_optogenetic_sites_table
+        assert read_optogenetic_pulses_table[0, "optogenetic_sites"].equals(
             read_optogenetic_sites_table.to_dataframe()[0:1]
         )
