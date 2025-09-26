@@ -114,6 +114,20 @@ A dynamic table documenting stimulation parameters that may vary across experime
 - Multiple sites can be referenced per epoch for simultaneous stimulation
 - Extends `TimeIntervals` so includes `start_time` and `stop_time` columns
 
+#### OptogeneticPulsesTable
+A dynamic table documenting individual light pulses.
+
+**Purpose**: Captures pulse-level timing and parameters when users annotate each pulse instead of aggregated epoch parameters. May be used alongside or instead of `OptogeneticEpochsTable` depending on analysis needs.
+
+**Key Columns**:
+- `power_in_mW`: Constant power during the pulse
+- `wavelength_in_nm`: Excitation wavelength used
+- `optogenetic_sites`: References to rows in `OptogeneticSitesTable` for this pulse
+
+**Usage Notes**:
+- Extends `TimeIntervals` and includes `start_time` and `stop_time`
+- Multiple sites can be referenced per pulse
+
 #### Container Types
 
 These container types organize related objects within `OptogeneticExperimentMetadata`:
@@ -161,6 +175,24 @@ classDiagram
             number_pulses_per_pulse_train : VectorData[int]
             number_trains : VectorData[int]
             intertrain_interval_in_ms : VectorData[float]
+            power_in_mW : VectorData[float]
+            wavelength_in_nm : VectorData[float]
+            optogenetic_sites : DynamicTableRegion[OptogeneticSitesTable]
+        }
+
+        class OptogeneticPulsesTable {
+            <<TimeIntervals>>
+            --------------------------------------
+            attributes
+            --------------------------------------
+            name : str
+            description : str
+
+            --------------------------------------
+            columns
+            --------------------------------------
+            start_time : VectorData[float]
+            stop_time : VectorData[float]
             power_in_mW : VectorData[float]
             wavelength_in_nm : VectorData[float]
             optogenetic_sites : DynamicTableRegion[OptogeneticSitesTable]
@@ -351,6 +383,7 @@ classDiagram
     OptogeneticVirusInjections *--> ViralVectorInjection
     OptogeneticEffectors *--> Effector
     OptogeneticEpochsTable ..> OptogeneticSitesTable
+    OptogeneticPulsesTable ..> OptogeneticSitesTable
     ExcitationSource ..> ExcitationSourceModel
     OpticalFiber ..> OpticalFiberModel
     OpticalFiber *--> FiberInsertion
@@ -380,6 +413,7 @@ from ndx_optogenetics import (
     OptogeneticEffectors,
     OptogeneticExperimentMetadata,
     OptogeneticEpochsTable,
+    OptogeneticPulsesTable,
 )
 
 # Initialize NWB file
@@ -513,6 +547,21 @@ opto_epochs_table.add_row(
     optogenetic_sites=[0],
 )
 nwbfile.add_time_intervals(opto_epochs_table)
+
+# Create stimulation pulses table
+opto_pulses_table = OptogeneticPulsesTable(
+    name="optogenetic_pulses",
+    description="Metadata about optogenetic stimulation per pulse",
+    target_tables={"optogenetic_sites": optogenetic_sites_table},
+)
+opto_pulses_table.add_row(
+    start_time=10.0,
+    stop_time=10.04,
+    power_in_mW=77.0,
+    wavelength_in_nm=488.0,
+    optogenetic_sites=[0],
+)
+nwbfile.add_time_intervals(opto_pulses_table)
 
 # Write the file
 path = "test_optogenetics.nwb"

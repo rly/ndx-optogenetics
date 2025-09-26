@@ -129,3 +129,23 @@ groups:
   - name: optogenetic_sites
     neurodata_type_inc: DynamicTableRegion
     doc: References row(s) of OptogeneticSitesTable.
+- neurodata_type_def: OptogeneticPulsesTable
+  neurodata_type_inc: TimeIntervals
+  doc: General metadata about the optogenetic stimulation recorded on a 
+    per-pulse basis.
+  datasets:
+  - name: power_in_mW
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Constant power of excitation source throughout the pulse, in mW, e.g., 
+      77 mW.
+  - name: wavelength_in_nm
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Wavelength of the excitation source, in nm.
+  - name: optogenetic_sites_index
+    neurodata_type_inc: VectorIndex
+    doc: Index to allow reference to multiple rows of the OptogeneticSitesTable.
+  - name: optogenetic_sites
+    neurodata_type_inc: DynamicTableRegion
+    doc: References row(s) of OptogeneticSitesTable.
