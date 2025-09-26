@@ -137,7 +137,7 @@ groups:
   - name: power_in_mW
     neurodata_type_inc: VectorData
     dtype: float
-    doc: Constant power of excitation source throughout the epoch, in mW, e.g., 
+    doc: Constant power of excitation source throughout the pulse, in mW, e.g., 
       77 mW.
   - name: wavelength_in_nm
     neurodata_type_inc: VectorData
