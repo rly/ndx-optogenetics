@@ -3,6 +3,7 @@
 ## v0.3.1 (Upcoming)
 
 - Added `OptogeneticPulsesTable` to record individual optogenetic pulses for irregular pulse presentations. [PR #17](https://github.com/rly/ndx-optogenetics/pull/17)
+- Made the `optical_fiber` field optional in the `OptogeneticSitesTable`. Not all experiments with optogenetic stimulation need an optical fiber to deliver the stimulus.
 
 ## v0.3.0 (September 23, 2025)
 
