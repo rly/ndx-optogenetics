@@ -88,7 +88,7 @@ A dynamic table documenting the physical stimulation sites and their associated 
 
 **Columns**:
 - `excitation_source`: Reference to the `ExcitationSource` device
-- `optical_fiber`: Reference to the `OpticalFiber` device  
+- `optical_fiber`: Reference to the `OpticalFiber` device (optional)
 - `effector`: Reference to the `Effector` protein targeted at this site
 
 **Extensibility**: Since this extends `DynamicTable`, you can add custom columns without defining new types. You can also annotate rows with anatomical information using the [ndx-anatomical-localization](https://github.com/bendichter/ndx-anatomical-localization) extension.
