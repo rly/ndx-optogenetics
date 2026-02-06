@@ -15,4 +15,4 @@ namespaces:
   - namespace: core
   - namespace: ndx-ophys-devices
   - source: ndx-optogenetics.extensions.yaml
-  version: 0.3.0
+  version: 0.4.0
