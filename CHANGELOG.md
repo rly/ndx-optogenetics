@@ -1,6 +1,6 @@
 # Changelog for ndx-optogenetics
 
-## v0.3.1 (Upcoming)
+## v0.4.0 (February 6, 2026)
 
 - Added `OptogeneticPulsesTable` to record individual optogenetic pulses for irregular pulse presentations. [PR #17](https://github.com/rly/ndx-optogenetics/pull/17)
 

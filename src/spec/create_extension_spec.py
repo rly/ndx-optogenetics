@@ -15,7 +15,7 @@ def main():
     # these arguments were auto-generated from your cookiecutter inputs
     ns_builder = NWBNamespaceBuilder(
         name="""ndx-optogenetics""",
-        version="""0.3.0""",
+        version="""0.4.0""",
         doc="""NWB extension to improve support for optogenetics data and metadata""",
         author=[
             "Ryan Ly",

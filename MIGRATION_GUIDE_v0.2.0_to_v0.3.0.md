@@ -395,7 +395,7 @@ opto_epochs_table.add_row(
 ### Install the New Version
 
 ```bash
-pip install ndx-optogenetics==0.3.0
+pip install ndx-optogenetics==0.4.0
 ```
 
 ## Step-by-Step Migration Process
