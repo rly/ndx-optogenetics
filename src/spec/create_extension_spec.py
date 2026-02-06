@@ -62,6 +62,7 @@ def main():
                     target_type="OpticalFiber",
                     reftype="object",
                 ),
+                quantity="?",
             ),
             NWBDatasetSpec(
                 name="effector",

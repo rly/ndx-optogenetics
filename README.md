@@ -77,7 +77,7 @@ The main container for all optogenetics-related metadata in an experiment.
 **Contains**:
 - `optogenetic_sites_table`: Table documenting stimulation sites and their components
 - `optogenetic_viruses`: Container for viral vector specifications (optional)
-- `optogenetic_virus_injections`: Container for injection procedure details (optional)  
+- `optogenetic_virus_injections`: Container for injection procedure details (optional)
 - `optogenetic_effectors`: Container for effector protein information (optional)
 - `stimulation_software`: Name of software used for stimulation delivery
 
@@ -87,8 +87,8 @@ A dynamic table documenting the physical stimulation sites and their associated 
 **Purpose**: Links together the three key components at each stimulation site: the excitation source (light), optical fiber (delivery), and effector (biological target).
 
 **Columns**:
-- `excitation_source`: Reference to the `ExcitationSource` device
-- `optical_fiber`: Reference to the `OpticalFiber` device  
+- `excitation_source`: Reference to the `ExcitationSource` device (optional)
+- `optical_fiber`: Reference to the `OpticalFiber` device (optional)
 - `effector`: Reference to the `Effector` protein targeted at this site
 
 **Extensibility**: Since this extends `DynamicTable`, you can add custom columns without defining new types. You can also annotate rows with anatomical information using the [ndx-anatomical-localization](https://github.com/bendichter/ndx-anatomical-localization) extension.
@@ -109,7 +109,7 @@ A dynamic table documenting stimulation parameters that may vary across experime
 - `wavelength_in_nm`: Excitation wavelength used
 - `optogenetic_sites`: References to rows in `OptogeneticSitesTable` for this epoch
 
-**Usage Notes**: 
+**Usage Notes**:
 - Control epochs should have `stimulation_on=False` with other parameters set to 0 or NaN
 - Multiple sites can be referenced per epoch for simultaneous stimulation
 - Extends `TimeIntervals` so includes `start_time` and `stop_time` columns
@@ -136,12 +136,12 @@ These container types organize related objects within `OptogeneticExperimentMeta
 - Contains one or more `ViralVector` objects
 - Groups all viral constructs used in the experiment
 
-**OptogeneticVirusInjections**  
+**OptogeneticVirusInjections**
 - Contains one or more `ViralVectorInjection` objects
 - Groups all injection procedures performed
 
 **OptogeneticEffectors**
-- Contains one or more `Effector` objects  
+- Contains one or more `Effector` objects
 - Groups all effector proteins targeted in the experiment
 
 ### Extension Development

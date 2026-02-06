@@ -18,6 +18,7 @@ groups:
       target_type: OpticalFiber
       reftype: object
     doc: The optical fiber device.
+    quantity: '?'
   - name: effector
     neurodata_type_inc: VectorData
     dtype:
