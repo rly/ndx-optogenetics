@@ -6,6 +6,7 @@
   - `OpticalFiber.fiber_insertion` is now a `StereotacticPosition` and is optional. With `orientation="RAS"`, `insertion_position_ml_in_mm` becomes `x_in_mm`, `insertion_position_ap_in_mm` becomes `y_in_mm`, `insertion_position_dv_in_mm` becomes `z_in_mm`, `position_reference` becomes `origin`, and `insertion_angle_{pitch,yaw,roll}_in_deg` become `{pitch,yaw,roll}_in_deg`. `depth_in_mm` and `hemisphere` have no equivalent; the hemisphere follows from the sign of the ML coordinate.
   - `ViralVectorInjection` coordinates move into the optional `viral_injection_coordinates` group. `location` becomes `anatomical_target`, `reference` becomes `origin`, and `ml_in_mm`, `ap_in_mm` and `dv_in_mm` become `x_in_mm`, `y_in_mm` and `z_in_mm` with `orientation="RAS"`. `hemisphere` has no equivalent.
 - Files written with ndx-optogenetics 0.4.0 or earlier cache ndx-ophys-devices 0.3.x and cannot be read in a Python session that has imported ndx-optogenetics 0.5.0 or ndx-ophys-devices 0.4.0. Open them in a session that does not import these packages; pynwb then loads the cached namespaces.
+- Dropped support for Python 3.9 and added Python 3.14 to the test matrix.
 - Fixed example values in the README and tests: the excitation source intensity now matches 77 mW through a 200 um core, and `intertrain_interval_in_ms` is NaN for a single train. The test now writes to a temporary directory.
 
 ## v0.4.0 (February 6, 2026)
