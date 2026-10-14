@@ -1,8 +1,11 @@
 # Changelog for ndx-optogenetics
 
-## v0.4.1 (Upcoming)
+## v0.4.1 (October 14, 2026)
 
-- Capped the ndx-ophys-devices dependency at `<0.4`. ndx-ophys-devices 0.4.0 removes `FiberInsertion`, which this release uses. ndx-optogenetics 0.5.0 will adopt ndx-ophys-devices 0.4.0. If you have pinned `ndx-optogenetics==0.4.0` and a fresh install fails with `cannot import name 'FiberInsertion'`, run `pip install "ndx-ophys-devices<0.4"`.
+The schema is unchanged apart from the namespace version.
+
+- Capped the ndx-ophys-devices dependency at `<0.4` because ndx-ophys-devices 0.4.0 removes `FiberInsertion`. If you use ndx-optogenetics 0.4.0, upgrade to 0.4.1. [PR #24](https://github.com/rly/ndx-optogenetics/pull/24)
+- Updated the migration guide to install 0.4.1. [PR #25](https://github.com/rly/ndx-optogenetics/pull/25)
 
 ## v0.4.0 (February 6, 2026)
 
