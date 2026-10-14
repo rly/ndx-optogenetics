@@ -1,5 +1,9 @@
 # Changelog for ndx-optogenetics
 
+## v0.4.1 (Upcoming)
+
+- Capped the ndx-ophys-devices dependency at `<0.4`. ndx-ophys-devices 0.4.0 removes `FiberInsertion`, which this release uses. ndx-optogenetics 0.5.0 will adopt ndx-ophys-devices 0.4.0. If you have pinned `ndx-optogenetics==0.4.0` and a fresh install fails with `cannot import name 'FiberInsertion'`, run `pip install "ndx-ophys-devices<0.4"`.
+
 ## v0.4.0 (February 6, 2026)
 
 - Added `OptogeneticPulsesTable` to record individual optogenetic pulses for irregular pulse presentations. [PR #17](https://github.com/rly/ndx-optogenetics/pull/17)
