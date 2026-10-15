@@ -10,8 +10,8 @@ project = 'ndx-optogenetics'
 copyright = '2026, Ryan Ly, Horea Christian, Ben Dichter, Paul Adkisson'
 author = 'Ryan Ly, Horea Christian, Ben Dichter, Paul Adkisson'
 
-version = '0.4.1'
-release = '0.4.1'
+version = '0.5.0'
+release = '0.5.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

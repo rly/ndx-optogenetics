@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ndx-optogenetics"
-version = "0.4.1"
+version = "0.5.0"
 authors = [
     { name="Ryan Ly", email="rly@lbl.gov" },
     { name="Horea Christian", email="uni@chymera.eu" },
@@ -13,15 +13,15 @@ authors = [
 ]
 description = "NWB extension to enhance support for optogenetics data and metadata in NWB"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "BSD-3-Clause"
 classifiers = [
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
@@ -36,7 +36,7 @@ keywords = [
 dependencies = [
     "pynwb>=3.1.0",
     "hdmf>=4.1.0",
-    "ndx_ophys_devices>=0.3.1,<0.4",
+    "ndx_ophys_devices>=0.4.0,<0.5",
 ]
 
 [project.optional-dependencies]
@@ -64,7 +64,7 @@ dev = [
 min-reqs = [
     "pynwb==3.1.0",
     "hdmf==4.1.0",
-    "ndx_ophys_devices==0.3.1",
+    "ndx_ophys_devices==0.4.0",
 ]
 
 # TODO: add URLs before release
