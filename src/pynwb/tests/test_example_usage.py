@@ -1,4 +1,5 @@
-def test_example_usage():
+def test_example_usage(tmp_path):
+    import math
     from datetime import datetime, timezone
     from pynwb import NWBFile, NWBHDF5IO
     from ndx_ophys_devices import (
@@ -9,7 +10,7 @@ def test_example_usage():
         ExcitationSource,
         OpticalFiberModel,
         OpticalFiber,
-        FiberInsertion,
+        StereotacticPosition,
     )
     from ndx_optogenetics import (
         OptogeneticSitesTable,
@@ -41,7 +42,7 @@ def test_example_usage():
         name="Omicron LuxX+ 488-100",
         model=excitation_source_model,
         power_in_W=0.077,
-        intensity_in_W_per_m2=1.0e10,
+        intensity_in_W_per_m2=2.45e6,  # 77 mW over the area of a 200 um core
     )
     nwbfile.add_device_model(excitation_source_model)
     nwbfile.add_device(excitation_source)
@@ -58,15 +59,15 @@ def test_example_usage():
         ferrule_name="cFCF - ∅2.5mm Ceramic Ferrule",
         ferrule_diameter_in_mm=2.5,
     )
-    fiber_insertion = FiberInsertion(
+    fiber_insertion = StereotacticPosition(
         name="fiber_insertion",
-        depth_in_mm=2.0,
-        insertion_position_ap_in_mm=-1.5,
-        insertion_position_ml_in_mm=3.2,
-        insertion_position_dv_in_mm=-5.8,
-        position_reference="Bregma at the cortical surface",
-        hemisphere="right",
-        insertion_angle_pitch_in_deg=0.0,
+        anatomical_target="GPe",
+        origin="Bregma at the cortical surface",
+        orientation="RAS",
+        x_in_mm=3.2,
+        y_in_mm=-1.5,
+        z_in_mm=-5.8,
+        pitch_in_deg=0.0,
     )
     optical_fiber = OpticalFiber(
         name="Lambda",
@@ -91,15 +92,18 @@ def test_example_usage():
     virus_injection = ViralVectorInjection(
         name="AAV-EF1a-DIO-hChR2(H134R)-EYFP Injection",
         description="AAV-EF1a-DIO-hChR2(H134R)-EYFP injection into GPe.",
-        hemisphere="right",
-        location="GPe",
-        ap_in_mm=-1.5,
-        ml_in_mm=3.2,
-        dv_in_mm=-6.0,
-        roll_in_deg=0.0,
-        pitch_in_deg=0.0,
-        yaw_in_deg=0.0,
-        reference="Bregma at the cortical surface",
+        viral_injection_coordinates=StereotacticPosition(
+            name="viral_injection_coordinates",
+            anatomical_target="GPe",
+            origin="Bregma at the cortical surface",
+            orientation="RAS",
+            x_in_mm=3.2,
+            y_in_mm=-1.5,
+            z_in_mm=-6.0,
+            roll_in_deg=0.0,
+            pitch_in_deg=0.0,
+            yaw_in_deg=0.0,
+        ),
         viral_vector=virus,
         volume_in_uL=0.45,
         injection_date="1970-01-01T00:00:00+00:00",
@@ -146,7 +150,7 @@ def test_example_usage():
         period_in_ms=250.0,
         number_pulses_per_pulse_train=100,
         number_trains=1,
-        intertrain_interval_in_ms=0.0,
+        intertrain_interval_in_ms=float("nan"),  # not applicable with a single train
         power_in_mW=77.0,
         wavelength_in_nm=488.0,
         optogenetic_sites=[0],
@@ -169,11 +173,11 @@ def test_example_usage():
     nwbfile.add_time_intervals(opto_pulses_table)
 
     # Write the file
-    path = "test_optogenetics.nwb"
+    path = tmp_path / "test_optogenetics.nwb"
     with NWBHDF5IO(path, mode="w") as io:
         io.write(nwbfile)
 
-    # read the NWBFile from disk and print out TODO
+    # Read the NWBFile from disk and check the values
     with NWBHDF5IO(path, mode="r", load_namespaces=True) as io:
         read_nwbfile = io.read()
 
@@ -191,7 +195,7 @@ def test_example_usage():
         assert read_excitation_source.name == "Omicron LuxX+ 488-100"
         assert read_excitation_source.model is read_excitation_source_model
         assert read_excitation_source.power_in_W == 0.077
-        assert read_excitation_source.intensity_in_W_per_m2 == 1.0e10
+        assert read_excitation_source.intensity_in_W_per_m2 == 2.45e6
 
         read_optical_fiber_model = read_nwbfile.device_models["Lambda Model"]
         assert type(read_optical_fiber_model) is OpticalFiberModel
@@ -211,6 +215,17 @@ def test_example_usage():
         assert read_optical_fiber.model is read_optical_fiber_model
         assert read_optical_fiber.description == "Lambda fiber implanted into right GPe."
         assert read_optical_fiber.serial_number == "123456"
+
+        read_fiber_insertion = read_optical_fiber.fiber_insertion
+        assert type(read_fiber_insertion) is StereotacticPosition
+        assert read_fiber_insertion.name == "fiber_insertion"
+        assert read_fiber_insertion.anatomical_target == "GPe"
+        assert read_fiber_insertion.origin == "Bregma at the cortical surface"
+        assert read_fiber_insertion.orientation == "RAS"
+        assert read_fiber_insertion.x_in_mm == 3.2
+        assert read_fiber_insertion.y_in_mm == -1.5
+        assert read_fiber_insertion.z_in_mm == -5.8
+        assert read_fiber_insertion.pitch_in_deg == 0.0
 
         read_optogenetic_experiment_metadata = read_nwbfile.lab_meta_data["optogenetic_experiment_metadata"]
         assert type(read_optogenetic_experiment_metadata) is OptogeneticExperimentMetadata
@@ -246,16 +261,19 @@ def test_example_usage():
         )
         assert read_virus_injection.name == "AAV-EF1a-DIO-hChR2(H134R)-EYFP Injection"
         assert read_virus_injection.description == "AAV-EF1a-DIO-hChR2(H134R)-EYFP injection into GPe."
-        assert read_virus_injection.hemisphere == "right"
-        assert read_virus_injection.location == "GPe"
-        assert read_virus_injection.ap_in_mm == -1.5
-        assert read_virus_injection.ml_in_mm == 3.2
-        assert read_virus_injection.dv_in_mm == -6.0
-        assert read_virus_injection.roll_in_deg == 0.0
-        assert read_virus_injection.pitch_in_deg == 0.0
-        assert read_virus_injection.yaw_in_deg == 0.0
-        assert read_virus_injection.reference == "Bregma at the cortical surface"
-        assert read_virus_injection.viral_vector == read_virus
+        read_injection_coordinates = read_virus_injection.viral_injection_coordinates
+        assert type(read_injection_coordinates) is StereotacticPosition
+        assert read_injection_coordinates.name == "viral_injection_coordinates"
+        assert read_injection_coordinates.anatomical_target == "GPe"
+        assert read_injection_coordinates.origin == "Bregma at the cortical surface"
+        assert read_injection_coordinates.orientation == "RAS"
+        assert read_injection_coordinates.x_in_mm == 3.2
+        assert read_injection_coordinates.y_in_mm == -1.5
+        assert read_injection_coordinates.z_in_mm == -6.0
+        assert read_injection_coordinates.roll_in_deg == 0.0
+        assert read_injection_coordinates.pitch_in_deg == 0.0
+        assert read_injection_coordinates.yaw_in_deg == 0.0
+        assert read_virus_injection.viral_vector is read_virus
         assert read_virus_injection.volume_in_uL == 0.45
 
         assert len(read_optogenetic_experiment_metadata.optogenetic_effectors.effectors) == 1
@@ -279,10 +297,10 @@ def test_example_usage():
         assert read_optogenetic_epochs_table[0, "period_in_ms"] == 250.0
         assert read_optogenetic_epochs_table[0, "number_pulses_per_pulse_train"] == 100
         assert read_optogenetic_epochs_table[0, "number_trains"] == 1
-        assert read_optogenetic_epochs_table[0, "intertrain_interval_in_ms"] == 0.0
+        assert math.isnan(read_optogenetic_epochs_table[0, "intertrain_interval_in_ms"])
         assert read_optogenetic_epochs_table[0, "power_in_mW"] == 77.0
         assert read_optogenetic_epochs_table[0, "wavelength_in_nm"] == 488.0
-        assert read_optogenetic_epochs_table.optogenetic_sites_index.data[:] == [1]
+        assert read_optogenetic_epochs_table.optogenetic_sites_index.data[:].tolist() == [1]
         assert read_optogenetic_epochs_table.optogenetic_sites.table is read_optogenetic_sites_table
         assert read_optogenetic_epochs_table[0, "optogenetic_sites"].equals(
             read_optogenetic_sites_table.to_dataframe()[0:1]
@@ -297,7 +315,7 @@ def test_example_usage():
         assert read_optogenetic_pulses_table[0, "stop_time"] == 10.04
         assert read_optogenetic_pulses_table[0, "power_in_mW"] == 77.0
         assert read_optogenetic_pulses_table[0, "wavelength_in_nm"] == 488.0
-        assert read_optogenetic_pulses_table.optogenetic_sites_index.data[:] == [1]
+        assert read_optogenetic_pulses_table.optogenetic_sites_index.data[:].tolist() == [1]
         assert read_optogenetic_pulses_table.optogenetic_sites.table is read_optogenetic_sites_table
         assert read_optogenetic_pulses_table[0, "optogenetic_sites"].equals(
             read_optogenetic_sites_table.to_dataframe()[0:1]

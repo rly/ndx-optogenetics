@@ -23,8 +23,8 @@ This extension depends on `ndx-ophys-devices`, which provides the foundational d
 - `wavelength_range_in_nm`: Supported wavelength range [min, max]
 
 **ExcitationSource**: Specific light source instance
-- `power_in_W`: Maximum power output
-- `intensity_in_W_per_m2`: Light intensity at the fiber tip
+- `power_in_W`: Incident power delivered to the sample, i.e., measured at the fiber tip or at the sample plane
+- `intensity_in_W_per_m2`: Irradiance at the sample
 - `exposure_time_in_s`: Typical exposure duration
 - Links to its corresponding `ExcitationSourceModel`
 
@@ -37,16 +37,16 @@ This extension depends on `ndx-ophys-devices`, which provides the foundational d
 
 **OpticalFiber**: Specific fiber instance with implantation details
 - `serial_number`: Unique identifier for this fiber
-- `fiber_insertion`: Container with stereotactic coordinates and angles
+- `fiber_insertion`: `StereotacticPosition` with the coordinates of the fiber tip and the approach angles (optional, omit for fibers that are not implanted)
 - Links to its corresponding `OpticalFiberModel`
 
-#### FiberInsertion
-Detailed implantation information for optical fibers:
-- Stereotactic coordinates (`insertion_position_ap_in_mm`, `insertion_position_ml_in_mm`, `insertion_position_dv_in_mm`)
-- `depth_in_mm`: Insertion depth
-- `position_reference`: Reference point for coordinates (e.g., "Bregma")
-- `hemisphere`: Target hemisphere
-- Insertion angles (`insertion_angle_pitch_in_deg`, `insertion_angle_yaw_in_deg`, `insertion_angle_roll_in_deg`)
+#### StereotacticPosition
+Stereotactic position of an implanted fiber tip or of an injection site:
+- `anatomical_target`: Targeted brain region (e.g., "GPe")
+- `origin`: Where (0, 0, 0) is (e.g., "Bregma at the cortical surface")
+- `orientation`: Three letters giving the direction of x, y and z (e.g., "RAS": x is right (ML), y is anterior (AP), z is superior (DV))
+- Coordinates of the target (`x_in_mm`, `y_in_mm`, `z_in_mm`)
+- Approach angles (`pitch_in_deg`, `yaw_in_deg`, `roll_in_deg`, optional); all 0 means a vertical approach
 
 #### ViralVector & ViralVectorInjection
 **ViralVector**: Viral construct specifications
@@ -56,11 +56,9 @@ Detailed implantation information for optical fibers:
 - `titer_in_vg_per_ml`: Viral titer in genomes per mL
 
 **ViralVectorInjection**: Injection procedure details
-- Stereotactic coordinates and angles
+- `viral_injection_coordinates`: `StereotacticPosition` with the target region, coordinates and angles of the injection site (optional)
 - `volume_in_uL`: Volume injected
 - `injection_date`: Date of injection procedure
-- `location`: Target brain region
-- `hemisphere`: Target hemisphere
 - Links to the corresponding `ViralVector`
 
 #### Effector
@@ -78,7 +76,7 @@ The main container for all optogenetics-related metadata in an experiment.
 - `optogenetic_sites_table`: Table documenting stimulation sites and their components
 - `optogenetic_viruses`: Container for viral vector specifications (optional)
 - `optogenetic_virus_injections`: Container for injection procedure details (optional)
-- `optogenetic_effectors`: Container for effector protein information (optional)
+- `optogenetic_effectors`: Container for effector protein information
 - `stimulation_software`: Name of software used for stimulation delivery
 
 #### OptogeneticSitesTable
@@ -146,12 +144,12 @@ These container types organize related objects within `OptogeneticExperimentMeta
 
 ### Extension Development
 
-You can extend this framework for lab-specific needs. For example, the upcoming [ndx-franklab-novela extension](https://github.com/LorenFrankLab/ndx-franklab-novela) defines a `FrankLabOptogeneticEpochsTable` that extends `OptogeneticEpochsTable` to include Frank Lab-specific stimulation parameters.
+You can extend this framework for lab-specific needs. For example, the [ndx-franklab-novela extension](https://github.com/LorenFrankLab/ndx-franklab-novela) defines a `FrankLabOptogeneticEpochsTable` that extends `OptogeneticEpochsTable` to include Frank Lab-specific stimulation parameters.
 
 ## Entity Relationship Diagram
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', "primaryBorderColor': '#144E73', 'lineColor': '#D96F32'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#ffffff', 'primaryBorderColor': '#144E73', 'lineColor': '#D96F32'}}}%%
 classDiagram
     direction LR
 
@@ -233,7 +231,7 @@ classDiagram
             --------------------------------------
             contains
             --------------------------------------
-            viral_vector : ViralVector[]
+            viral_vectors : ViralVector[]
         }
 
         class OptogeneticVirusInjections {
@@ -249,7 +247,7 @@ classDiagram
             --------------------------------------
             contains
             --------------------------------------
-            effector : Effector[]
+            effectors : Effector[]
         }
     }
 
@@ -293,20 +291,20 @@ classDiagram
             ferrule_diameter_in_mm : float
         }
 
-        class FiberInsertion {
+        class StereotacticPosition {
             <<NWBContainer>>
             --------------------------------------
             attributes
             --------------------------------------
-            insertion_position_ap_in_mm : float
-            insertion_position_ml_in_mm : float
-            insertion_position_dv_in_mm : float
-            depth_in_mm : float
-            position_reference : str
-            hemisphere : str
-            insertion_angle_yaw_in_deg : float
-            insertion_angle_pitch_in_deg : float
-            insertion_angle_roll_in_deg : float
+            anatomical_target : str
+            origin : str
+            orientation : str
+            x_in_mm : float
+            y_in_mm : float
+            z_in_mm : float
+            pitch_in_deg : float
+            yaw_in_deg : float
+            roll_in_deg : float
         }
 
         class OpticalFiber {
@@ -314,7 +312,7 @@ classDiagram
             --------------------------------------
             groups
             --------------------------------------
-            fiber_insertion : FiberInsertion
+            fiber_insertion : StereotacticPosition
             --------------------------------------
             links
             --------------------------------------
@@ -338,19 +336,12 @@ classDiagram
             attributes
             --------------------------------------
             description : str
-            location : str
-            hemisphere : str
-            reference : str
-            ap_in_mm : float
-            ml_in_mm : float
-            dv_in_mm : float
-            pitch_in_deg : float
-            yaw_in_deg : float
-            roll_in_deg : float
-            stereotactic_rotation_in_deg : float
-            stereotactic_tilt_in_deg : float
             volume_in_uL : float
             injection_date : str
+            --------------------------------------
+            groups
+            --------------------------------------
+            viral_injection_coordinates : StereotacticPosition
             --------------------------------------
             links
             --------------------------------------
@@ -386,7 +377,8 @@ classDiagram
     OptogeneticPulsesTable ..> OptogeneticSitesTable
     ExcitationSource ..> ExcitationSourceModel
     OpticalFiber ..> OpticalFiberModel
-    OpticalFiber *--> FiberInsertion
+    OpticalFiber *--> StereotacticPosition
+    ViralVectorInjection *--> StereotacticPosition
     ViralVectorInjection ..> ViralVector
     Effector ..> ViralVectorInjection
 ```
@@ -404,7 +396,7 @@ from ndx_ophys_devices import (
     ExcitationSource,
     OpticalFiberModel,
     OpticalFiber,
-    FiberInsertion,
+    StereotacticPosition,
 )
 from ndx_optogenetics import (
     OptogeneticSitesTable,
@@ -436,7 +428,7 @@ excitation_source = ExcitationSource(
     name="Omicron LuxX+ 488-100",
     model=excitation_source_model,
     power_in_W=0.077,
-    intensity_in_W_per_m2=1.0e10,
+    intensity_in_W_per_m2=2.45e6,  # 77 mW over the area of a 200 um core
 )
 nwbfile.add_device_model(excitation_source_model)
 nwbfile.add_device(excitation_source)
@@ -453,15 +445,15 @@ optical_fiber_model = OpticalFiberModel(
     ferrule_name="cFCF - ∅2.5mm Ceramic Ferrule",
     ferrule_diameter_in_mm=2.5,
 )
-fiber_insertion = FiberInsertion(
-    name="fiber_insertion",
-    depth_in_mm=2.0,
-    insertion_position_ap_in_mm=-1.5,
-    insertion_position_ml_in_mm=3.2,
-    insertion_position_dv_in_mm=-5.8,
-    position_reference="Bregma at the cortical surface",
-    hemisphere="right",
-    insertion_angle_pitch_in_deg=0.0,
+fiber_insertion = StereotacticPosition(
+    name="fiber_insertion",  # must be "fiber_insertion"
+    anatomical_target="GPe",
+    origin="Bregma at the cortical surface",
+    orientation="RAS",
+    x_in_mm=3.2,  # ML, positive is right
+    y_in_mm=-1.5,  # AP, positive is anterior
+    z_in_mm=-5.8,  # DV, positive is dorsal
+    pitch_in_deg=0.0,
 )
 optical_fiber = OpticalFiber(
     name="Lambda",
@@ -486,15 +478,18 @@ optogenetic_viruses = OptogeneticViruses(viral_vectors=[virus])
 virus_injection = ViralVectorInjection(
     name="AAV-EF1a-DIO-hChR2(H134R)-EYFP Injection",
     description="AAV-EF1a-DIO-hChR2(H134R)-EYFP injection into GPe.",
-    hemisphere="right",
-    location="GPe",
-    ap_in_mm=-1.5,
-    ml_in_mm=3.2,
-    dv_in_mm=-6.0,
-    roll_in_deg=0.0,
-    pitch_in_deg=0.0,
-    yaw_in_deg=0.0,
-    reference="Bregma at the cortical surface",
+    viral_injection_coordinates=StereotacticPosition(
+        name="viral_injection_coordinates",  # must be "viral_injection_coordinates"
+        anatomical_target="GPe",
+        origin="Bregma at the cortical surface",
+        orientation="RAS",
+        x_in_mm=3.2,
+        y_in_mm=-1.5,
+        z_in_mm=-6.0,
+        roll_in_deg=0.0,
+        pitch_in_deg=0.0,
+        yaw_in_deg=0.0,
+    ),
     viral_vector=virus,
     volume_in_uL=0.45,
     injection_date="1970-01-01T00:00:00+00:00",
@@ -541,7 +536,7 @@ opto_epochs_table.add_row(
     period_in_ms=250.0,
     number_pulses_per_pulse_train=100,
     number_trains=1,
-    intertrain_interval_in_ms=0.0,
+    intertrain_interval_in_ms=float("nan"),  # not applicable with a single train
     power_in_mW=77.0,
     wavelength_in_nm=488.0,
     optogenetic_sites=[0],
