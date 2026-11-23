@@ -3,6 +3,7 @@
 ## v0.5.0 (Upcoming)
 
 - Dropped support for Python 3.9 and 3.10 and added Python 3.14 to the test matrix.
+- Fixed `OptogeneticEpochsTable` and `OptogeneticPulsesTable` dropping MeaningsTables when reading a file. The constructors now accept all `DynamicTable` arguments, including `meanings_tables`. [Issue #28](https://github.com/rly/ndx-optogenetics/issues/28)
 
 ## v0.4.1 (October 14, 2026)
 

@@ -90,7 +90,7 @@ class OptogeneticEpochsTable(TimeIntervals):
     @docval(
         {"name": "name", "type": str, "doc": "name of this OptogeneticEpochsTable"},
         {"name": "description", "type": str, "doc": "Description of this OptogeneticEpochsTable"},
-        *get_docval(DynamicTable.__init__, "id", "columns", "colnames", "target_tables"),
+        *[arg for arg in get_docval(DynamicTable.__init__) if arg["name"] not in ("name", "description")],
         allow_positional=AllowPositional.WARNING,
     )
     def __init__(self, **kwargs):
@@ -134,7 +134,7 @@ class OptogeneticPulsesTable(TimeIntervals):
     @docval(
         {"name": "name", "type": str, "doc": "name of this OptogeneticPulsesTable"},
         {"name": "description", "type": str, "doc": "Description of this OptogeneticPulsesTable"},
-        *get_docval(DynamicTable.__init__, "id", "columns", "colnames", "target_tables"),
+        *[arg for arg in get_docval(DynamicTable.__init__) if arg["name"] not in ("name", "description")],
         allow_positional=AllowPositional.WARNING,
     )
     def __init__(self, **kwargs):
